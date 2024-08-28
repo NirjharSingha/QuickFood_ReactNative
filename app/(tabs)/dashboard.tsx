@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const index = () => {
+const dashboard = () => {
     return (
         <View>
-            <Text className='text-blue-600'>home</Text>
+            <Text>dashboard</Text>
         </View>
     )
 }
 
-export default index
+export default dashboard
