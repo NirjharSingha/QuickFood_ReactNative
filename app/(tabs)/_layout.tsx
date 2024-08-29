@@ -3,16 +3,19 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Tabs } from 'expo-router';
 import React, { useState } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { usePathname } from 'expo-router';
 
 export default function TabLayout() {
     const [role, setRole] = useState('user');
+    const pathname = usePathname();
+
     return (
-        <Tabs screenOptions={{ tabBarActiveTintColor: 'blue', tabBarLabelStyle: { fontWeight: 'bold' } }}>
+        <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: 'blue', tabBarLabelStyle: { fontWeight: 'bold' } }}>
             <Tabs.Screen
                 name="index"
                 options={{
                     title: 'Home',
-                    tabBarIcon: ({ color }) => <FontAwesome name="home" size={26} color={color} />,
+                    tabBarIcon: () => <FontAwesome name="home" size={26} color={pathname === "/" ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
@@ -20,7 +23,7 @@ export default function TabLayout() {
                 options={{
                     href: role === 'rider' ? '/delivery' : null,
                     title: 'Delivery',
-                    tabBarIcon: ({ color }) => <MaterialIcons name="delivery-dining" size={26} color={color} />
+                    tabBarIcon: () => <MaterialIcons name="delivery-dining" size={26} color={pathname.includes("/delivery") ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
@@ -28,7 +31,7 @@ export default function TabLayout() {
                 options={{
                     href: role === 'admin' ? '/dashboard' : null,
                     title: 'Dashboard',
-                    tabBarIcon: ({ color }) => <MaterialIcons name="dashboard" size={26} color={color} />
+                    tabBarIcon: () => <MaterialIcons name="dashboard" size={26} color={pathname.includes("/dashboard") ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
@@ -36,7 +39,7 @@ export default function TabLayout() {
                 options={{
                     href: role === 'user' ? '/order' : null,
                     title: 'Order',
-                    tabBarIcon: ({ color }) => <FontAwesome6 size={26} name="first-order-alt" color={color} />,
+                    tabBarIcon: () => <FontAwesome6 size={26} name="first-order-alt" color={pathname.includes("/order") ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
@@ -44,14 +47,14 @@ export default function TabLayout() {
                 options={{
                     href: role === 'user' ? '/restaurants' : null,
                     title: 'Restaurants',
-                    tabBarIcon: ({ color }) => <MaterialIcons name="local-restaurant" size={26} color={color} />,
+                    tabBarIcon: () => <MaterialIcons name="local-restaurant" size={26} color={pathname.includes("/restaurants") ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
                 name="account"
                 options={{
                     title: 'Account',
-                    tabBarIcon: ({ color }) => <MaterialIcons name="manage-accounts" size={26} color={color} />,
+                    tabBarIcon: () => <MaterialIcons name="manage-accounts" size={26} color={pathname.includes("/account") ? 'blue' : 'gray'} />
                 }}
             />
         </Tabs>

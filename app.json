@@ -32,5 +32,12 @@
     "experiments": {
       "typedRoutes": true
     }
+  },
+  "extra": {
+    "router": {
+      "exclude": [
+        "/account/notifications"
+      ]
+    }
   }
 }
