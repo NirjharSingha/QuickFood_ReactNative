@@ -1,29 +1,30 @@
 import { Stack } from "expo-router/stack";
 import React from "react";
+import { StatusBar, View, Platform, StyleSheet } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
-import Header from "@/components/Header";
-import { usePathname } from "expo-router";
-import { styled } from 'nativewind';
-import { View } from 'react-native';
 
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
 
 export default function Layout() {
-  const pathname = usePathname();
-  const StyledView = styled(View);
-
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{
-        headerShown: pathname === '/', header: () =>
-          <StyledView className="bg-[#D6C5B7] px-2 py-1 flex-row justify-between items-center w-full">
-            <Header />
-          </StyledView>
-      }} />
-      < Stack.Screen name="+not-found" />
-    </Stack >
+    <View style={styles.container}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="rgba(214,197,183,0.8)"
+      />
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </View>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Adjust for Android
+  },
+});

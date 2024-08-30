@@ -3,8 +3,11 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
+import { blue } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
+const primaryBlue = 'rgb(19, 150, 237)'
 
 export const Colors = {
   light: {
@@ -14,6 +17,7 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
+    primaryBlue
   },
   dark: {
     text: '#ECEDEE',
@@ -22,5 +26,6 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    primaryBlue
   },
 };
