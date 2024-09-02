@@ -8,6 +8,7 @@ import { blue } from "react-native-reanimated/lib/typescript/reanimated2/Colors"
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 const primaryBlue = 'rgb(19, 150, 237)'
+const primaryGray = 'rgb(75, 85, 99)'
 
 export const Colors = {
   light: {
@@ -17,7 +18,8 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
-    primaryBlue
+    primaryBlue,
+    primaryGray
   },
   dark: {
     text: '#ECEDEE',
