@@ -5,6 +5,7 @@ import { NativeWindStyleSheet } from "nativewind";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PaperProvider } from 'react-native-paper';
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -29,12 +30,15 @@ export default function Layout() {
   }, []);
 
   useEffect(() => {
+    // if (!loading) {
+    //   if (isLoggedIn) {
+    //     router.push("/");
+    //   } else {
+    //     router.push("/auth/login");
+    //   }
+    // }
     if (!loading) {
-      if (isLoggedIn) {
-        router.push("/");
-      } else {
-        router.push("/auth/login");
-      }
+      router.push("/")
     }
   }, [loading, isLoggedIn]);
 
@@ -47,18 +51,20 @@ export default function Layout() {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="rgba(214,197,183,0.8)"
-      />
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="auth/login" options={{ headerShown: false }} />
-        <Stack.Screen name="auth/signup" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </View>
+    <PaperProvider>
+      <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="rgba(214,197,183,0.8)"
+        />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/login" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/signup" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </View>
+    </PaperProvider>
   );
 }
 

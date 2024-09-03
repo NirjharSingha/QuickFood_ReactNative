@@ -1,4 +1,3 @@
-import { router } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { Image } from "react-native";
@@ -53,17 +52,19 @@ export const Input: React.FC<InoutProps> = ({ text, setText, placeholder, setWar
 export const Password: React.FC<PasswordProps> = ({ password, setPassword, showPass, setShowPass, placeholder, setWarning }) => {
     return (
         <StyledView className="p-1 flex-row justify-between indent-3 bg-white border-b-[1px] border-b-gray-400 mb-4 min-w-full">
-            <StyledInput
-                keyboardType="default"
-                className="indent-3 border-none outline-none cursor-pointer bg-white w-full"
-                placeholder={placeholder}
-                secureTextEntry={!showPass} // Toggle visibility with a state variable
-                value={password}
-                onChangeText={(text) => {
-                    setPassword(text);
-                    setWarning("")
-                }}
-            />
+            <StyledView className="w-[90%]">
+                <StyledInput
+                    keyboardType="default"
+                    className="indent-3 border-none outline-none cursor-pointer bg-white w-full"
+                    placeholder={placeholder}
+                    secureTextEntry={!showPass} // Toggle visibility with a state variable
+                    value={password}
+                    onChangeText={(text) => {
+                        setPassword(text);
+                        setWarning("")
+                    }}
+                />
+            </StyledView>
             {!showPass && (
                 <Octicons name="eye" size={22} color={light.primaryGray} style={{ cursor: "pointer" }} onPress={() => setShowPass(true)} />
             )}
@@ -90,8 +91,8 @@ const Signup = () => {
             <StyledImage source={require("@/assets/images/foodDelivery.png")} resizeMode="contain" className="w-full h-auto aspect-auto" />
             <StyledView className="w-[98.5%] h-full bg-white shadow-lg shadow-gray-800 rounded-t-xl z-10 mt-[-5px] p-4 flex-1 justify-center items-center">
                 <StyledView className="pt-4 flex-row justify-center items-center gap-3">
-                    <Octicons name="sign-in" size={45} color={light.primaryGray} />
-                    <StyledText className=" text-gray-700 font-bold" style={{ fontSize: 22 }}>
+                    <Octicons name="sign-in" size={47} color={light.primaryGray} />
+                    <StyledText className=" text-gray-700 font-bold" style={{ fontSize: 24 }}>
                         Sign Up
                     </StyledText>
                 </StyledView>
@@ -103,12 +104,12 @@ const Signup = () => {
                 <Password password={password} setPassword={setPassword} showPass={showPass} setShowPass={setShowPass} placeholder="Enter password" setWarning={setWarning} />
                 <Password password={confirmPassword} setPassword={setConfirmPassword} showPass={showConfirmPassword} setShowPass={setShowConfirmPassword} placeholder="Confirm password" setWarning={setWarning} />
                 <StyledTouchableOpacity
-                    className="bg-blue-500 w-full py-2 rounded-md"
-                    onPress={() => setWarning(id)}
+                    className="bg-blue-500 w-full py-2 rounded-md mt-2 mb-1"
+                    onPress={() => router.push("/")}
                 >
                     <StyledText className="text-white text-lg w-full text-center font-bold">Sign up</StyledText>
                 </StyledTouchableOpacity>
-                <StyledView className="flex-row justify-center items-center mt-4 mb-4">
+                <StyledView className="flex-row justify-center items-center mt-4 mb-5">
                     <StyledText className="w-full text-center" style={{ fontSize: 15, color: light.primaryGray }}>
                         Already have an account?{"  "}
                         <StyledText className="text-blue-600 font-bold underline" onPress={() => router.push("/auth/login")}>
@@ -117,7 +118,7 @@ const Signup = () => {
                     </StyledText>
                 </StyledView>
                 <StyledView className="">
-                    <GoogleOAuthProvider clientId={process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID as string}>
+                    {/* <GoogleOAuthProvider clientId={process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID as string}>
                         <GoogleLogin
                             onSuccess={(credentialResponse) => {
                                 const details = jwtDecode(credentialResponse.credential as string);
@@ -128,7 +129,7 @@ const Signup = () => {
                                 console.log("Failed");
                             }}
                         />
-                    </GoogleOAuthProvider>
+                    </GoogleOAuthProvider> */}
                 </StyledView>
             </StyledView>
         </ScrollView>
