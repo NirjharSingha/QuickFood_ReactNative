@@ -7,6 +7,10 @@ import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PaperProvider } from 'react-native-paper';
 
+import { useRef, } from 'react';
+import { Button, } from 'react-native';
+import LottieView from 'lottie-react-native';
+
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
@@ -15,6 +19,12 @@ export default function Layout() {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
+
+  const animation = useRef<LottieView>(null);
+  useEffect(() => {
+    // You can control the ref programmatically, rather than using autoPlay
+    // animation.current?.play();
+  }, []);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -37,18 +47,24 @@ export default function Layout() {
     //     router.push("/auth/login");
     //   }
     // }
-    if (!loading) {
-      router.push("/")
-    }
+    // if (!loading) {
+    //   router.push("/")
+    // }
   }, [loading, isLoggedIn]);
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
+
+  useEffect(() => {
+    setTimeout(() => {
+      router.push("/auth/signup");
+    }, 3000);
+  }, []);
 
   return (
     <PaperProvider>
@@ -57,6 +73,18 @@ export default function Layout() {
           barStyle="dark-content"
           backgroundColor="rgba(214,197,183,0.8)"
         />
+        <View style={styles.animationContainer}>
+          <LottieView
+            autoPlay
+            ref={animation}
+            style={{
+              width: 200,
+              height: 200,
+              backgroundColor: '#eee',
+            }}
+            source={require('@/assets/animations/splash.json')}
+          />
+        </View>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="auth/login" options={{ headerShown: false }} />
@@ -72,5 +100,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Adjust for Android
+  },
+
+
+
+
+
+
+  animationContainer: {
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  buttonContainer: {
+    paddingTop: 20,
   },
 });

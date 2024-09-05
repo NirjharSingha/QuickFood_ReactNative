@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { RadioButton } from 'react-native-paper';
+import axios from "axios";
 
 const StyledView = styled(View)
 const StyledImage = styled(Image)
@@ -61,6 +62,37 @@ const Login = () => {
     const [checked, setChecked] = useState('first');
     const pathname = usePathname();
     const router = useRouter();
+
+    const handleLogin = async () => {
+        if (id.includes("@") && checked === "second") {
+            setWarning("Invalid id");
+            return;
+        }
+
+        const postData = {
+            id: id,
+            password: password,
+        };
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`,
+                postData
+            );
+            if (response.status == 200) {
+                // localStorage.setItem("token", response.data.token);
+                // localStorage.setItem("isLoggedIn", "true");
+                // setIsLoggedIn(true);
+                // setRole(response.data.role);
+                // localStorage.setItem("role", response.data.role);
+                // setShowLogin(false);
+                // setToastMessage("Logged in successfully");
+            }
+        } catch (error) {
+            console.log(error);
+            setWarning("Invalid credentials");
+        }
+    };
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
