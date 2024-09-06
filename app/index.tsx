@@ -32,8 +32,8 @@ const index = () => {
             <LottieView
                 autoPlay
                 style={{
-                    width: 200,
-                    height: 200,
+                    width: 300,
+                    height: 300,
                     backgroundColor: '#eee',
                 }}
                 source={require('@/assets/animations/splash.json')}
@@ -43,11 +43,11 @@ const index = () => {
                     transform: [{ translateY: translateYValue }],
                 }}
             >
-                <StyledView className="flex-row justify-center items-center mt-[-40px] animate-">
-                    <StyledView className="rounded-full mr-3 border-2 border-solid border-gray-400 p-3 bg-gray-200">
-                        <StyledImage source={FavIcon} style={{ width: 45, height: 45 }} />
+                <StyledView className="flex-row justify-center items-center mt-[-20px]">
+                    <StyledView className="rounded-full mr-3 border-2 border-solid border-gray-400 p-[10px] bg-gray-200">
+                        <StyledImage source={FavIcon} style={{ width: 37, height: 37 }} />
                     </StyledView>
-                    <StyledText className="text-gray-700 font-bold" style={{ fontSize: 35 }}>
+                    <StyledText className="text-gray-700 font-bold" style={{ fontSize: 32 }}>
                         QuickFood
                     </StyledText>
                 </StyledView></Animated.View>
@@ -59,10 +59,10 @@ export default index
 
 const styles = StyleSheet.create({
     animationContainer: {
-        backgroundColor: '#FFF7ED',
+        backgroundColor: '#eee',
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
-        marginTop: -80
+        marginTop: -100
     }
 });

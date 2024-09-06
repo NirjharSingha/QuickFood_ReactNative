@@ -63,10 +63,8 @@ const home = () => {
                         <StyledText className="w-full text-center text-gray-700 font-bold mb-4" style={{ fontSize: 20 }}>
                             in Minutes
                         </StyledText>
-                        <StyledText className="w-full text-center  p-2 pl-4 pr-4 text-gray-700">
-                            We offer fastest delivery service in the city. We are here to serve
-                            even outside the city. {"\n"} We ensure the quality of food and
-                            service.
+                        <StyledText className="w-full text-center p-2 pl-4 pr-4 text-gray-700">
+                            We offer fastest delivery in the city{"\n"}ensuring the quality of the food.
                         </StyledText>
                     </StyledView>
                     <StyledImage source={require("@/assets/images/Food_Delivery.png")} resizeMode="contain" className="w-[98%] h-auto mx-auto" />
