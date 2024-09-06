@@ -21,7 +21,7 @@ import CarouselItem16 from '@/assets/images/CarouselItem16.jpg';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 
-const index = () => {
+const home = () => {
     const StyledView = styled(View);
     const StyledText = styled(Text);
     const StyledImage = styled(Image)
@@ -127,4 +127,4 @@ const index = () => {
     )
 }
 
-export default index
+export default home

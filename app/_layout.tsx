@@ -20,24 +20,18 @@ export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  const animation = useRef<LottieView>(null);
-  useEffect(() => {
-    // You can control the ref programmatically, rather than using autoPlay
-    // animation.current?.play();
-  }, []);
+  // useEffect(() => {
+  //   const checkAuthStatus = async () => {
+  //     // Assume token is stored in AsyncStorage
+  //     const token = await AsyncStorage.getItem("authToken");
+  //     if (token) {
+  //       setIsLoggedIn(true);
+  //     }
+  //     setLoading(false);
+  //   };
 
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      // Assume token is stored in AsyncStorage
-      const token = await AsyncStorage.getItem("authToken");
-      if (token) {
-        setIsLoggedIn(true);
-      }
-      setLoading(false);
-    };
-
-    checkAuthStatus();
-  }, []);
+  //   checkAuthStatus();
+  // }, []);
 
   useEffect(() => {
     // if (!loading) {
@@ -60,12 +54,6 @@ export default function Layout() {
   //   );
   // }
 
-  useEffect(() => {
-    setTimeout(() => {
-      router.push("/auth/signup");
-    }, 3000);
-  }, []);
-
   return (
     <PaperProvider>
       <View style={styles.container}>
@@ -73,19 +61,8 @@ export default function Layout() {
           barStyle="dark-content"
           backgroundColor="rgba(214,197,183,0.8)"
         />
-        <View style={styles.animationContainer}>
-          <LottieView
-            autoPlay
-            ref={animation}
-            style={{
-              width: 200,
-              height: 200,
-              backgroundColor: '#eee',
-            }}
-            source={require('@/assets/animations/splash.json')}
-          />
-        </View>
         <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="auth/login" options={{ headerShown: false }} />
           <Stack.Screen name="auth/signup" options={{ headerShown: false }} />
@@ -100,20 +77,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, // Adjust for Android
-  },
-
-
-
-
-
-
-  animationContainer: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  buttonContainer: {
-    paddingTop: 20,
-  },
+  }
 });

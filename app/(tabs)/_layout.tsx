@@ -12,10 +12,10 @@ export default function TabLayout() {
     return (
         <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: 'blue', tabBarLabelStyle: { fontWeight: 'bold' } }}>
             <Tabs.Screen
-                name="index"
+                name="home"
                 options={{
                     title: 'Home',
-                    tabBarIcon: () => <FontAwesome name="home" size={26} color={pathname === "/" ? 'blue' : 'gray'} />
+                    tabBarIcon: () => <FontAwesome name="home" size={26} color={pathname === "/home" ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
