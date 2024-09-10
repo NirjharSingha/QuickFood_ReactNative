@@ -48,7 +48,7 @@ const home = () => {
 
     return (
         <StyledView className='w-full h-full'>
-            <StyledView className="bg-[#D6C5B7] px-2 py-1 flex-row justify-between items-center w-full">
+            <StyledView className="bg-[#D6C5B7] px-3 py-1 flex-row justify-between items-center w-full">
                 <Header />
             </StyledView>
             <StyledScrollView className="w-screen bg-orange-50" showsVerticalScrollIndicator={false}>

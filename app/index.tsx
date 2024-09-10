@@ -1,9 +1,12 @@
-import React, { useEffect, useRef } from "react";
-import { View, StyleSheet, Image, Text, Animated } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, Image, Text, Animated, TouchableOpacity } from "react-native";
 import LottieView from 'lottie-react-native';
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import FavIcon from '@/assets/images/favicon.png';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 const index = () => {
     const router = useRouter();
@@ -20,15 +23,29 @@ const index = () => {
         }).start();
     }, [translateYValue]);
 
-    useEffect(() => {
-        setTimeout(() => {
+    const handleNavigation = async () => {
+        const token = await AsyncStorage.getItem("token");
+        if (token === null || token === undefined) {
             router.push("/auth/login");
-        }, 4000);
-    }, []);
-
+        } else {
+            const claims = jwtDecode(token)
+            const currentTimeSeconds = Math.floor(Date.now() / 1000);
+            const expiryTime = claims.exp
+            if (expiryTime === undefined || currentTimeSeconds >= expiryTime) {
+                router.push("/auth/login");
+            } else {
+                router.push("/account");
+            }
+        }
+    }
 
     return (
         <View style={styles.animationContainer}>
+            <TouchableOpacity onPress={handleNavigation} style={{ position: 'absolute', top: 120, right: 20 }}>
+                <StyledView className="p-[6px] rounded-full bg-gray-800">
+                    <MaterialCommunityIcons name="skip-forward" size={32} color="white" />
+                </StyledView>
+            </TouchableOpacity>
             <LottieView
                 autoPlay
                 style={{
@@ -50,7 +67,8 @@ const index = () => {
                     <StyledText className="text-gray-700 font-bold" style={{ fontSize: 32 }}>
                         QuickFood
                     </StyledText>
-                </StyledView></Animated.View>
+                </StyledView>
+            </Animated.View>
         </View>
     )
 }

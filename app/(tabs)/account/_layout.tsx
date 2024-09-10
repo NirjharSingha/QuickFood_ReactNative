@@ -60,8 +60,8 @@ export default function Layout() {
                 </ScrollView>
 
                 {/* Second Row: Logout Button */}
-                <TouchableOpacity style={{ padding: 8 }} onPress={() => { /* Implement your logout functionality here */ }}>
-                    <StyledView className='flex-row bg-blue-500 py-2 items-center justify-center rounded-md mb-1'>
+                <TouchableOpacity style={{ padding: 6 }} onPress={() => { /* Implement your logout functionality here */ }}>
+                    <StyledView className='flex-row bg-blue-500 py-[6px] items-center justify-center rounded-md mb-1'>
                         <StyledText className='text-white font-bold mr-3 text-base'>Logout</StyledText>
                         <MaterialIcons name="logout" size={24} color="white" />
                     </StyledView>
@@ -76,13 +76,14 @@ export default function Layout() {
                 screenOptions={({ navigation }) => ({
                     drawerPosition: 'right',
                     header: () =>
-                        <StyledView className="bg-[#D6C5B7] px-2 py-1 flex-row justify-between items-center w-full">
+                        <StyledView className="bg-[#D6C5B7] px-3 py-1 flex-row justify-between items-center w-full">
                             <Header />
-                            <MaterialIcons
-                                name="menu"
-                                size={24}
-                                onPress={() => navigation.toggleDrawer()}
-                            />
+                            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+                                <MaterialIcons
+                                    name="menu"
+                                    size={28}
+                                />
+                            </TouchableOpacity>
                         </StyledView>
                 })}
                 drawerContent={(props) => <CustomDrawerContent {...props} />} // Custom drawer content

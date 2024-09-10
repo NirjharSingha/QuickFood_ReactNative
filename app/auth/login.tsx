@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { RadioButton } from 'react-native-paper';
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StyledView = styled(View)
 const StyledImage = styled(Image)
@@ -55,7 +56,7 @@ const Radio: React.FC<RadioProps> = ({ checked, setChecked }) => {
 };
 
 const Login = () => {
-    const [warning, setWarning] = useState("Invalid username or password");
+    const [warning, setWarning] = useState("");
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
     const [showPass, setShowPass] = useState(false);
@@ -64,8 +65,16 @@ const Login = () => {
     const router = useRouter();
 
     const handleLogin = async () => {
+        if (id === "" || password === "") {
+            setWarning("Please fill all fields");
+            return;
+        }
         if (id.includes("@") && checked === "second") {
             setWarning("Invalid id");
+            return;
+        }
+        if (!id.includes("@") && checked === "first") {
+            setWarning("Invalid email");
             return;
         }
 
@@ -76,17 +85,14 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`,
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/auth/login`,
                 postData
             );
             if (response.status == 200) {
-                // localStorage.setItem("token", response.data.token);
-                // localStorage.setItem("isLoggedIn", "true");
-                // setIsLoggedIn(true);
-                // setRole(response.data.role);
-                // localStorage.setItem("role", response.data.role);
-                // setShowLogin(false);
-                // setToastMessage("Logged in successfully");
+                const token = response.data.token;
+                await AsyncStorage.setItem("token", token);
+                await AsyncStorage.setItem("role", response.data.role);
+                router.replace("/home");
             }
         } catch (error) {
             console.log(error);
@@ -116,8 +122,8 @@ const Login = () => {
                 <Input text={id} setText={setId} placeholder={!pathname.includes("/admin/riders") ? "Enter email" : "Enter rider Id"} setWarning={setWarning} keyboardType={!pathname.includes("/admin/riders") ? "email-address" : "default"} />
                 <Password password={password} setPassword={setPassword} showPass={showPass} setShowPass={setShowPass} placeholder="Enter password" setWarning={setWarning} />
                 <StyledTouchableOpacity
-                    className="bg-blue-500 w-full py-2 rounded-md mt-3 mb-2"
-                    onPress={() => router.push("/home")}
+                    className="bg-blue-500 w-full py-[6px] rounded-md mt-3 mb-2"
+                    onPress={handleLogin}
                 >
                     <StyledText className="text-white text-lg w-full text-center font-bold">Log in</StyledText>
                 </StyledTouchableOpacity>
@@ -125,7 +131,7 @@ const Login = () => {
                     <StyledView className="flex-row justify-center items-center mt-4 mb-6">
                         <StyledText className="w-full text-center" style={{ fontSize: 15, color: light.primaryGray }}>
                             Don't have an account?{"  "}
-                            <StyledText className="text-blue-600 font-bold underline" onPress={() => router.push("/auth/signup")}>
+                            <StyledText className="text-blue-600 font-bold underline" onPress={() => router.replace("/auth/signup")}>
                                 Sign up
                             </StyledText>
                         </StyledText>

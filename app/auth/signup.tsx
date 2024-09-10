@@ -104,15 +104,15 @@ const Signup = () => {
                 <Password password={password} setPassword={setPassword} showPass={showPass} setShowPass={setShowPass} placeholder="Enter password" setWarning={setWarning} />
                 <Password password={confirmPassword} setPassword={setConfirmPassword} showPass={showConfirmPassword} setShowPass={setShowConfirmPassword} placeholder="Confirm password" setWarning={setWarning} />
                 <StyledTouchableOpacity
-                    className="bg-blue-500 w-full py-2 rounded-md mt-2 mb-1"
-                    onPress={() => router.push("/home")}
+                    className="bg-blue-500 w-full py-[6px] rounded-md mt-2 mb-1"
+                    onPress={() => router.replace("/home")}
                 >
                     <StyledText className="text-white text-lg w-full text-center font-bold">Sign up</StyledText>
                 </StyledTouchableOpacity>
                 <StyledView className="flex-row justify-center items-center mt-4 mb-5">
                     <StyledText className="w-full text-center" style={{ fontSize: 15, color: light.primaryGray }}>
                         Already have an account?{"  "}
-                        <StyledText className="text-blue-600 font-bold underline" onPress={() => router.push("/auth/login")}>
+                        <StyledText className="text-blue-600 font-bold underline" onPress={() => router.replace("/auth/login")}>
                             Log in
                         </StyledText>
                     </StyledText>
