@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -9,18 +9,20 @@ import Loading from "@/components/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import { styled } from "nativewind";
-import { View, Text, Image, ScrollView, ImageBackground, TouchableOpacity, SafeAreaView, TextInput } from "react-native";
+import { View, Text, Image, ScrollView, ImageBackground, TouchableOpacity, SafeAreaView, TextInput, KeyboardTypeOptions } from "react-native";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Entypo from '@expo/vector-icons/Entypo';
 import { Colors } from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+import unauthorized from "@/scripts/unauthorized";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledImage = styled(Image)
 const StyledScrollView = styled(ScrollView)
 const StyledInput = styled(TextInput)
+const StyledTouchableOpacity = styled(TouchableOpacity)
 
 interface InputGroupProps {
     isEdit: boolean;
@@ -30,15 +32,10 @@ interface InputGroupProps {
     setValue: (value: string) => void;
     placeholder: string;
     setWarning: (value: string) => void;
+    keyboardType: KeyboardTypeOptions;
 }
 
-type ProfilePic = {
-    uri: string;
-    name: string | undefined;
-    type: string;
-};
-
-const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, value, setValue, placeholder, setWarning }) => {
+const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, value, setValue, placeholder, setWarning, keyboardType = "default" }) => {
     return (
         <StyledView className={`overflow-x-hidden mt-2 ${isEdit ? "flex-row items-center justify-between mr-[6px]" : "flex-1"}`}>
             <StyledText className="pl-1 font-bold mb-[6px] mr-3 text-gray-700" style={{ fontSize: 18 }}>
@@ -48,6 +45,7 @@ const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, value, set
                 <StyledInput
                     className="border-b-[1px] border-gray-400 mb-4 w-[65%] pl-1 outline-none cursor-pointer bg-slate-100"
                     placeholder={placeholder}
+                    keyboardType={keyboardType}
                     value={value}
                     style={{ fontSize: 16 }}
                     onChangeText={(text) => {
@@ -70,13 +68,12 @@ const index = () => {
     const [id, setId] = useState("");
     const [username, setUsername] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
-    const [profilePic, setProfilePic] = useState<ProfilePic | null>(null);
     const [imgStream, setImgStream] = useState("");
     const [address, setAddress] = useState("");
     const [isEdit, setIsEdit] = useState(false)
     const [warning, setWarning] = useState("");
-    const fileInputRef = useRef(null);
     const [showLoading, setShowLoading] = useState(false);
+    const [flag, setFlag] = useState(false);
 
     useEffect(() => {
         const getProfile = async () => {
@@ -108,26 +105,11 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                if (axiosError.response) {
-                    const { status, data } = axiosError.response;
-                    if (status === 401) {
-                        await AsyncStorage.removeItem("token");
-                        await AsyncStorage.removeItem("role");
-                        Toast.show({
-                            type: 'error',
-                            text1: 'Session Expired',
-                            text2: 'Your current session has expired. Please login again.',
-                            visibilityTime: 6000,
-                        });
-                        router.push("/auth/login");
-                    } else {
-                        console.log(data);
-                    }
-                }
+                unauthorized(axiosError, Toast, AsyncStorage, router);
             }
         };
 
-        getProfile();
+        // getProfile();
     }, []);
 
     const handleUpdate = async () => {
@@ -141,10 +123,8 @@ const index = () => {
         formData.append("name", username);
         formData.append("address", address);
         formData.append("mobile", phoneNum);
-        if (profilePic !== null) {
-            console.log(profilePic.name);
-            console.log(profilePic.type);
-            formData.append("file", { uri: profilePic?.uri, name: "image.png", type: "image/png" } as any);
+        if (flag) {
+            formData.append("file", { uri: imgStream, name: "image.jpeg", type: "image/jpeg" } as any);
         } else {
             formData.append("file", null as any);
         }
@@ -163,10 +143,11 @@ const index = () => {
                 }
             );
             if (response.status == 200) {
-                console.log(response.data);
+                setIsEdit(false);
             }
         } catch (error) {
-            console.log("Error:", error);
+            const axiosError = error as AxiosError;
+            unauthorized(axiosError, Toast, AsyncStorage, router);
         };
     }
 
@@ -179,12 +160,8 @@ const index = () => {
 
         if (!result.canceled) {
             const imageUri = result.assets[0].uri;
-            const fileName = imageUri.split('/').pop();
-            const fileType = result.assets[0].type || 'image/jpeg';
-
-            // For displaying the image on the UI (using URI)
             setImgStream(imageUri);
-            setProfilePic({ uri: imageUri, name: fileName, type: fileType });
+            setFlag(true);
         }
     };
 
@@ -212,6 +189,11 @@ const index = () => {
                                     {imgStream === "" && <StyledView className="bg-slate-200 rounded-full border-2 border-solid border-white" style={{ width: 146, height: 146 }} />}
                                     {imgStream !== "" && <StyledImage source={{ uri: imgStream }} style={{ width: 146, height: 146, borderRadius: 73 }} />}
                                 </StyledView>
+                                {isEdit &&
+                                    <StyledTouchableOpacity className="absolute top-[2px] right-[2px] border-[0.5px] border-white p-1 rounded-full bg-red-500" onPress={() => setIsEdit(false)}>
+                                        <Entypo name="cross" size={24} color="white" />
+                                    </StyledTouchableOpacity>
+                                }
                             </StyledView>
                             {isEdit && (
                                 <TouchableOpacity onPress={uploadImage}>
@@ -237,16 +219,16 @@ const index = () => {
                             {!isEdit && (
                                 <StyledView className={`overflow-x-hidden mt-2 flex-1`}>
                                     <StyledText className="pl-1 font-bold mb-[6px] mr-3 text-gray-700" style={{ fontSize: 18 }}>ID:</StyledText>
-                                    <StyledText className="mb-2 border-2 border-gray-200 pl-2 pt-[3px] pb-[2px] rounded-md" style={{ fontSize: 16 }}>
+                                    <StyledText className="mb-2 border-2 border-gray-200 pl-2 pt-[3px] pb-[2px] rounded-md truncate" style={{ fontSize: 16 }}>
                                         {id}
                                     </StyledText>
                                 </StyledView>
                             )}
-                            <InputGroup isEdit={isEdit} flag={true} title="Name" value={username} setValue={setUsername} placeholder="Enter username" setWarning={setWarning} />
-                            <InputGroup isEdit={isEdit} flag={false} title="Address" value={address} setValue={setAddress} placeholder="Enter address" setWarning={setWarning} />
-                            <InputGroup isEdit={isEdit} flag={false} title="Mobile" value={phoneNum} setValue={setPhoneNum} placeholder="Enter mobile number" setWarning={setWarning} />
+                            <InputGroup isEdit={isEdit} flag={true} title="Name" value={username} setValue={setUsername} placeholder="Enter username" setWarning={setWarning} keyboardType="default" />
+                            <InputGroup isEdit={isEdit} flag={false} title="Address" value={address} setValue={setAddress} placeholder="Enter address" setWarning={setWarning} keyboardType="default" />
+                            <InputGroup isEdit={isEdit} flag={false} title="Mobile" value={phoneNum} setValue={setPhoneNum} placeholder="Enter mobile number" setWarning={setWarning} keyboardType="numeric" />
                         </StyledView>
-                    </StyledScrollView >
+                    </StyledScrollView>
                     <TouchableOpacity style={{ padding: 6 }} onPress={() => {
                         if (!isEdit) {
                             setIsEdit(true);

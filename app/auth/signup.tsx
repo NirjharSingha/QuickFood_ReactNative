@@ -51,7 +51,7 @@ export const Input: React.FC<InoutProps> = ({ text, setText, placeholder, setWar
 
 export const Password: React.FC<PasswordProps> = ({ password, setPassword, showPass, setShowPass, placeholder, setWarning }) => {
     return (
-        <StyledView className="p-1 flex-row justify-between indent-3 bg-white border-b-[1px] border-b-gray-400 mb-4 min-w-full">
+        <StyledView className="p-1 flex-row justify-between items-center indent-3 bg-white border-b-[1px] border-b-gray-400 mb-4 min-w-full">
             <StyledView className="w-[90%]">
                 <StyledInput
                     keyboardType="default"

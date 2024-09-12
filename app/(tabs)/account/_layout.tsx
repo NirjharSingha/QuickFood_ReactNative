@@ -8,6 +8,8 @@ import { Colors } from '@/constants/Colors';
 import { usePathname, useRouter } from 'expo-router';
 import UserImage from '@/assets/images/user.png';
 import Entypo from '@expo/vector-icons/Entypo';
+import React, { useState } from 'react';
+import Password from '@/components/password';
 
 export default function Layout() {
     const StyledView = styled(View);
@@ -15,11 +17,13 @@ export default function Layout() {
     const pathname = usePathname();
     const router = useRouter();
     const { primaryBlue } = Colors.light;
+    const [visible, setVisible] = useState(false);
 
     // Custom drawer content component
     const CustomDrawerContent = ({ }: { navigation: any }) => {
         return (
             <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
+                <Password visible={visible} setVisible={setVisible} />
                 {/* First Row: Scrollable Content */}
                 <ScrollView style={{ flex: 1 }}>
                     <StyledView className="bg-white p-4">
@@ -46,6 +50,14 @@ export default function Layout() {
                             <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/account" ? 'bg-blue-100' : ''} rounded-full m-0 mt-3`} style={{ gap: 10 }}>
                                 <MaterialIcons name="account-circle" size={26} color={pathname === "/account" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
                                 <StyledText className='font-bold text-base' style={{ color: pathname === "/account" ? primaryBlue : 'gray', margin: 0 }}>Profile</StyledText>
+                            </StyledView>
+                        </TouchableOpacity>
+
+                        {/* Password Option */}
+                        <TouchableOpacity onPress={() => setVisible(true)}>
+                            <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/account/password" ? 'bg-blue-100' : ''} rounded-full m-0 mt-3`} style={{ gap: 10 }}>
+                                <MaterialIcons name="password" size={26} color={pathname === "/account/password" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
+                                <StyledText className='font-bold text-base' style={{ color: pathname === "/account/password" ? primaryBlue : 'gray', margin: 0 }}>Password</StyledText>
                             </StyledView>
                         </TouchableOpacity>
 
