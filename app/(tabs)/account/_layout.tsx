@@ -10,6 +10,7 @@ import UserImage from '@/assets/images/user.png';
 import Entypo from '@expo/vector-icons/Entypo';
 import React, { useState } from 'react';
 import Password from '@/components/password';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Layout() {
     const StyledView = styled(View);
@@ -72,7 +73,11 @@ export default function Layout() {
                 </ScrollView>
 
                 {/* Second Row: Logout Button */}
-                <TouchableOpacity style={{ padding: 6 }} onPress={() => { /* Implement your logout functionality here */ }}>
+                <TouchableOpacity style={{ padding: 6 }} onPress={async () => {
+                    await AsyncStorage.removeItem("token");
+                    await AsyncStorage.removeItem("role");
+                    router.replace("/auth/login");
+                }}>
                     <StyledView className='flex-row bg-blue-500 py-[6px] items-center justify-center rounded-md mb-1'>
                         <StyledText className='text-white font-bold mr-3 text-base'>Logout</StyledText>
                         <MaterialIcons name="logout" size={24} color="white" />

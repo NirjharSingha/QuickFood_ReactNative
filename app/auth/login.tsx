@@ -119,7 +119,7 @@ const Login = () => {
                 <StyledText className=" text-red-600 w-full text-center mt-3 mb-2" style={{ fontSize: 13 }}>
                     {warning}
                 </StyledText>
-                <Input text={id} setText={setId} placeholder={!pathname.includes("/admin/riders") ? "Enter email" : "Enter rider Id"} setWarning={setWarning} keyboardType={!pathname.includes("/admin/riders") ? "email-address" : "default"} />
+                <Input text={id} setText={setId} placeholder={checked === 'first' ? "Enter email" : "Enter Id"} setWarning={setWarning} keyboardType={!pathname.includes("/admin/riders") ? "email-address" : "default"} />
                 <Password password={password} setPassword={setPassword} showPass={showPass} setShowPass={setShowPass} placeholder="Enter password" setWarning={setWarning} />
                 <StyledTouchableOpacity
                     className="bg-blue-500 w-full py-[6px] rounded-md mt-3 mb-2"
