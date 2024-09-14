@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
+import { jwtDecode } from 'jwt-decode'
+import Loading from '@/components/Loading'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -20,7 +22,7 @@ interface RestaurantCardProps {
     restaurant: any;
 }
 
-export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
+const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
     const router = useRouter();
     const pathname = usePathname();
     const [rating, setRating] = useState('');
@@ -56,12 +58,12 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
                 unauthorized(axiosError, Toast, AsyncStorage, router);
             }
         };
-        // getRating();
+        getRating();
     }, []);
 
     return (
         <StyledTouchableOpacity
-            className={`w-full max-w-[300px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px]`}
+            className={`w-full max-w-[300px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}
             onPress={handleNavigate}
         >
             <StyledImage
@@ -91,10 +93,65 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
 };
 
 const restaurants = () => {
+    const [restaurants, setRestaurants] = useState([]);
+    const [showMessage, setShowMessage] = useState(false);
+    const [showLoading, setShowLoading] = useState(true);
+    const router = useRouter();
+
+    useEffect(() => {
+        const getRestaurants = async () => {
+            const token = await AsyncStorage.getItem("token");
+            if (token === null || token === undefined) {
+                router.push("/auth/login");
+                return;
+            }
+
+            const owner = jwtDecode(token).sub;
+            try {
+                const response = await axios.get(
+                    `${process.env.EXPO_PUBLIC_SERVER_URL}/restaurant/getRestaurantByOwner?owner=${owner}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                if (response.status == 200) {
+                    setShowLoading(false);
+                    setRestaurants(response.data);
+                    if (response.data.length === 0) {
+                        setShowMessage(true);
+                    }
+                }
+            } catch (error) {
+                const axiosError = error as AxiosError;
+                unauthorized(axiosError, Toast, AsyncStorage, router);
+            }
+        };
+        getRestaurants();
+    }, []);
+
     return (
-        <StyledScrollView className="w-screen p-3" showsVerticalScrollIndicator={false}>
-            <RestaurantCard restaurant={{ id: 1, name: "Restaurant 1", rating: 2, address: "Address 1", image: null }} />
-        </StyledScrollView>
+        <View>
+            {showLoading && <Loading />}
+            {!showLoading && showMessage && (
+                <StyledView className='flex-row w-full h-full justify-center items-center'>
+                    <StyledText className="text-gray-500" style={{ fontSize: 14 }}>
+                        No Restaurants Found
+                    </StyledText>
+                </StyledView>
+            )}
+            {!showLoading && !showMessage &&
+                <StyledScrollView className="w-screen p-3" showsVerticalScrollIndicator={false}>
+                    {restaurants.length !== 0 && restaurants.map((restaurant, index) => (
+                        <View key={index}>
+                            <RestaurantCard restaurant={restaurant} />
+                            {index === restaurants.length - 1 && <View className="mb-3" />}
+                        </View>
+                    ))}
+                </StyledScrollView>
+            }
+        </View>
     )
 }
 
