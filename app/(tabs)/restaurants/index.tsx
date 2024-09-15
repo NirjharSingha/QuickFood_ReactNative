@@ -11,6 +11,8 @@ import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
 import { jwtDecode } from 'jwt-decode'
 import Loading from '@/components/Loading'
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -98,38 +100,41 @@ const restaurants = () => {
     const [showLoading, setShowLoading] = useState(true);
     const router = useRouter();
 
-    useEffect(() => {
-        const getRestaurants = async () => {
-            const token = await AsyncStorage.getItem("token");
-            if (token === null || token === undefined) {
-                router.push("/auth/login");
-                return;
-            }
+    const getRestaurants = async () => {
+        const token = await AsyncStorage.getItem("token");
+        if (token === null || token === undefined) {
+            router.push("/auth/login");
+            return;
+        }
 
-            const owner = jwtDecode(token).sub;
-            try {
-                const response = await axios.get(
-                    `${process.env.EXPO_PUBLIC_SERVER_URL}/restaurant/getRestaurantByOwner?owner=${owner}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (response.status == 200) {
-                    setShowLoading(false);
-                    setRestaurants(response.data);
-                    if (response.data.length === 0) {
-                        setShowMessage(true);
-                    }
+        const owner = jwtDecode(token).sub;
+        try {
+            const response = await axios.get(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/restaurant/getRestaurantByOwner?owner=${owner}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
-            } catch (error) {
-                const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+            );
+            if (response.status == 200) {
+                setShowLoading(false);
+                setRestaurants(response.data);
+                if (response.data.length === 0) {
+                    setShowMessage(true);
+                }
             }
-        };
-        getRestaurants();
-    }, []);
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            unauthorized(axiosError, Toast, AsyncStorage, router);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            getRestaurants();
+        }, [])
+    );
 
     return (
         <View>

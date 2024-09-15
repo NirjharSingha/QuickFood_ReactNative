@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect } from "react";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
@@ -35,7 +33,14 @@ interface InputGroupProps {
     keyboardType: KeyboardTypeOptions;
 }
 
-const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, value, setValue, placeholder, setWarning, keyboardType = "default" }) => {
+interface PrevDataType {
+    name: string;
+    address: string;
+    phoneNum: string;
+    image: string;
+}
+
+export const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, value, setValue, placeholder, setWarning, keyboardType = "default" }) => {
     return (
         <StyledView className={`overflow-x-hidden mt-2 ${isEdit ? "flex-row items-center justify-between mr-[6px]" : "flex-1"}`}>
             <StyledText className="pl-1 font-bold mb-[6px] mr-3 text-gray-700" style={{ fontSize: 18 }}>
@@ -74,6 +79,7 @@ const index = () => {
     const [warning, setWarning] = useState("");
     const [showLoading, setShowLoading] = useState(false);
     const [flag, setFlag] = useState(false);
+    const [prevdata, setPrevdata] = useState<PrevDataType>({ name: '', address: '', phoneNum: '', image: '' });
 
     useEffect(() => {
         const getProfile = async () => {
@@ -109,7 +115,7 @@ const index = () => {
             }
         };
 
-        // getProfile();
+        getProfile();
     }, []);
 
     const handleUpdate = async () => {
@@ -117,6 +123,7 @@ const index = () => {
             setWarning("Username cannot be empty");
             return;
         }
+        setWarning('')
 
         const formData = new FormData();
         formData.append("id", id);
@@ -152,6 +159,7 @@ const index = () => {
     }
 
     const uploadImage = async () => {
+        setWarning('')
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -190,7 +198,15 @@ const index = () => {
                                     {imgStream !== "" && <StyledImage source={{ uri: imgStream }} style={{ width: 146, height: 146, borderRadius: 73 }} />}
                                 </StyledView>
                                 {isEdit &&
-                                    <StyledTouchableOpacity className="absolute top-[2px] right-[2px] border-[0.5px] border-white p-1 rounded-full bg-red-500" onPress={() => setIsEdit(false)}>
+                                    <StyledTouchableOpacity className="absolute top-[2px] right-[2px] border-[0.5px] border-white p-1 rounded-full bg-red-500" onPress={() => {
+                                        setWarning('')
+                                        setIsEdit(false)
+                                        setUsername(prevdata.name);
+                                        setAddress(prevdata.address);
+                                        setPhoneNum(prevdata.phoneNum);
+                                        setImgStream(prevdata.image);
+                                        setFlag(false);
+                                    }}>
                                         <Entypo name="cross" size={24} color="white" />
                                     </StyledTouchableOpacity>
                                 }
@@ -232,6 +248,13 @@ const index = () => {
                     <TouchableOpacity style={{ padding: 6 }} onPress={() => {
                         if (!isEdit) {
                             setIsEdit(true);
+                            const data = {
+                                name: username,
+                                address: address,
+                                phoneNum: phoneNum,
+                                image: imgStream,
+                            }
+                            setPrevdata(data);
                         } else {
                             handleUpdate()
                         }

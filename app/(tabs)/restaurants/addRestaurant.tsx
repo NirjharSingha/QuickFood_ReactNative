@@ -1,11 +1,9 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import { ResComponent } from './[id]/info'
 
 const addRestaurant = () => {
     return (
-        <View>
-            <Text>addRestaurant</Text>
-        </View>
+        <ResComponent id='' />
     )
 }
 
