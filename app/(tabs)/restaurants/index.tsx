@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'expo-router'
 import { usePathname } from 'expo-router'
@@ -17,7 +17,7 @@ import { useCallback } from 'react';
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
-const StyledTouchableOpacity = styled(TouchableOpacity)
+const StyledPressable = styled(Pressable)
 const StyledScrollView = styled(ScrollView)
 
 interface RestaurantCardProps {
@@ -64,7 +64,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
     }, []);
 
     return (
-        <StyledTouchableOpacity
+        <StyledPressable
             className={`w-full max-w-[300px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}
             onPress={handleNavigate}
         >
@@ -90,7 +90,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
                     }
                 </View>
             }
-        </StyledTouchableOpacity >
+        </StyledPressable>
     );
 };
 

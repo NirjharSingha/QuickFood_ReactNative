@@ -293,7 +293,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
     )
 }
 
-const index = () => {
+const info = () => {
     const { id } = useLocalSearchParams() as { id?: string };
 
     useEffect(() => {
@@ -310,4 +310,4 @@ const index = () => {
     );
 }
 
-export default index;
+export default info;
