@@ -18,7 +18,6 @@ export default function Layout() {
     const router = useRouter();
     const { primaryBlue } = Colors.light;
     const [visible, setVisible] = useState(false);
-    const [menuId, setMenuId] = useState(0);
 
     // Custom drawer content component
     const CustomDrawerContent = ({ }: { navigation: any }) => {
@@ -33,7 +32,7 @@ export default function Layout() {
         return (
             <ScrollView style={{ flex: 1, flexDirection: 'column' }}>
                 <StyledView className="bg-white p-4">
-                    <MenuDialog visible={visible} setVisible={setVisible} id={menuId} setId={setMenuId} menu={{ id: 0, name: '', category: '', price: 100, quantity: 10, image: '' }} />
+                    <MenuDialog visible={visible} setVisible={setVisible} menu={{ id: 0, name: '', category: '', price: 0, quantity: 0, image: '' }} />
 
                     <DrawerHeader image={ResIcon} title="Restaurants" text="Manage Your Restaurants" />
 

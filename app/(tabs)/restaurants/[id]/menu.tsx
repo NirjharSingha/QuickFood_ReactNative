@@ -16,7 +16,7 @@ const StyledText = styled(Text)
 const StyledImage = styled(Image)
 const StyledPressable = styled(Pressable)
 
-interface MenuType {
+export interface MenuType {
     id: number;
     name: string;
     image: string;
@@ -108,6 +108,8 @@ const MenuCard: React.FC<MenuCardProps> = ({ menu }) => {
 
 const Menu = () => {
     const [menu, setMenu] = useState<MenuType[]>([]);
+    const [menuToEdit, setMenuToEdit] = useState<MenuType | null>(null);
+    const [showMenuDialog, setShowMenuDialog] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
     const [page, setPage] = useState(0);
