@@ -40,6 +40,11 @@ interface PrevDataType {
     image: string;
 }
 
+interface CustomImagePickerProps {
+    uploadImage: any;
+    imgStream: string;
+}
+
 export const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, value, setValue, placeholder, setWarning, keyboardType = "default" }) => {
     return (
         <StyledView className={`overflow-x-hidden mt-2 ${isEdit ? "flex-row items-center justify-between mr-[6px]" : "flex-1"}`}>
@@ -67,6 +72,25 @@ export const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, val
     )
 }
 
+export const CustomImagePicker: React.FC<CustomImagePickerProps> = ({ uploadImage, imgStream }) => {
+    return (
+        <TouchableOpacity onPress={uploadImage}>
+            <StyledView className="w-full flex-row justify-center items-center mb-1 mt-4">
+                <StyledView
+                    className="max-w-[210px] flex-row cursor-pointer rounded-full border-[1px] border-gray-900 overflow-hidden"
+                >
+                    <StyledText className="w-[46%] py-[2px] h-full bg-slate-600 text-white flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
+                        Choose image
+                    </StyledText>
+                    <StyledText className="w-[54%] py-[2px] h-full text-gray-700 flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
+                        {imgStream === "" ? "No image chosen" : "Image chosen"}
+                    </StyledText>
+                </StyledView>
+            </StyledView>
+        </TouchableOpacity>
+    )
+}
+
 const index = () => {
     const { light } = Colors
     const router = useRouter();
@@ -77,7 +101,7 @@ const index = () => {
     const [address, setAddress] = useState("");
     const [isEdit, setIsEdit] = useState(false)
     const [warning, setWarning] = useState("");
-    const [showLoading, setShowLoading] = useState(false);
+    const [showLoading, setShowLoading] = useState(true);
     const [flag, setFlag] = useState(false);
     const [prevdata, setPrevdata] = useState<PrevDataType>({ name: '', address: '', phoneNum: '', image: '' });
 
@@ -85,7 +109,6 @@ const index = () => {
         const getProfile = async () => {
             try {
                 const token = await AsyncStorage.getItem("token");
-                setShowLoading(true);
                 const response = await axios.get(
                     `${process.env.EXPO_PUBLIC_SERVER_URL}/user/getUser?userId=${token !== null ? jwtDecode(token).sub : ""
                     }`,
@@ -212,20 +235,7 @@ const index = () => {
                                 }
                             </StyledView>
                             {isEdit && (
-                                <TouchableOpacity onPress={uploadImage}>
-                                    <StyledView className="w-full flex-row justify-center items-center mb-1 mt-4">
-                                        <StyledView
-                                            className="max-w-[210px] flex-row cursor-pointer rounded-full border-[1px] border-gray-900 overflow-hidden"
-                                        >
-                                            <StyledText className="w-[46%] py-[2px] h-full bg-slate-600 text-white flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
-                                                Choose image
-                                            </StyledText>
-                                            <StyledText className="w-[54%] py-[2px] h-full text-gray-700 flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
-                                                {imgStream === "" ? "No image chosen" : "Image chosen"}
-                                            </StyledText>
-                                        </StyledView>
-                                    </StyledView>
-                                </TouchableOpacity>
+                                <CustomImagePicker uploadImage={uploadImage} imgStream={imgStream} />
                             )}
                             {isEdit && (
                                 <StyledText className="text-red-600 w-full text-center mt-2" style={{ fontSize: 14 }}>

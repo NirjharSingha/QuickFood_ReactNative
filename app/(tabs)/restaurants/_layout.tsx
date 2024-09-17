@@ -9,6 +9,7 @@ import { CustomDrawer, DrawerHeader } from '@/components/Drawer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import ResIcon from '@/assets/images/resIcon.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MenuDialog from '@/components/MenuDialog';
 
 export default function Layout() {
     const StyledView = styled(View);
@@ -16,6 +17,8 @@ export default function Layout() {
     const pathname = usePathname();
     const router = useRouter();
     const { primaryBlue } = Colors.light;
+    const [visible, setVisible] = useState(false);
+    const [menuId, setMenuId] = useState(0);
 
     // Custom drawer content component
     const CustomDrawerContent = ({ }: { navigation: any }) => {
@@ -30,6 +33,8 @@ export default function Layout() {
         return (
             <ScrollView style={{ flex: 1, flexDirection: 'column' }}>
                 <StyledView className="bg-white p-4">
+                    <MenuDialog visible={visible} setVisible={setVisible} id={menuId} setId={setMenuId} menu={{ id: 0, name: '', category: '', price: 100, quantity: 10, image: '' }} />
+
                     <DrawerHeader image={ResIcon} title="Restaurants" text="Manage Your Restaurants" />
 
                     {(pathname === '/restaurants' || pathname === '/restaurants/addRestaurant') &&
@@ -71,6 +76,13 @@ export default function Layout() {
                                 <StyledView className={`flex-row items-center px-4 py-2 ${pathname.includes("/menu") ? 'bg-blue-100' : ''} rounded-full m-0 mt-3`} style={{ gap: 10 }}>
                                     <MaterialIcons name="list-alt" size={26} color={pathname.includes("/menu") ? primaryBlue : 'gray'} style={{ margin: 0 }} />
                                     <StyledText className='font-bold text-base' style={{ color: pathname.includes("/menu") ? primaryBlue : 'gray', margin: 0 }}>Menu Items</StyledText>
+                                </StyledView>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => setVisible(true)}>
+                                <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/restaurants/addRestaurant" ? 'bg-blue-100' : ''} rounded-full m-0 mt-2`} style={{ gap: 10 }}>
+                                    <Ionicons name="add-circle" size={26} color={pathname === "/restaurants/addRestaurant" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
+                                    <StyledText className='font-bold text-base' style={{ color: pathname === "/restaurants/addRestaurant" ? primaryBlue : 'gray', margin: 0 }}>Add Menu</StyledText>
                                 </StyledView>
                             </TouchableOpacity>
 

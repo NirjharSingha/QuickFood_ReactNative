@@ -17,6 +17,7 @@ import * as ImagePicker from 'expo-image-picker';
 import unauthorized from "@/scripts/unauthorized";
 import { usePathname } from "expo-router";
 import { InputGroup } from "../../account";
+import { CustomImagePicker } from "../../account";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -234,20 +235,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
                                 }
                             </StyledView>
                             {(isEdit || isAddRes) && (
-                                <TouchableOpacity onPress={uploadImage}>
-                                    <StyledView className="w-full flex-row justify-center items-center mb-1 mt-4">
-                                        <StyledView
-                                            className="max-w-[210px] flex-row cursor-pointer rounded-full border-[1px] border-gray-900 overflow-hidden"
-                                        >
-                                            <StyledText className="w-[46%] py-[2px] h-full bg-slate-600 text-white flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
-                                                Choose image
-                                            </StyledText>
-                                            <StyledText className="w-[54%] py-[2px] h-full text-gray-700 flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
-                                                {imgStream === "" ? "No image chosen" : "Image chosen"}
-                                            </StyledText>
-                                        </StyledView>
-                                    </StyledView>
-                                </TouchableOpacity>
+                                <CustomImagePicker imgStream={imgStream} uploadImage={uploadImage} />
                             )}
                             {(isEdit || isAddRes) && (
                                 <StyledText className="text-red-600 w-full text-center mt-2" style={{ fontSize: 14 }}>

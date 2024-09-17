@@ -15,7 +15,6 @@ const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
 const StyledPressable = styled(Pressable)
-const StyledScrollView = styled(ScrollView)
 
 interface MenuType {
     id: number;
