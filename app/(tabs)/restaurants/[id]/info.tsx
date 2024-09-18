@@ -138,7 +138,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
                         type: 'success',
                         text1: 'Restaurant Added',
                         text2: 'Your restaurant has been added successfully.',
-                        visibilityTime: 6000,
+                        visibilityTime: 4000,
                     });
                     router.push('/restaurants');
                 }
@@ -169,7 +169,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
                         type: 'error',
                         text1: 'Session Expired',
                         text2: 'Your current session has expired. Please login again.',
-                        visibilityTime: 6000,
+                        visibilityTime: 4000,
                     });
                     router.push("/auth/login");
                 } else if (status === 409) {

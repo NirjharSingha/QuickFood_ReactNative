@@ -10,13 +10,15 @@ import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { Loading2 } from '@/components/Loading'
+import MenuDialog from '@/components/MenuDialog'
+import { useMenu } from '@/contexts/Menu'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
 const StyledPressable = styled(Pressable)
 
-export interface MenuType {
+interface MenuType {
     id: number;
     name: string;
     image: string;
@@ -27,9 +29,11 @@ export interface MenuType {
 
 interface MenuCardProps {
     menu: MenuType;
+    setShowMenuDialog?: (value: boolean) => void;
+    setMenuToEdit?: (menu: MenuType) => void;
 }
 
-const MenuCard: React.FC<MenuCardProps> = ({ menu }) => {
+const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, setMenuToEdit }) => {
     const router = useRouter();
     const [rating, setRating] = useState('');
     const [flag, setFlag] = useState(false);
@@ -61,11 +65,11 @@ const MenuCard: React.FC<MenuCardProps> = ({ menu }) => {
 
     return (
         <StyledPressable
-            className={`w-full max-w-[300px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}>
+            className={`w-full max-w-[280px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}>
             <StyledImage
                 source={menu.image ? { uri: `data:image/jpeg;base64,${menu.image}` } : require("@/assets/images/Menu.jpg")}
                 alt="logo"
-                className="bg-red-100 w-full h-[180px] rounded-tl-lg rounded-tr-lg border-b-2 border-b-gray-200"
+                className="bg-red-100 w-full h-[170px] rounded-tl-lg rounded-tr-lg border-b-2 border-b-gray-200"
             />
             <StyledText className="font-bold text-gray-700 mt-2 pl-3 pr-3" style={{ fontSize: 18 }}>
                 {menu.name}
@@ -86,7 +90,10 @@ const MenuCard: React.FC<MenuCardProps> = ({ menu }) => {
                 Price : {`${menu.price} Tk`}
             </StyledText>
             <StyledView className='flex-row items-center justify-between p-3 pb-0'>
-                <TouchableOpacity onPress={() => { }}>
+                <TouchableOpacity onPress={() => {
+                    setMenuToEdit && setMenuToEdit(menu);
+                    setShowMenuDialog && setShowMenuDialog(true);
+                }}>
                     <FontAwesome6 name="pen" size={18} color="#2CA4D4" />
                 </TouchableOpacity>
                 {flag === true &&
@@ -107,10 +114,9 @@ const MenuCard: React.FC<MenuCardProps> = ({ menu }) => {
 
 
 const Menu = () => {
-    const [menu, setMenu] = useState<MenuType[]>([]);
-    const [menuToEdit, setMenuToEdit] = useState<MenuType | null>(null);
+    const { menu, setMenu } = useMenu();
+    const [menuToEdit, setMenuToEdit] = useState<MenuType | undefined>(undefined);
     const [showMenuDialog, setShowMenuDialog] = useState(false);
-    const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [prevScrollTop, setPrevScrollTop] = useState(0);
@@ -189,10 +195,11 @@ const Menu = () => {
                     </StyledText>
                 </StyledView>
             )}
+            <MenuDialog visible={showMenuDialog} setVisible={setShowMenuDialog} menu={menuToEdit} />
             <ScrollView style={{ width: '100%', padding: 12 }} showsVerticalScrollIndicator={false} ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={5}>
                 {menu.length !== 0 && menu.map((item, index) => (
                     <View key={index}>
-                        <MenuCard menu={item} />
+                        <MenuCard menu={item} setShowMenuDialog={setShowMenuDialog} setMenuToEdit={setMenuToEdit} />
                         {index === menu.length - 1 && <View className="mb-3" />}
                     </View>
                 ))}

@@ -64,7 +64,7 @@ const Password: React.FC<PasswordProps> = ({ visible, setVisible }) => {
                         type: 'success',
                         text1: 'Password Updated',
                         text2: 'Your password has been updated successfully.',
-                        visibilityTime: 6000,
+                        visibilityTime: 4000,
                     });
                 }
             } catch (error) {

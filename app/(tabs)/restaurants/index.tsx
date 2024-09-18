@@ -65,13 +65,13 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
 
     return (
         <StyledPressable
-            className={`w-full max-w-[300px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}
+            className={`w-full max-w-[270px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}
             onPress={handleNavigate}
         >
             <StyledImage
                 source={restaurant.image ? { uri: `data:image/jpeg;base64,${restaurant.image}` } : require("@/assets/images/Restaurant.jpeg")}
                 alt="logo"
-                className="bg-red-100 w-full h-[190px] rounded-tl-lg rounded-tr-lg border-b-2 border-b-gray-200"
+                className="bg-red-100 w-full h-[170px] rounded-tl-lg rounded-tr-lg border-b-2 border-b-gray-200"
             />
             <StyledText className="font-bold text-gray-700 mt-2 pl-3 pr-3" style={{ fontSize: 18 }}>
                 {restaurant.name}
