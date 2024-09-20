@@ -14,6 +14,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { Colors } from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
 import unauthorized from "@/scripts/unauthorized";
+import { ProfileDataType } from "@/scripts/type";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -31,13 +32,6 @@ interface InputGroupProps {
     placeholder: string;
     setWarning: (value: string) => void;
     keyboardType: KeyboardTypeOptions;
-}
-
-interface PrevDataType {
-    name: string;
-    address: string;
-    phoneNum: string;
-    image: string;
 }
 
 interface CustomImagePickerProps {
@@ -103,7 +97,7 @@ const index = () => {
     const [warning, setWarning] = useState("");
     const [showLoading, setShowLoading] = useState(true);
     const [flag, setFlag] = useState(false);
-    const [prevdata, setPrevdata] = useState<PrevDataType>({ name: '', address: '', phoneNum: '', image: '' });
+    const [prevdata, setPrevdata] = useState<ProfileDataType>({ name: '', address: '', phoneNum: '', image: '' });
 
     useEffect(() => {
         const getProfile = async () => {

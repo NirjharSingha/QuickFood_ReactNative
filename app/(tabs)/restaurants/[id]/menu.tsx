@@ -12,20 +12,12 @@ import { FontAwesome6 } from '@expo/vector-icons'
 import { Loading2 } from '@/components/Loading'
 import MenuDialog from '@/components/MenuDialog'
 import { useMenu } from '@/contexts/Menu'
+import { MenuType } from '@/scripts/type'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
 const StyledPressable = styled(Pressable)
-
-interface MenuType {
-    id: number;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-    category: string;
-}
 
 interface MenuCardProps {
     menu: MenuType;

@@ -1,13 +1,5 @@
 import React, { useState, createContext, useContext } from "react";
-
-type MenuType = {
-    id: number;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-    category: string;
-};
+import { MenuType } from "@/scripts/type";
 
 type MenuContextType = {
     menu: MenuType[];

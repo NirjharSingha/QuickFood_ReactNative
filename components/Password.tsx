@@ -77,7 +77,7 @@ const Password: React.FC<PasswordProps> = ({ visible, setVisible }) => {
 
     return (
         <Portal>
-            <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white' }}>
+            <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white', borderRadius: 12 }}>
                 <StyledView className='flex-row justify-center items-center gap-3 mb-4'>
                     <FontAwesome5 name="lock" size={35} color={light.primaryGray} style={{ textAlign: 'center' }} />
                     <StyledText style={styles.title}>Password</StyledText>

@@ -298,7 +298,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ visible, setVisible, menu }) =>
 
     return (
         <Portal>
-            <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white' }}>
+            <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white', borderRadius: 12, marginHorizontal: 8 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <StyledView className='flex-row justify-center items-center gap-3 mb-4'>
                         <MaterialIcons name="list-alt" size={35} color={light.primaryGray} style={{ textAlign: 'center' }} />

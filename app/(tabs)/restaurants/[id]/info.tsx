@@ -18,6 +18,7 @@ import unauthorized from "@/scripts/unauthorized";
 import { usePathname } from "expo-router";
 import { InputGroup } from "../../account";
 import { CustomImagePicker } from "../../account";
+import { ProfileDataType } from "@/scripts/type";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -27,13 +28,6 @@ const StyledTouchableOpacity = styled(TouchableOpacity)
 
 interface ResComponentProps {
     id: string;
-}
-
-interface PrevDataType {
-    name: string;
-    address: string;
-    phoneNum: string;
-    image: string;
 }
 
 export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
@@ -49,7 +43,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
     const [flag, setFlag] = useState(false);
     const [isAddRes, setIsAddRes] = useState(true);
     const [resId, setResId] = useState(id !== undefined && id !== null ? id : "");
-    const [prevdata, setPrevdata] = useState<PrevDataType>({ name: '', address: '', phoneNum: '', image: '' });
+    const [prevdata, setPrevdata] = useState<ProfileDataType>({ name: '', address: '', phoneNum: '', image: '' });
     const pathname = usePathname()
 
     useEffect(() => {
