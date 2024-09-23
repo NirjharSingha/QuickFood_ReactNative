@@ -24,13 +24,17 @@ export type OrderCardType = {
 }
 
 export type OrderDetailsType = {
-    customerName?: string;
-    riderName?: string;
-    restaurantName?: string;
-    paymentMethod?: string;
-    orderPlaced?: any;
-    deliveryTaken?: string;
-    userNotified?: string;
-    deliveryCompleted?: string;
-    menuItems?: MenuType[];
-};
+    customerName: string;
+    riderName: string;
+    restaurantName: string;
+    paymentMethod: string;
+    orderPlaced: any;
+    deliveryTaken: any;
+    userNotified: any;
+    deliveryCompleted: any;
+    deliveryAddress: string;
+    isPrepared: boolean;
+    price: number;
+    deliveryFee: number;
+    menuItems: MenuType[];
+} | null;

@@ -1,46 +1,34 @@
-import { View, Text, Image, Pressable, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect, useRef } from 'react'
-import { router, useLocalSearchParams, useRouter } from 'expo-router'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { router, useRouter } from 'expo-router'
 import axios, { AxiosError } from 'axios'
 import unauthorized from '@/scripts/unauthorized'
 import Toast from 'react-native-toast-message'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
-import { FontAwesome6 } from '@expo/vector-icons'
-import Loading, { Loading2 } from '@/components/Loading'
-import MenuDialog from '@/components/MenuDialog'
-import { useMenu } from '@/contexts/Menu'
+import Loading from '@/components/Loading'
 import { OrderCardType } from '@/scripts/type'
 import OrderDialog from '@/components/OrderDialog'
-
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
-const StyledPressable = styled(Pressable)
 const StyledScrollView = styled(ScrollView)
 
 interface OrderCardProps {
     order: OrderCardType;
-    setShowDialog: (value: boolean) => void;
-    setSelectedOrder: (value: number) => void;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ order, setSelectedOrder, setShowDialog }) => {
+const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
     const router = useRouter();
+    const [visible, setVisible] = useState(false);
     const handlePress = () => {
-        setSelectedOrder(order.id);
-        setShowDialog(true);
-        console.log('clicked');
-
+        setVisible(true);
     }
 
     return (
-        <StyledPressable
-            className={`w-full max-w-[280px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}
-            onPress={handlePress}>
+        <StyledView className={`w-full max-w-[280px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[6px] mb-3`}>
             <StyledImage
                 source={order.restaurantPic ? { uri: `data:image/jpeg;base64,${order.restaurantPic}` } : require("@/assets/images/Restaurant.jpeg")}
                 alt="logo"
@@ -58,7 +46,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, setSelectedOrder, setShowD
             <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
                 Date : {new Date(order.timestamp).toLocaleString()}
             </StyledText>
-        </StyledPressable>
+            <TouchableOpacity style={{ padding: 3, marginTop: 4, marginHorizontal: 4 }} onPress={handlePress}>
+                <StyledView className='flex-row bg-blue-500 py-[3px] items-center justify-center rounded-md'>
+                    <StyledText className='text-white font-bold text-base' style={{ fontSize: 13 }}>Show Details</StyledText>
+                </StyledView>
+            </TouchableOpacity>
+            {visible && <OrderDialog selectedOrder={order.id} visible={visible} setVisible={setVisible} />}
+        </StyledView>
     );
 };
 
@@ -66,8 +60,6 @@ const pendingOrders = () => {
     const [pendingOrders, setPendingOrders] = useState([]);
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
-    const [selectedOrder, setSelectedOrder] = useState(1);
-    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         const getPendingOrders = async () => {
@@ -110,12 +102,11 @@ const pendingOrders = () => {
                     </StyledText>
                 </StyledView>
             )}
-            <OrderDialog selectedOrder={selectedOrder} visible={visible} setVisible={setVisible} />
             {!showLoading && !showMessage &&
                 <StyledScrollView className="w-screen p-3" showsVerticalScrollIndicator={false}>
                     {pendingOrders.length !== 0 && pendingOrders.map((order, index) => (
                         <View key={index}>
-                            <OrderCard order={order} setShowDialog={setVisible} setSelectedOrder={setSelectedOrder} />
+                            <OrderCard order={order} />
                             {index === pendingOrders.length - 1 && <View className="mb-3" />}
                         </View>
                     ))}
