@@ -124,7 +124,7 @@ const SearchBar = () => {
     }
 
     return (
-        <StyledView className=" bg-[#374151] relative h-[49px] pr-6">
+        <StyledView className=" bg-[#374151] relative h-[49px] pr-6 z-50">
             <StyledView className='absolute top-2 left-3 w-full max-w-[270px] flex-1' ref={containerRef} collapsable={false}>
                 <StyledView className="flex-row w-full">
                     <StyledView className="h-[33px] bg-white border-[1.5px] border-solid border-gray-500 flex justify-center items-center mt-0.5rem rounded-l-full border-r-0 pl-2 pr-1">

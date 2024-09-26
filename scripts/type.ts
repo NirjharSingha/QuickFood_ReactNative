@@ -14,6 +14,13 @@ export type MenuType = {
     category: string;
 }
 
+export type RestaurantCardType = {
+    id: string;
+    name: string;
+    address: string;
+    image: string;
+}
+
 export type OrderCardType = {
     id: number;
     restaurantName: string;
