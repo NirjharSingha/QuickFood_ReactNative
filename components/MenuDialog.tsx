@@ -11,7 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError } from 'axios';
-import { useMenu } from '@/contexts/Menu';
+import { useGlobal } from '@/contexts/Globals';
 import Toast from 'react-native-toast-message';
 
 const StyledView = styled(View);
@@ -155,7 +155,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ visible, setVisible, menu }) =>
     const [flag, setFlag] = useState(false);
     const { light } = Colors;
     const router = useRouter();
-    const { setMenu } = useMenu();
+    const { setMenu } = useGlobal();
 
     useEffect(() => {
         const isAdd = menu?.id === 0;

@@ -4,7 +4,7 @@ import { StatusBar, View, Platform, StyleSheet } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import { PaperProvider } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-import MenuContextProvider from "@/contexts/Menu";
+import GlobalContextProvider from "@/contexts/Globals";
 import { ClickOutsideProvider } from 'react-native-click-outside';
 
 NativeWindStyleSheet.setOutput({
@@ -15,7 +15,7 @@ export default function Layout() {
   return (
     <ClickOutsideProvider>
       <PaperProvider>
-        <MenuContextProvider>
+        <GlobalContextProvider>
           <View style={styles.container}>
             <StatusBar
               barStyle="dark-content"
@@ -30,7 +30,7 @@ export default function Layout() {
             </Stack>
             <Toast />
           </View>
-        </MenuContextProvider>
+        </GlobalContextProvider>
       </PaperProvider>
     </ClickOutsideProvider>
   );

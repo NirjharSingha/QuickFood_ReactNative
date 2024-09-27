@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import SearchBar from '@/components/SearchBar'
 import { Loading2 } from '@/components/Loading'
@@ -11,17 +11,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { MenuType } from '@/scripts/type'
 import unauthorized from '@/scripts/unauthorized'
 import Toast from 'react-native-toast-message'
+import Filters from '@/components/Filters'
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Colors } from '@/constants/Colors'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
+const StyledTouchableOpcity = styled(TouchableOpacity)
 
 const order = () => {
+    const { light } = Colors
     const router = useRouter();
     const [menu, setMenu] = useState<MenuType[]>([]);
     const [nameFilter, setNameFilter] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
     const [priceFilter, setPriceFilter] = useState("");
     const [ratingFilter, setRatingFilter] = useState("")
+    const [visible, setVisible] = useState(false);
     const [page, setPage] = useState(0);
     const [prevScrollTop, setPrevScrollTop] = useState(0);
     const [sendRequest, setSendRequest] = useState(true);
@@ -73,12 +79,7 @@ const order = () => {
         if (sendRequest) {
             getMenu();
         }
-    }, [page, sendRequest]);
-
-    useEffect(() => {
-        setSendRequest(true);
-        setPage(0);
-    }, [nameFilter, categoryFilter, priceFilter, ratingFilter]);
+    }, [page, sendRequest, nameFilter, categoryFilter, priceFilter, ratingFilter]);
 
     const handleScroll = (event: any) => {
         const currentScrollTop = event.nativeEvent.contentOffset.y; // Current scroll position
@@ -99,8 +100,14 @@ const order = () => {
 
     return (
         <View>
+            {visible && <Filters visible={visible} setVisible={setVisible} nameFilter={nameFilter} setNameFilter={setNameFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} priceFilter={priceFilter} setPriceFilter={setPriceFilter} ratingFilter={ratingFilter} setRatingFilter={setRatingFilter} setSendRequest={setSendRequest} setPage={setPage} />}
             <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false} ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={5}>
-                <SearchBar />
+                <StyledView className=" bg-[#374151] h-[49px] flex-row items-center">
+                    <StyledTouchableOpcity onPress={() => setVisible(true)} className='flex-row justify-center items-center ml-auto mr-3 px-[10px] bg-white rounded-full py-[3px]'>
+                        <Ionicons name="filter-sharp" size={20} color={light.primaryGray} />
+                        <StyledText style={{ color: light.primaryGray, fontSize: 14, fontWeight: 'bold' }} className='ml-2 mb-[1px]'>Apply Filters</StyledText>
+                    </StyledTouchableOpcity>
+                </StyledView>
                 {menu.length !== 0 && menu.map((item, index) => (
                     <View key={index} style={{ paddingHorizontal: 12 }}>
                         {index === 0 && <View className="mt-3" />}

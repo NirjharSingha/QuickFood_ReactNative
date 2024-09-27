@@ -9,7 +9,7 @@ import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Loading2 } from '@/components/Loading'
 import MenuDialog from '@/components/MenuDialog'
-import { useMenu } from '@/contexts/Menu'
+import { useGlobal } from '@/contexts/Globals'
 import { MenuType } from '@/scripts/type'
 import { MenuCard } from '@/components/cards/MenuCard'
 
@@ -17,7 +17,7 @@ const StyledView = styled(View)
 const StyledText = styled(Text)
 
 const Menu = () => {
-    const { menu, setMenu } = useMenu();
+    const { menu, setMenu } = useGlobal();
     const [menuToEdit, setMenuToEdit] = useState<MenuType | undefined>(undefined);
     const [showMenuDialog, setShowMenuDialog] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
