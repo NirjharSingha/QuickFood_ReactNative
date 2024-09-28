@@ -115,6 +115,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({ flag, title, value, se
                 <TouchableOpacity className='w-full flex-row items-center justify-between px-[6px] py-[3px] border-[1.5px] border-gray-300 bg-white rounded-md' onPress={() => {
                     setVisible((prev) => !prev)
                     setWarning('')
+                    setValue('')
                 }}>
                     <StyledText className="text-gray-500 mb-[1.5px]" style={{ fontSize: 14 }}>
                         {value === "" ? placeholder : textValue}

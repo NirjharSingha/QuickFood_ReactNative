@@ -10,6 +10,7 @@ import MenuDialog from '@/components/MenuDialog';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useGlobal } from '@/contexts/Globals';
 
 export default function Layout() {
     const StyledView = styled(View);
@@ -18,6 +19,7 @@ export default function Layout() {
     const router = useRouter();
     const { primaryBlue } = Colors.light;
     const [visible, setVisible] = useState(false);
+    const { cartCount } = useGlobal();
 
     // Custom drawer content component
     const CustomDrawerContent = ({ }: { navigation: any }) => {
@@ -51,7 +53,7 @@ export default function Layout() {
                     <TouchableOpacity onPress={() => router.push("/order/cart")}>
                         <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/order/cart" ? 'bg-blue-100' : ''} rounded-full m-0 mt-2`} style={{ gap: 10 }}>
                             <FontAwesome5 name="shopping-cart" size={24} color={pathname === "/order/cart" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
-                            <StyledText className='font-bold text-base' style={{ color: pathname === "/order/cart" ? primaryBlue : 'gray', margin: 0 }}>Cart</StyledText>
+                            <StyledText className='font-bold text-base' style={{ color: pathname === "/order/cart" ? primaryBlue : 'gray', margin: 0 }}>Cart {`(${cartCount})`}</StyledText>
                         </StyledView>
                     </TouchableOpacity>
 

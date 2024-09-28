@@ -54,7 +54,7 @@ const Password: React.FC<PasswordProps> = ({ visible, setVisible }) => {
                     data,
                     {
                         headers: {
-                            Authorization: `Bearer ${token + "abcd"}`,
+                            Authorization: `Bearer ${token}`,
                         },
                     }
                 );

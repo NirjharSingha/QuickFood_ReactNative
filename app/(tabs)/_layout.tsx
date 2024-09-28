@@ -1,13 +1,32 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Tabs } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { usePathname } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useGlobal } from '@/contexts/Globals';
 
 export default function TabLayout() {
     const [role, setRole] = useState('user');
     const pathname = usePathname();
+    const { setCartCount } = useGlobal();
+
+    useEffect(() => {
+        const handleCartCount = async () => {
+            let temp = await AsyncStorage.getItem('cart');
+            if (!temp) return
+
+            let cart = JSON.parse(temp);
+
+            if (cart) {
+                if (cart.selectedMenu) {
+                    setCartCount(cart.selectedMenu.length);
+                }
+            }
+        }
+        handleCartCount();
+    }, []);
 
     return (
         <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: 'blue', tabBarLabelStyle: { fontWeight: 'bold' } }}>

@@ -7,6 +7,7 @@ export type ProfileDataType = {
 
 export type MenuType = {
     id: number;
+    restaurantId: string;
     name: string;
     image: string;
     price: number;
