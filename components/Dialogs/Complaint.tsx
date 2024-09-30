@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from 'react-native'
+import { Text, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import { styled } from 'nativewind';
 import { Button, Dialog, Portal } from 'react-native-paper';
@@ -10,7 +10,6 @@ import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import { OrderCardType } from '@/scripts/type';
 
-const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledInput = styled(TextInput);
 

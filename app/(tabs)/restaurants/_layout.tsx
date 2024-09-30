@@ -9,7 +9,7 @@ import { CustomDrawer, DrawerHeader } from '@/components/Drawer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import ResIcon from '@/assets/images/resIcon.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MenuDialog from '@/components/MenuDialog';
+import MenuDialog from '@/components/Dialogs/MenuDialog';
 
 export default function Layout() {
     const StyledView = styled(View);

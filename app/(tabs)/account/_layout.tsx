@@ -5,7 +5,7 @@ import { Colors } from '@/constants/Colors';
 import { usePathname, useRouter } from 'expo-router';
 import UserImage from '@/assets/images/user.png';
 import React, { useState } from 'react';
-import Password from '@/components/Password';
+import Password from '@/components/Dialogs/Password';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CustomDrawer, DrawerHeader } from '@/components/Drawer';
 

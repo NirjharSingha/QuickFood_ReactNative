@@ -15,6 +15,8 @@ import { Colors } from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
 import unauthorized from "@/scripts/unauthorized";
 import { ProfileDataType } from "@/scripts/type";
+import { InputGroup_1 as InputGroup } from "@/components/input/TextInput";
+import { CustomImagePicker } from "@/components/input/ImagePicker";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -22,68 +24,6 @@ const StyledImage = styled(Image)
 const StyledScrollView = styled(ScrollView)
 const StyledInput = styled(TextInput)
 const StyledTouchableOpacity = styled(TouchableOpacity)
-
-interface InputGroupProps {
-    isEdit: boolean;
-    flag: boolean;
-    title: string;
-    value: string;
-    setValue: (value: string) => void;
-    placeholder: string;
-    setWarning: (value: string) => void;
-    keyboardType: KeyboardTypeOptions;
-}
-
-interface CustomImagePickerProps {
-    uploadImage: any;
-    imgStream: string;
-}
-
-export const InputGroup: React.FC<InputGroupProps> = ({ isEdit, flag, title, value, setValue, placeholder, setWarning, keyboardType = "default" }) => {
-    return (
-        <StyledView className={`overflow-x-hidden mt-2 ${isEdit ? "flex-row items-center justify-between mr-[6px]" : "flex-1"}`}>
-            <StyledText className="pl-1 font-bold mb-[6px] mr-3 text-gray-700" style={{ fontSize: 18 }}>
-                {title}:{isEdit && flag && <StyledText className="text-red-500">*</StyledText>}
-            </StyledText>
-            {isEdit ? (
-                <StyledInput
-                    className="border-b-[1px] border-gray-400 mb-4 w-[65%] pl-1 outline-none cursor-pointer bg-slate-100"
-                    placeholder={placeholder}
-                    keyboardType={keyboardType}
-                    value={value}
-                    style={{ fontSize: 16 }}
-                    onChangeText={(text) => {
-                        setValue(text);
-                        setWarning("");
-                    }}
-                />
-            ) : (
-                <StyledText className={`mb-2 border-2 border-gray-200 pl-2 pt-[3px] pb-[2px] rounded-md ${value === "" ? "text-gray-500" : ""}`} style={{ fontSize: 16 }}>
-                    {value === "" ? "Not filled" : value}
-                </StyledText>
-            )}
-        </StyledView>
-    )
-}
-
-export const CustomImagePicker: React.FC<CustomImagePickerProps> = ({ uploadImage, imgStream }) => {
-    return (
-        <TouchableOpacity onPress={uploadImage}>
-            <StyledView className="w-full flex-row justify-center items-center mb-1 mt-4">
-                <StyledView
-                    className="max-w-[210px] flex-row cursor-pointer rounded-full border-[1px] border-gray-900 overflow-hidden"
-                >
-                    <StyledText className="w-[46%] py-[2px] h-full bg-slate-600 text-white flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
-                        Choose image
-                    </StyledText>
-                    <StyledText className="w-[54%] py-[2px] h-full text-gray-700 flex-row justify-center items-center text-center" style={{ fontSize: 12 }}>
-                        {imgStream === "" ? "No image chosen" : "Image chosen"}
-                    </StyledText>
-                </StyledView>
-            </StyledView>
-        </TouchableOpacity>
-    )
-}
 
 const index = () => {
     const { light } = Colors

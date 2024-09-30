@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
-import { Password as PassInput } from '@/app/auth/signup';
+import { Password as PassInput } from '@/components/input/PasswordInput';
 import { Colors } from '@/constants/Colors';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { View } from 'react-native';

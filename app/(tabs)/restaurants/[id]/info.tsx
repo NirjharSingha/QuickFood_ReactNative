@@ -16,8 +16,8 @@ import { Colors } from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
 import unauthorized from "@/scripts/unauthorized";
 import { usePathname } from "expo-router";
-import { InputGroup } from "../../account";
-import { CustomImagePicker } from "../../account";
+import { InputGroup_1 as InputGroup } from "@/components/input/TextInput";
+import { CustomImagePicker } from "@/components/input/ImagePicker";
 import { ProfileDataType } from "@/scripts/type";
 
 const StyledView = styled(View);

@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { CustomDrawer, DrawerHeader } from '@/components/Drawer';
 import FoodBucket from '@/assets/images/FoodBucket.jpg';
-import MenuDialog from '@/components/MenuDialog';
+import MenuDialog from '@/components/Dialogs/MenuDialog';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -30,9 +30,9 @@ export default function Layout() {
 
                     <DrawerHeader image={FoodBucket} title="Orders" text="Manage your orders" />
                     <TouchableOpacity onPress={() => router.push("/order")}>
-                        <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/order" ? 'bg-blue-100' : ''} rounded-full m-0 mt-3`} style={{ gap: 10 }}>
-                            <FontAwesome6 name="bowl-food" size={24} color={pathname === "/order" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
-                            <StyledText className='font-bold text-base' style={{ color: pathname === "/order" ? primaryBlue : 'gray', margin: 0 }}>Order Food</StyledText>
+                        <StyledView className={`flex-row items-center px-4 py-2 ${pathname.startsWith("/order") && !pathname.includes('/status') && !pathname.includes('/rating') && !pathname.includes('/cart') && !pathname.includes('/chat') ? 'bg-blue-100' : ''} rounded-full m-0 mt-3`} style={{ gap: 10 }}>
+                            <FontAwesome6 name="bowl-food" size={24} color={pathname.startsWith("/order") && !pathname.includes('/status') && !pathname.includes('/rating') && !pathname.includes('/cart') && !pathname.includes('/chat') ? primaryBlue : 'gray'} style={{ margin: 0 }} />
+                            <StyledText className='font-bold text-base' style={{ color: pathname.startsWith("/order") && !pathname.includes('/status') && !pathname.includes('/rating') && !pathname.includes('/cart') && !pathname.includes('/chat') ? primaryBlue : 'gray', margin: 0 }}>Order Food</StyledText>
                         </StyledView>
                     </TouchableOpacity>
 

@@ -6,6 +6,8 @@ import Octicons from '@expo/vector-icons/Octicons';
 import { Colors } from "@/constants/Colors";
 import { usePathname } from "expo-router";
 import { useRouter } from "expo-router";
+import { Input } from "@/components/input/TextInput";
+import { Password } from "@/components/input/PasswordInput";
 
 const StyledView = styled(View)
 const StyledImage = styled(Image)
@@ -13,64 +15,6 @@ const StyledText = styled(Text)
 const StyledInput = styled(TextInput)
 const StyledTouchableOpacity = styled(TouchableOpacity)
 const { light } = Colors
-
-interface PasswordProps {
-    password: string;
-    setPassword: (password: string) => void;
-    showPass: boolean;
-    setShowPass: (showPass: boolean) => void;
-    placeholder: string;
-    setWarning: (text: string) => void;
-}
-
-interface InoutProps {
-    text: string;
-    setText: (text: string) => void;
-    placeholder: string;
-    setWarning: (text: string) => void;
-    keyboardType: "email-address" | "default";
-}
-
-export const Input: React.FC<InoutProps> = ({ text, setText, placeholder, setWarning, keyboardType }) => {
-    return (
-        <StyledInput
-            keyboardType={keyboardType}
-            className={`indent-3 border-b-[1px] border-b-gray-400 w-full mb-4 outline-none p-1  cursor-pointer bg-white`}
-            placeholder={placeholder}
-            value={text}
-            onChangeText={(value) => {
-                setText(value)
-                setWarning("")
-            }}
-        />
-    )
-}
-
-export const Password: React.FC<PasswordProps> = ({ password, setPassword, showPass, setShowPass, placeholder, setWarning }) => {
-    return (
-        <StyledView className="p-1 flex-row justify-between items-center indent-3 bg-white border-b-[1px] border-b-gray-400 mb-4 min-w-full">
-            <StyledView className="w-[90%]">
-                <StyledInput
-                    keyboardType="default"
-                    className="indent-3 border-none outline-none cursor-pointer bg-white w-full"
-                    placeholder={placeholder}
-                    secureTextEntry={!showPass} // Toggle visibility with a state variable
-                    value={password}
-                    onChangeText={(text) => {
-                        setPassword(text);
-                        setWarning("")
-                    }}
-                />
-            </StyledView>
-            {!showPass && (
-                <Octicons name="eye" size={22} color={light.primaryGray} style={{ cursor: "pointer" }} onPress={() => setShowPass(true)} />
-            )}
-            {showPass && (
-                <Octicons name="eye-closed" size={22} color={light.primaryGray} style={{ cursor: "pointer" }} onPress={() => setShowPass(false)} />
-            )}
-        </StyledView>
-    )
-}
 
 const Signup = () => {
     const [warning, setWarning] = useState("Invalid username or password");

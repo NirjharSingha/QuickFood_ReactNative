@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { MenuType } from '@/scripts/type'
 import unauthorized from '@/scripts/unauthorized'
 import Toast from 'react-native-toast-message'
-import Filters from '@/components/Filters'
+import Filters from '@/components/Dialogs/Filters'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors'
 
@@ -19,7 +19,7 @@ const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledTouchableOpcity = styled(TouchableOpacity)
 
-const order = () => {
+const index = () => {
     const { light } = Colors
     const router = useRouter();
     const [menu, setMenu] = useState<MenuType[]>([]);
@@ -127,4 +127,4 @@ const order = () => {
     )
 }
 
-export default order
+export default index

@@ -3,8 +3,9 @@ import { Button, Dialog, Portal, Text } from 'react-native-paper';
 import React, { useState } from 'react'
 import { Colors } from '@/constants/Colors';
 import { styled } from 'nativewind';
-import { InputGroup, SelectInput } from './MenuDialog';
+import { InputGroup_2 as InputGroup } from '../input/TextInput';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { SelectInput } from '../input/SelectInput';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);

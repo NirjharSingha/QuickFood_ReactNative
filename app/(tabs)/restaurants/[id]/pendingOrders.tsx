@@ -11,7 +11,7 @@ import Loading from '@/components/Loading'
 import { OrderCard } from '@/components/cards/OrderCard'
 import { OrderCardType } from '@/scripts/type'
 import { useGlobal } from '@/contexts/Globals'
-import OrderDialog from '@/components/OrderDialog'
+import OrderDialog from '@/components/Dialogs/OrderDialog'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)

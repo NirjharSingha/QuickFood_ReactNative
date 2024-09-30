@@ -15,7 +15,7 @@ import Toast from 'react-native-toast-message'
 const StyledView = styled(View)
 const StyledText = styled(Text)
 
-const order = () => {
+const index = () => {
     const router = useRouter();
     const [restaurants, setRestaurants] = useState<RestaurantCardType[]>([]);
     const [page, setPage] = useState(0);
@@ -96,4 +96,4 @@ const order = () => {
     )
 }
 
-export default order
+export default index
