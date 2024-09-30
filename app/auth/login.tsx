@@ -3,11 +3,8 @@ import { Password, Input } from "./signup";
 import { styled } from "nativewind";
 import { Colors } from "@/constants/Colors";
 import { usePathname } from "expo-router";
-import { View, Text, ScrollView, TouchableOpacity, Animated } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Image } from "react-native";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -137,24 +134,7 @@ const Login = () => {
                         </StyledText>
                     </StyledView>
                 }
-                {checked === "first" &&
-                    <StyledView className="">
-                        {/* <GoogleOAuthProvider clientId={process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID as string}>
-                            <GoogleLogin
-                                onSuccess={(credentialResponse) => {
-                                    const details = jwtDecode(credentialResponse.credential as string);
-                                    console.log(details);
-                                    // handleGoogleAuth(details);
-                                }}
-                                onError={() => {
-                                    console.log("Failed");
-                                }}
-                            />
-                        </GoogleOAuthProvider> */}
-                    </StyledView>
-                }
             </StyledView>
-            {/* </Animated.View> */}
         </ScrollView>
     );
 }

@@ -1,6 +1,6 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { router, useRouter } from 'expo-router'
+import { router } from 'expo-router'
 import axios, { AxiosError } from 'axios'
 import unauthorized from '@/scripts/unauthorized'
 import Toast from 'react-native-toast-message'
@@ -8,58 +8,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
 import Loading from '@/components/Loading'
+import { OrderCard } from '@/components/cards/OrderCard'
 import { OrderCardType } from '@/scripts/type'
+import { useGlobal } from '@/contexts/Globals'
 import OrderDialog from '@/components/OrderDialog'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
-const StyledImage = styled(Image)
 const StyledScrollView = styled(ScrollView)
 
-interface OrderCardProps {
-    order: OrderCardType;
-}
-
-const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
-    const router = useRouter();
-    const [visible, setVisible] = useState(false);
-    const handlePress = () => {
-        setVisible(true);
-    }
-
-    return (
-        <StyledView className={`w-full max-w-[280px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[6px] mb-3`}>
-            <StyledImage
-                source={order.restaurantPic ? { uri: `data:image/jpeg;base64,${order.restaurantPic}` } : require("@/assets/images/Restaurant.jpeg")}
-                alt="logo"
-                className="bg-red-100 w-full h-[170px] rounded-tl-lg rounded-tr-lg border-b-2 border-b-gray-200"
-            />
-            <StyledText className="font-bold text-gray-700 mt-2 pl-3 pr-3" style={{ fontSize: 18 }}>
-                {order.restaurantName}
-            </StyledText>
-            <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
-                Total : {order.price} Tk
-            </StyledText>
-            <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
-                Payment : {order.paymentMethod === "COD" ? "COD" : "Done"}
-            </StyledText>
-            <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
-                Date : {new Date(order.timestamp).toLocaleString()}
-            </StyledText>
-            <TouchableOpacity style={{ padding: 3, marginTop: 4, marginHorizontal: 4 }} onPress={handlePress}>
-                <StyledView className='flex-row bg-blue-500 py-[3px] items-center justify-center rounded-md'>
-                    <StyledText className='text-white font-bold text-base' style={{ fontSize: 13 }}>Show Details</StyledText>
-                </StyledView>
-            </TouchableOpacity>
-            {visible && <OrderDialog selectedOrder={order.id} visible={visible} setVisible={setVisible} />}
-        </StyledView>
-    );
-};
-
 const pendingOrders = () => {
-    const [pendingOrders, setPendingOrders] = useState([]);
+    const [pendingOrders, setPendingOrders] = useState<OrderCardType[]>([]);
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
+    const { showOrderDialog, setShowOrderDialog, selectedOrder } = useGlobal()
 
     useEffect(() => {
         const getPendingOrders = async () => {
@@ -94,6 +56,7 @@ const pendingOrders = () => {
 
     return (
         <View>
+            {showOrderDialog && <OrderDialog selectedOrder={selectedOrder} visible={showOrderDialog} setVisible={setShowOrderDialog} setOrders={setPendingOrders} />}
             {showLoading && <Loading />}
             {!showLoading && showMessage && (
                 <StyledView className='flex-row w-full h-full justify-center items-center'>

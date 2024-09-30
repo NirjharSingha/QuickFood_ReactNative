@@ -5,9 +5,6 @@ import { styled } from "nativewind";
 import Octicons from '@expo/vector-icons/Octicons';
 import { Colors } from "@/constants/Colors";
 import { usePathname } from "expo-router";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { useRouter } from "expo-router";
 
 const StyledView = styled(View)
@@ -116,20 +113,6 @@ const Signup = () => {
                             Log in
                         </StyledText>
                     </StyledText>
-                </StyledView>
-                <StyledView className="">
-                    {/* <GoogleOAuthProvider clientId={process.env.EXPO_PUBLIC_OAUTH_CLIENT_ID as string}>
-                        <GoogleLogin
-                            onSuccess={(credentialResponse) => {
-                                const details = jwtDecode(credentialResponse.credential as string);
-                                console.log(details);
-                                // handleGoogleAuth(details);
-                            }}
-                            onError={() => {
-                                console.log("Failed");
-                            }}
-                        />
-                    </GoogleOAuthProvider> */}
                 </StyledView>
             </StyledView>
         </ScrollView>

@@ -6,6 +6,10 @@ type GlobalContextType = {
     setMenu: React.Dispatch<React.SetStateAction<MenuType[]>>;
     cartCount: number;
     setCartCount: React.Dispatch<React.SetStateAction<number>>;
+    selectedOrder: number;
+    setSelectedOrder: React.Dispatch<React.SetStateAction<number>>;
+    showOrderDialog: boolean;
+    setShowOrderDialog: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type GlobalContextProviderProps = {
@@ -27,9 +31,11 @@ export default function MenuContextProvider({
 }: GlobalContextProviderProps) {
     const [menu, setMenu] = useState<MenuType[]>([]);
     const [cartCount, setCartCount] = useState(0);
+    const [selectedOrder, setSelectedOrder] = useState(0);
+    const [showOrderDialog, setShowOrderDialog] = useState(false);
 
     return (
-        <GlobalContext.Provider value={{ menu, setMenu, cartCount, setCartCount }}>
+        <GlobalContext.Provider value={{ menu, setMenu, cartCount, setCartCount, selectedOrder, setSelectedOrder, showOrderDialog, setShowOrderDialog }}>
             {children}
         </GlobalContext.Provider>
     );

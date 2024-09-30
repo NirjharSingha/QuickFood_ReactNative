@@ -36,21 +36,24 @@ interface MenuCardProps {
 interface AlertDialogProps {
     visible: boolean;
     setVisible: (value: boolean) => void;
+    title: string;
     message: string;
     continueHandler: any;
     cancelHandler: any;
+    flag: boolean;
 }
 
-export const AlertDialog: React.FC<AlertDialogProps> = ({ visible, setVisible, message, cancelHandler, continueHandler }) => {
+export const AlertDialog: React.FC<AlertDialogProps> = ({ visible, setVisible, title, message, cancelHandler, continueHandler, flag }) => {
     const hideDialog = () => setVisible(false);
     return (
         <Portal>
             <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white', borderRadius: 12 }}>
                 <Dialog.Content>
+                    <StyledText className='font-bold text-gray-700 mb-2' style={{ fontSize: 18 }}>{title}</StyledText>
                     <StyledText style={{ fontSize: 14, color: Colors.light.primaryGray }}>{message}</StyledText>
                 </Dialog.Content>
-                <Dialog.Actions>
-                    <Button onPress={cancelHandler}>Cancel</Button>
+                <Dialog.Actions style={{ marginTop: -12 }}>
+                    {flag && <Button onPress={cancelHandler}>Go Back</Button>}
                     <Button onPress={continueHandler}>Continue</Button>
                 </Dialog.Actions>
             </Dialog>
@@ -253,7 +256,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
                     </View>
                 }
             </StyledView>
-            <AlertDialog visible={showCartAlert} setVisible={setShowCartAlert} message="You cannot order food from different restaurants at the same time. If you select this food item, the previous items will be removed from the cart. Do you want to continue?" cancelHandler={cancelHandler} continueHandler={continueHandler} />
+            <AlertDialog visible={showCartAlert} setVisible={setShowCartAlert} title='Order Verification' message="You cannot order food from different restaurants at the same time. If you select this food item, the previous items will be removed from the cart. Do you want to continue?" cancelHandler={cancelHandler} continueHandler={continueHandler} flag={true} />
         </StyledView>
     );
 };
