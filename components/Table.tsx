@@ -2,20 +2,13 @@ import { styled } from 'nativewind';
 import * as React from 'react';
 import { Image, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { OrderTableType } from '@/scripts/type';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledImage = styled(Image);
 
-export type DataType = {
-    id: number
-    name: string
-    price: number
-    image: string
-    quantity: number
-}
-
-export const OrderTable = ({ data }: { data: DataType[] }) => {
+export const OrderTable = ({ data }: { data: OrderTableType[] }) => {
     return (
         <StyledView className='mr-[6px] mb-[20px]'>
             <StyledText className="font-bold py-[5px] text-center text-white mb-1 bg-slate-500 rounded-t-lg" style={{ fontSize: 18 }}>

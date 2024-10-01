@@ -14,7 +14,8 @@ import Loading from '../Loading';
 import { useGlobal } from '@/contexts/Globals';
 import { AlertDialog } from '@/components/Dialogs/AlertDialog';
 import Complaint from './Complaint';
-import { OrderTable as Table, DataType } from '../Table';
+import { OrderTable as Table } from '../Table';
+import { OrderTableType } from '@/scripts/type';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -40,7 +41,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
     const [loading, setLoading] = useState(true);
     const [orderDetails, setOrderDetails] = useState<OrderDetailsType>(null);
     const [orderStatus, setOrderStatus] = useState(-1);
-    const [tableData, setTableData] = useState<DataType[]>([]);
+    const [tableData, setTableData] = useState<OrderTableType[]>([]);
     const { selectedOrder, setSelectedOrder } = useGlobal()
     const [showAlert, setShowAlert] = useState(false);
     const [cancelMessage, setCancelMessage] = useState("");
@@ -64,7 +65,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
             );
             if (response.status === 200) {
                 setOrderDetails(response.data);
-                let data: DataType[] = [];
+                let data: OrderTableType[] = [];
                 response.data.menuItems.forEach((item: MenuItemType) => {
                     data.push({
                         id: item.menuId,

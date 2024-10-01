@@ -1,21 +1,10 @@
 import React from "react";
 import { styled } from "nativewind";
-import { Colors } from "@/constants/Colors";
-import { usePathname } from "expo-router";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { Image } from "react-native";
-import { useState } from "react";
-import { useRouter } from "expo-router";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { View, Text } from "react-native";
 import { RadioButton } from 'react-native-paper';
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StyledView = styled(View)
-const StyledImage = styled(Image)
 const StyledText = styled(Text)
-const StyledTouchableOpacity = styled(TouchableOpacity)
-const { light } = Colors
 
 interface RadioProps {
     checked: string;

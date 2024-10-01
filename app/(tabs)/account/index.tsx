@@ -7,7 +7,7 @@ import Loading from "@/components/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import { styled } from "nativewind";
-import { View, Text, Image, ScrollView, ImageBackground, TouchableOpacity, SafeAreaView, TextInput, KeyboardTypeOptions } from "react-native";
+import { View, Text, Image, ScrollView, ImageBackground, TouchableOpacity, SafeAreaView } from "react-native";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -22,7 +22,6 @@ const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledImage = styled(Image)
 const StyledScrollView = styled(ScrollView)
-const StyledInput = styled(TextInput)
 const StyledTouchableOpacity = styled(TouchableOpacity)
 
 const index = () => {

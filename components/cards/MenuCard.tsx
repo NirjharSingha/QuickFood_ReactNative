@@ -12,19 +12,12 @@ import { MenuType } from '@/scripts/type'
 import { usePathname } from 'expo-router'
 import { useGlobal } from '@/contexts/Globals'
 import { AlertDialog } from '../Dialogs/AlertDialog'
+import { CartType } from '@/scripts/type'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
 const StyledTouchableOpacity = styled(TouchableOpacity)
-
-type Cart = {
-    restaurantId: string;
-    selectedMenu: {
-        selectedMenuId: number;
-        selectedMenuQuantity: number;
-    }[]
-}
 
 interface MenuCardProps {
     menu: MenuType;
@@ -107,7 +100,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
         if (!temp) {
             return
         }
-        let cart: Cart = JSON.parse(temp);
+        let cart: CartType = JSON.parse(temp);
 
         cart.selectedMenu.forEach((item) => {
             if (item.selectedMenuId === menu.id) {
@@ -150,7 +143,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
             if (pathname.includes("/order")) {
                 let temp = await AsyncStorage.getItem("cart");
                 if (temp) {
-                    let cart: Cart = JSON.parse(temp);
+                    let cart: CartType = JSON.parse(temp);
                     cart.selectedMenu.forEach((item) => {
                         if (item.selectedMenuId === menu.id) {
                             setQuantity(item.selectedMenuQuantity);
@@ -206,11 +199,11 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
                 }
                 {pathname.includes("/order") && quantity !== 0 &&
                     <StyledView className="flex-row items-center justify-between border-2 border-gray-400 rounded-[4.5px] py-[2px] mb-1">
-                        <TouchableOpacity style={{ paddingLeft: 8, paddingRight: 12 }} onPress={() => updateQuantity(false)} >
+                        <TouchableOpacity style={{ paddingLeft: 8, paddingRight: 16 }} onPress={() => updateQuantity(false)} >
                             <AntDesign name="minuscircle" size={14} color='#374151' />
                         </TouchableOpacity>
                         <StyledText className="text-gray-700" style={{ fontSize: 12 }}>{quantity}</StyledText>
-                        <TouchableOpacity style={{ paddingLeft: 12, paddingRight: 8 }} onPress={() => updateQuantity(true)} >
+                        <TouchableOpacity style={{ paddingLeft: 16, paddingRight: 8 }} onPress={() => updateQuantity(true)} >
                             <AntDesign name="pluscircle" size={14} color='#3B82F6' />
                         </TouchableOpacity>
                     </StyledView>

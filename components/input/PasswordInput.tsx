@@ -1,17 +1,11 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, ScrollView, TouchableOpacity } from "react-native";
-import { Image } from "react-native";
+import React from "react";
+import { View, TextInput } from "react-native";
 import { styled } from "nativewind";
 import Octicons from '@expo/vector-icons/Octicons';
 import { Colors } from "@/constants/Colors";
-import { usePathname } from "expo-router";
-import { useRouter } from "expo-router";
 
 const StyledView = styled(View)
-const StyledImage = styled(Image)
-const StyledText = styled(Text)
 const StyledInput = styled(TextInput)
-const StyledTouchableOpacity = styled(TouchableOpacity)
 const { light } = Colors
 
 interface PasswordProps {

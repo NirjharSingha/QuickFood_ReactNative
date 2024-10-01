@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Image } from "react-native";
 import { styled } from "nativewind";
 import Octicons from '@expo/vector-icons/Octicons';
@@ -8,16 +8,18 @@ import { usePathname } from "expo-router";
 import { useRouter } from "expo-router";
 import { Input } from "@/components/input/TextInput";
 import { Password } from "@/components/input/PasswordInput";
+import axios from "axios";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StyledView = styled(View)
 const StyledImage = styled(Image)
 const StyledText = styled(Text)
-const StyledInput = styled(TextInput)
 const StyledTouchableOpacity = styled(TouchableOpacity)
 const { light } = Colors
 
 const Signup = () => {
-    const [warning, setWarning] = useState("Invalid username or password");
+    const [warning, setWarning] = useState("");
     const [id, setId] = useState("");
     const [username, setUsername] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,6 +28,47 @@ const Signup = () => {
     const [showPass, setShowPass] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
+
+    const handleSignUp = async () => {
+        if (password !== confirmPassword) {
+            setWarning("Passwords do not match");
+            return;
+        }
+
+        const postData = {
+            id: id,
+            name: username,
+            password: password,
+            role: !pathname.includes("/admin/riders") ? "USER" : "RIDER",
+        };
+        try {
+            const response = await axios.post(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/auth/signupReactNative`,
+                postData
+            );
+            if (response.status == 200) {
+                if (pathname.includes("/admin/riders")) {
+                    Toast.show({
+                        type: "success",
+                        text1: "Rider added",
+                        text2: "The rider is added successfully",
+                        visibilityTime: 4000,
+                    });
+
+                    // setRiders((prev) => {
+                    //     return [...prev, { id: id, name: username, image: null }];
+                    // });
+                    return;
+                }
+                await AsyncStorage.setItem("token", response.data.token);
+                await AsyncStorage.setItem("role", response.data.role);
+                router.replace("/home");
+            }
+        } catch (error) {
+            console.log(error);
+            setWarning("Invalid input");
+        }
+    };
 
     return (
         <ScrollView className="min-h-full bg-white" showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center", }}>
@@ -46,7 +89,7 @@ const Signup = () => {
                 <Password password={confirmPassword} setPassword={setConfirmPassword} showPass={showConfirmPassword} setShowPass={setShowConfirmPassword} placeholder="Confirm password" setWarning={setWarning} />
                 <StyledTouchableOpacity
                     className="bg-blue-500 w-full py-[6px] rounded-md mt-2 mb-1"
-                    onPress={() => router.replace("/home")}
+                    onPress={handleSignUp}
                 >
                     <StyledText className="text-white text-lg w-full text-center font-bold">Sign up</StyledText>
                 </StyledTouchableOpacity>

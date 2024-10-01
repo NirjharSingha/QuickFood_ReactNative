@@ -46,3 +46,20 @@ export type OrderDetailsType = {
     deliveryFee: number;
     menuItems: MenuType[];
 } | null;
+
+export type CartType = {
+    restaurantId: string;
+    selectedMenu: {
+        selectedMenuId: number;
+        selectedMenuQuantity: number;
+    }[]
+    total?: number;
+}
+
+export type OrderTableType = {
+    id: number
+    name: string
+    price: number
+    image: string
+    quantity: number
+}
