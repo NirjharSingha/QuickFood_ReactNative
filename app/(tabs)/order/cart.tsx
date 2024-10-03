@@ -23,7 +23,7 @@ const StyledText = styled(Text);
 const StyledImage = styled(Image);
 
 const cart = () => {
-    const [showLoading, setShowLoading] = useState(true);
+    const [showLoading, setShowLoading] = useState(false);
     const router = useRouter();
     const [tableData, setTableData] = useState<OrderTableType[]>([]);
     const [total, setTotal] = useState(0);
@@ -62,9 +62,11 @@ const cart = () => {
                         }
                     );
                     if (response.status === 200) {
+                        setShowLoading(false);
                         if (response.data.length === 0) {
                             setShowMessage(true);
                         } else {
+                            setShowMessage(false);
                             const data: MenuType[] = response.data;
                             let tempTableData: OrderTableType[] = [];
                             let tempTotal = 0;
@@ -81,7 +83,7 @@ const cart = () => {
                             setTotal(tempTotal);
                             setTableData(tempTableData);
                             cart = { ...cart, total: tempTotal };
-                            localStorage.setItem("cart", JSON.stringify(cart));
+                            await AsyncStorage.setItem("cart", JSON.stringify(cart));
                         }
                     }
                 } catch (error) {
@@ -122,6 +124,12 @@ const cart = () => {
             getCart();
         }, [])
     );
+
+    const clearCart = async () => {
+        await AsyncStorage.removeItem("cart");
+        setCartCount(0);
+        setShowMessage(true);
+    }
 
     return (
         <View>
@@ -165,12 +173,17 @@ const cart = () => {
                                     <StyledText className={`text-gray-700 mb-1`}>
                                         Delivery Time : 30 minutes
                                     </StyledText>
+                                    <TouchableOpacity style={{ padding: 6 }} onPress={clearCart}>
+                                        <StyledView className='w-[150px] bg-slate-500 py-[2px] rounded-[3px] my-[2px]' style={{ marginLeft: -4 }}>
+                                            <StyledText className='text-white font-bold text-center' style={{ fontSize: 14 }}>Clear Cart</StyledText>
+                                        </StyledView>
+                                    </TouchableOpacity>
                                 </StyledView>
                             </StyledView>
                             <Table data={tableData} />
                         </ScrollView>
                     </ScrollView>
-                    <TouchableOpacity style={{ padding: 6 }}>
+                    <TouchableOpacity style={{ padding: 6 }} onPress={() => router.push('/order/payment')}>
                         <StyledView className='flex-row bg-blue-500 py-[6px] items-center justify-center rounded-md my-[2px]'>
                             <StyledText className='text-white font-bold ml-2 text-base'>Go for Payment</StyledText>
                         </StyledView>

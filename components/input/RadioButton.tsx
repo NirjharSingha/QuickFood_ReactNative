@@ -9,9 +9,11 @@ const StyledText = styled(Text)
 interface RadioProps {
     checked: string;
     setChecked: (checked: string) => void;
+    text1: string;
+    text2: string;
 }
 
-export const Radio: React.FC<RadioProps> = ({ checked, setChecked }) => {
+export const Radio: React.FC<RadioProps> = ({ checked, setChecked, text1, text2 }) => {
     return (
         <StyledView className="flex-1 items-start">
             <StyledView className="flex-row justify-center items-center">
@@ -22,7 +24,7 @@ export const Radio: React.FC<RadioProps> = ({ checked, setChecked }) => {
                     color="#3B82F6"
                 />
                 <StyledText className=" text-gray-700 font-bold" style={{ fontSize: 15 }}>
-                    Log in as User
+                    {text1}
                 </StyledText>
             </StyledView>
             <StyledView className="flex-row justify-center items-center">
@@ -33,7 +35,7 @@ export const Radio: React.FC<RadioProps> = ({ checked, setChecked }) => {
                     color="#3B82F6"
                 />
                 <StyledText className=" text-gray-700 font-bold" style={{ fontSize: 15 }}>
-                    Log in as Employee
+                    {text2}
                 </StyledText>
             </StyledView>
         </StyledView>

@@ -8,7 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/favicon.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,9 +17,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/favicon.png",
+        "foregroundImage": "./assets/images/androidIcon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.user_ns.QuickFood"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +32,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2bf9f1df-a28e-4ad2-8ca3-1dca7ba95b5b"
+      }
     }
   }
 }

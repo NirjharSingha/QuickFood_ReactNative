@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'expo-router'
 import axios, { AxiosError } from 'axios'
 import unauthorized from '@/scripts/unauthorized'
@@ -13,6 +13,7 @@ import { usePathname } from 'expo-router'
 import { useGlobal } from '@/contexts/Globals'
 import { AlertDialog } from '../Dialogs/AlertDialog'
 import { CartType } from '@/scripts/type'
+import { useFocusEffect } from '@react-navigation/native';
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -138,22 +139,27 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
         setShowCartAlert(false);
     };
 
-    useEffect(() => {
-        const updateQuantity = async () => {
-            if (pathname.includes("/order")) {
-                let temp = await AsyncStorage.getItem("cart");
-                if (temp) {
-                    let cart: CartType = JSON.parse(temp);
-                    cart.selectedMenu.forEach((item) => {
-                        if (item.selectedMenuId === menu.id) {
-                            setQuantity(item.selectedMenuQuantity);
-                        }
-                    });
-                }
+    const menuQuantity = async () => {
+        if (pathname.includes("/order")) {
+            let temp = await AsyncStorage.getItem("cart");
+            if (temp) {
+                let cart: CartType = JSON.parse(temp);
+                cart.selectedMenu.forEach((item) => {
+                    if (item.selectedMenuId === menu.id) {
+                        setQuantity(item.selectedMenuQuantity);
+                    }
+                });
+            } else {
+                setQuantity(0);
             }
         }
-        updateQuantity();
-    }, []);
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            menuQuantity();
+        }, [])
+    );
 
     return (
         <StyledView className={`w-full max-w-[280px] mx-auto rounded-lg shadow-md bg-base-100 border-2 border-gray-200 bg-white pb-[14px] mb-3`}>

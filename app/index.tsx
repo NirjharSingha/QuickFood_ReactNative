@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Image, Text, Animated, TouchableOpacity } from "react-native";
 import LottieView from 'lottie-react-native';
 import { useRouter } from "expo-router";
@@ -34,7 +34,7 @@ const index = () => {
             if (expiryTime === undefined || currentTimeSeconds >= expiryTime) {
                 router.push("/auth/login");
             } else {
-                router.push("/order");
+                router.push("/order/payment");
             }
         }
     }
@@ -61,8 +61,8 @@ const index = () => {
                 }}
             >
                 <StyledView className="flex-row justify-center items-center mt-[-20px]">
-                    <StyledView className="rounded-full mr-3 border-2 border-solid border-gray-400 p-[10px] bg-gray-200">
-                        <StyledImage source={FavIcon} style={{ width: 37, height: 37 }} />
+                    <StyledView className="rounded-full mr-3 p-3 bg-orange-50">
+                        <StyledImage source={FavIcon} style={{ width: 35, height: 35 }} />
                     </StyledView>
                     <StyledText className="text-gray-700 font-bold" style={{ fontSize: 32 }}>
                         QuickFood

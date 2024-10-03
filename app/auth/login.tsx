@@ -9,7 +9,6 @@ import { Image } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { RadioButton } from 'react-native-paper';
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Radio } from "@/components/input/RadioButton";
@@ -79,7 +78,7 @@ const Login = () => {
                     Choose role
                 </StyledText>
                 <StyledView className="min-w-full mr-auto flex-row mt-1">
-                    <Radio checked={checked} setChecked={setChecked} />
+                    <Radio checked={checked} setChecked={setChecked} text1="Log in as User" text2="Log in as Employee" />
                 </StyledView>
                 <StyledText className=" text-red-600 w-full text-center mt-3 mb-2" style={{ fontSize: 13 }}>
                     {warning}
