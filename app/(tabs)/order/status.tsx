@@ -1,7 +1,6 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Loading from '@/components/Loading'
-import restaurants from '../restaurants'
 import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
 import { OrderCard } from '@/components/cards/OrderCard'
@@ -23,7 +22,7 @@ const status = () => {
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
     const [orders, setOrders] = useState<OrderCardType[]>([]);
-    const { showOrderDialog, selectedOrder, setShowOrderDialog } = useGlobal()
+    const { showOrderDialog, selectedOrder, setShowOrderDialog, setCartCount } = useGlobal()
     const router = useRouter();
 
     useEffect(() => {
@@ -52,7 +51,7 @@ const status = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
         getOrderCards();

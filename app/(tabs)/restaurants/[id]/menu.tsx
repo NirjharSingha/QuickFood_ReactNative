@@ -17,7 +17,7 @@ const StyledView = styled(View)
 const StyledText = styled(Text)
 
 const Menu = () => {
-    const { menu, setMenu } = useGlobal();
+    const { menu, setMenu, setCartCount } = useGlobal();
     const [menuToEdit, setMenuToEdit] = useState<MenuType | undefined>(undefined);
     const [showMenuDialog, setShowMenuDialog] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
@@ -79,7 +79,7 @@ const Menu = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     };
 

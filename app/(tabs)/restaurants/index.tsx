@@ -12,6 +12,7 @@ import Loading from '@/components/Loading'
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { RestaurantCard } from '@/components/cards/RestaurantCard'
+import { useGlobal } from '@/contexts/Globals'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -22,6 +23,7 @@ const restaurants = () => {
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
     const router = useRouter();
+    const { setCartCount } = useGlobal()
 
     const getRestaurants = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -49,7 +51,7 @@ const restaurants = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     };
 

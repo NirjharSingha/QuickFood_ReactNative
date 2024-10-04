@@ -19,6 +19,7 @@ import { usePathname } from "expo-router";
 import { InputGroup_1 as InputGroup } from "@/components/input/TextInput";
 import { CustomImagePicker } from "@/components/input/ImagePicker";
 import { ProfileDataType } from "@/scripts/type";
+import { useGlobal } from "@/contexts/Globals";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -45,6 +46,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
     const [resId, setResId] = useState(id !== undefined && id !== null ? id : "");
     const [prevdata, setPrevdata] = useState<ProfileDataType>({ name: '', address: '', phoneNum: '', image: '' });
     const pathname = usePathname()
+    const { setCartCount } = useGlobal()
 
     useEffect(() => {
         const getResInfo = async () => {
@@ -74,7 +76,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
 

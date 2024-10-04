@@ -12,6 +12,7 @@ import axios, { AxiosError } from 'axios';
 import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import unauthorized from '@/scripts/unauthorized';
+import { useGlobal } from '@/contexts/Globals';
 
 interface PasswordProps {
     visible: boolean;
@@ -30,6 +31,7 @@ const Password: React.FC<PasswordProps> = ({ visible, setVisible }) => {
     const [showPass, setShowPass] = useState(false);
     const { light } = Colors;
     const router = useRouter();
+    const { setCartCount } = useGlobal()
 
     const updatePassword = async () => {
         if (password === "" || confirmPassword === "") {
@@ -70,7 +72,7 @@ const Password: React.FC<PasswordProps> = ({ visible, setVisible }) => {
             } catch (error) {
                 hideDialog();
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         }
     }

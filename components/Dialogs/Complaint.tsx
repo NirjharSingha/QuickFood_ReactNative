@@ -9,6 +9,7 @@ import unauthorized from '@/scripts/unauthorized';
 import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import { OrderCardType } from '@/scripts/type';
+import { useGlobal } from '@/contexts/Globals';
 
 const StyledText = styled(Text);
 const StyledInput = styled(TextInput);
@@ -24,6 +25,7 @@ const Complaint: React.FC<ComplaintProps> = ({ visible, setVisible, orderId, set
     const router = useRouter()
     const [warning, setWarning] = useState("");
     const [input, setInput] = useState("");
+    const { setCartCount } = useGlobal()
 
     const handler = async (complaint: string) => {
         try {
@@ -61,7 +63,7 @@ const Complaint: React.FC<ComplaintProps> = ({ visible, setVisible, orderId, set
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     };
 

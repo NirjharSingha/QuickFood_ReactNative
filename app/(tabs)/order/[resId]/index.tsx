@@ -14,6 +14,7 @@ import Toast from 'react-native-toast-message'
 import Filters from '@/components/Dialogs/Filters'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors'
+import { useGlobal } from '@/contexts/Globals'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -35,6 +36,7 @@ const index = () => {
     const scrollViewRef = useRef<ScrollView>(null);
     const { resId } = useLocalSearchParams() as { resId?: string };
     const pageSize = 3;
+    const { setCartCount } = useGlobal();
 
     useEffect(() => {
         const getMenu = async () => {
@@ -72,7 +74,7 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
 

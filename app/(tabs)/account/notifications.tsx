@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError } from 'axios';
 import unauthorized from '@/scripts/unauthorized';
 import Toast from 'react-native-toast-message';
+import { useGlobal } from "@/contexts/Globals";
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -25,6 +26,8 @@ interface NotificationCardProps {
 
 const NotificationCard: React.FC<NotificationCardProps> = ({ notification, setNotifications, setUnreadCount }) => {
     const router = useRouter();
+    const { setCartCount } = useGlobal();
+
     const deleteOne = async () => {
         try {
             const token = await AsyncStorage.getItem("token");
@@ -49,7 +52,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, setNo
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     }
 
@@ -81,6 +84,7 @@ const notifications = () => {
     const router = useRouter();
     const [unreadCount, setUnreadCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
+    const { setCartCount } = useGlobal();
 
     const deleteAll = async () => {
         try {
@@ -104,7 +108,7 @@ const notifications = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     }
 
@@ -138,7 +142,7 @@ const notifications = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
         getNotifications();

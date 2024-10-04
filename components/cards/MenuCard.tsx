@@ -54,7 +54,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
         getRating();

@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { styled } from 'nativewind'
 import { RestaurantCardType } from '@/scripts/type'
+import { useGlobal } from '@/contexts/Globals'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -24,6 +25,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
     const pathname = usePathname();
     const [rating, setRating] = useState('');
     const [flag, setFlag] = useState(false);
+    const { setCartCount } = useGlobal()
 
     const handleNavigate = () => {
         if (pathname.includes("/restaurants")) {
@@ -52,7 +54,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
         getRating();

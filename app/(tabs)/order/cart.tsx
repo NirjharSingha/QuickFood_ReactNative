@@ -88,7 +88,7 @@ const cart = () => {
                     }
                 } catch (error) {
                     const axiosError = error as AxiosError;
-                    unauthorized(axiosError, Toast, AsyncStorage, router);
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
                 }
 
                 const selectedRes = cart.restaurantId;
@@ -107,7 +107,7 @@ const cart = () => {
                     }
                 } catch (error) {
                     const axiosError = error as AxiosError;
-                    unauthorized(axiosError, Toast, AsyncStorage, router);
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
                 }
             } else {
                 setShowMessage(true);

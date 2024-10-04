@@ -17,6 +17,7 @@ import unauthorized from "@/scripts/unauthorized";
 import { ProfileDataType } from "@/scripts/type";
 import { InputGroup_1 as InputGroup } from "@/components/input/TextInput";
 import { CustomImagePicker } from "@/components/input/ImagePicker";
+import { useGlobal } from "@/contexts/Globals";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -37,6 +38,7 @@ const index = () => {
     const [showLoading, setShowLoading] = useState(true);
     const [flag, setFlag] = useState(false);
     const [prevdata, setPrevdata] = useState<ProfileDataType>({ name: '', address: '', phoneNum: '', image: '' });
+    const { setCartCount } = useGlobal();
 
     useEffect(() => {
         const getProfile = async () => {
@@ -67,7 +69,7 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
 
@@ -110,7 +112,7 @@ const index = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         };
     }
 

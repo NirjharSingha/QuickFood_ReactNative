@@ -13,9 +13,9 @@ NativeWindStyleSheet.setOutput({
 
 export default function Layout() {
   return (
-    <ClickOutsideProvider>
-      <PaperProvider>
-        <GlobalContextProvider>
+    <GlobalContextProvider>
+      <ClickOutsideProvider>
+        <PaperProvider>
           <View style={styles.container}>
             <StatusBar
               barStyle="dark-content"
@@ -30,9 +30,9 @@ export default function Layout() {
             </Stack>
             <Toast />
           </View>
-        </GlobalContextProvider>
-      </PaperProvider>
-    </ClickOutsideProvider>
+        </PaperProvider>
+      </ClickOutsideProvider>
+    </GlobalContextProvider>
   );
 }
 

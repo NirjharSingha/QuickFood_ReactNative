@@ -9,6 +9,13 @@ import { TextInput } from "react-native-paper";
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CartType } from "@/scripts/type";
+import { useRouter } from "expo-router";
+import { jwtDecode } from "jwt-decode";
+import axios, { AxiosError } from "axios";
+import unauthorized from "@/scripts/unauthorized";
+import { useGlobal } from "@/contexts/Globals";
+import Toast from "react-native-toast-message";
+import LottieView from "lottie-react-native";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -26,7 +33,7 @@ const DeliveryAddress: React.FC<{ address: string, setAddress: any }> = ({ addre
             activeOutlineColor='gray'
             textColor={Colors.light.primaryGray}
             value={address}
-            onChange={(text) => {
+            onChangeText={(text) => {
                 setAddress(text)
             }}
         />
@@ -53,6 +60,9 @@ const Payment = () => {
     const [tipIndex, setTipIndex] = useState(0);
     const [address, setAddress] = useState('')
     const [foodCost, setFoodCost] = useState(0);
+    const [showAnimation, setShowAnimation] = useState(false);
+    const router = useRouter();
+    const { setCartCount } = useGlobal();
 
     useEffect(() => {
         if (paymentMethod === 'second') {
@@ -65,7 +75,6 @@ const Payment = () => {
         if (!temp) return
 
         const cart: CartType = JSON.parse(temp);
-        console.log(cart);
 
         if (cart && cart.total) {
             setFoodCost(cart.total);
@@ -83,8 +92,120 @@ const Payment = () => {
         return tipAmounts_1[tipIndex]
     }
 
+    const resetValues = async () => {
+        setShowAnimation(false);
+        setAddress('');
+        setPaymentMethod('first');
+        setTipIndex(0);
+        setFoodCost(0);
+        await AsyncStorage.removeItem("cart");
+        setCartCount(0);
+        router.push("/order");
+    }
+
+    const handleConfirmOrder = async () => {
+        if (address === '') {
+            Toast.show({
+                type: 'error',
+                text1: 'Address Required',
+                text2: 'Please fill the delivery address',
+                visibilityTime: 4000,
+            })
+            return
+        }
+        let dataToSend: { id: number, quantity: number }[] = [];
+        let temp = await AsyncStorage.getItem("cart");
+        if (!temp) {
+            router.push("/order");
+            return
+        }
+        let cart = JSON.parse(temp) as CartType;
+        const selectedMenu = cart.selectedMenu;
+
+        selectedMenu.forEach((menu) => {
+            dataToSend.push({
+                id: menu.selectedMenuId,
+                quantity: menu.selectedMenuQuantity,
+            });
+        });
+
+        const token = await AsyncStorage.getItem("token");
+        if (token === null || token === undefined) {
+            router.push("/auth/login");
+            return;
+        }
+        const userId = jwtDecode(token).sub;
+
+        const placeOrderData = {
+            userId: String(userId),
+            restaurantId: String(cart.restaurantId),
+            deliveryAddress: address,
+            latitude: 23.7264519,
+            longitude: 90.3771728,
+            deliveryTime: 30,
+            paymentMethod: paymentMethod === 'first' ? 'ONLINE' : 'COD',
+            price: cart.total,
+            riderTip: getRiderTip(),
+            deliveryFee: cart.total ? cart.total * 0.1 : 0,
+            orderQuantities: dataToSend,
+        };
+
+        try {
+            const response = await axios.post(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/order/placeOrder`,
+                placeOrderData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (response.status === 200) {
+                setShowAnimation(true);
+                setTimeout(async () => {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Order Placed',
+                        text2: 'Your order has been placed successfully',
+                        visibilityTime: 4000,
+                    })
+                    resetValues();
+                }, 3000);
+            }
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response) {
+                const { status, data } = axiosError.response;
+                if (status === 401) {
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                }
+                if (status === 400) {
+                    Toast.show({
+                        type: 'error',
+                        text1: data as string,
+                        text2: `Sorry, your order is not placed because of ${(data as string).toLowerCase()}.`,
+                        visibilityTime: 4000,
+                    })
+                    resetValues()
+                }
+            }
+        }
+    };
+
     return (
         <SafeAreaView style={{ height: '100%' }}>
+            {showAnimation && (
+                <View style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <LottieView
+                        autoPlay
+                        style={{
+                            width: 90,
+                            height: 90
+                        }}
+                        source={require('@/assets/animations/tick.json')}
+                    />
+                </View>
+            )}
             <StyledScrollView className={`bg-slate-100 w-full p-[6px]`} showsVerticalScrollIndicator={false} style={{ zIndex: 1, height: '100%' }}>
                 <StyledView className="w-full h-full">
                     <StyledView className='flex-row justify-center items-center gap-3 mb-1'>
@@ -170,7 +291,7 @@ const Payment = () => {
                     </StyledView>
                 </StyledView>
             </StyledScrollView>
-            <TouchableOpacity style={{ padding: 6 }}>
+            <TouchableOpacity style={{ padding: 6 }} onPress={handleConfirmOrder}>
                 <StyledView className='flex-row bg-blue-500 py-[6px] items-center justify-center rounded-md my-[2px]'>
                     <StyledText className='text-white font-bold ml-2 text-base'>Confirm order</StyledText>
                 </StyledView>

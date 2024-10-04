@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 import { styled } from 'nativewind';
 import { useClickOutside } from 'react-native-click-outside';
 import { ScrollView } from 'react-native-gesture-handler'
+import { useGlobal } from '@/contexts/Globals';
 
 interface SearchResultProps {
     filteredData: Array<{ id: string; name: string; image: string }>;
@@ -67,6 +68,7 @@ const SearchBar = () => {
     const [inputValue, setInputValue] = useState("");
     const [showResult, setShowResult] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
+    const { setCartCount } = useGlobal()
     const containerRef = useClickOutside<View>(() => {
         setShowResult(false)
         setShowMessage(false)
@@ -104,7 +106,7 @@ const SearchBar = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         } else if (value.length === 0) {
             setFilteredData([]);

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "QuickFood_ReactNative",
-    "slug": "QuickFood_ReactNative",
+    "name": "QuickFood",
+    "slug": "QuickFood",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/favicon.png",
@@ -35,7 +35,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2bf9f1df-a28e-4ad2-8ca3-1dca7ba95b5b"
+        "projectId": "95f1bf06-33a9-457c-88ca-4a03d05c22cf"
       }
     }
   }

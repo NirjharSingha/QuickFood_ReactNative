@@ -21,7 +21,7 @@ const pendingOrders = () => {
     const [pendingOrders, setPendingOrders] = useState<OrderCardType[]>([]);
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
-    const { showOrderDialog, setShowOrderDialog, selectedOrder } = useGlobal()
+    const { showOrderDialog, setShowOrderDialog, selectedOrder, setCartCount } = useGlobal()
 
     useEffect(() => {
         const getPendingOrders = async () => {
@@ -48,7 +48,7 @@ const pendingOrders = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
         getPendingOrders();

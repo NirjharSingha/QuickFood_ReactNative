@@ -42,7 +42,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
     const [orderDetails, setOrderDetails] = useState<OrderDetailsType>(null);
     const [orderStatus, setOrderStatus] = useState(-1);
     const [tableData, setTableData] = useState<OrderTableType[]>([]);
-    const { selectedOrder, setSelectedOrder } = useGlobal()
+    const { selectedOrder, setSelectedOrder, setCartCount } = useGlobal()
     const [showAlert, setShowAlert] = useState(false);
     const [cancelMessage, setCancelMessage] = useState("");
     const [showComplaint, setShowComplaint] = useState(false);
@@ -97,7 +97,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
         } catch (error) {
             setVisible(false)
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     };
 
@@ -140,7 +140,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     };
 
@@ -179,7 +179,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     }
 
@@ -216,7 +216,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
         }
     };
 
@@ -232,7 +232,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
     return (
         <Portal>
             <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white', borderRadius: 8, marginHorizontal: 4, marginVertical: 80, paddingLeft: 6, paddingBottom: 8 }}>
-                <AlertDialog visible={showAlert} setVisible={setShowAlert} title='Cancel Order' message={cancelMessage} cancelHandler={() => setShowAlert(false)} continueHandler={continueHandler} flag={cancelMessage.includes("cannot cancel")} />
+                <AlertDialog visible={showAlert} setVisible={setShowAlert} title='Cancel Order' message={cancelMessage} cancelHandler={() => setShowAlert(false)} continueHandler={continueHandler} flag={!cancelMessage.includes("cannot cancel")} />
                 <Complaint visible={showComplaint} setVisible={setShowComplaint} orderId={selectedOrder} setOrders={setOrders} />
                 {loading && <Loading />}
                 {!loading &&
