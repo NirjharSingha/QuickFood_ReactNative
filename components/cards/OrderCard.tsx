@@ -3,6 +3,7 @@ import React from 'react'
 import { styled } from 'nativewind'
 import { OrderCardType } from '@/scripts/type'
 import { useGlobal } from '@/contexts/Globals'
+import { router, usePathname } from 'expo-router'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -14,8 +15,13 @@ interface OrderCardProps {
 
 export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
     const { setSelectedOrder, setShowOrderDialog } = useGlobal()
+    const pathname = usePathname()
 
     const handlePress = () => {
+        if (pathname === "/order/rating") {
+            router.push(`/order/rating/${order.id}`)
+            return;
+        }
         setSelectedOrder(order.id);
         setShowOrderDialog(true);
     }
@@ -33,15 +39,22 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
             <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
                 Total : {order.price} Tk
             </StyledText>
-            <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
-                Payment : {order.paymentMethod === "COD" ? "COD" : "Done"}
-            </StyledText>
+            {pathname !== '/order/rating' &&
+                <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
+                    Payment : {order.paymentMethod === "COD" ? "COD" : "Done"}
+                </StyledText>
+            }
+            {pathname === '/order/rating' &&
+                <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
+                    Payment Method : {order.paymentMethod === "COD" ? "COD" : "Online"}
+                </StyledText>
+            }
             <StyledText className="text-gray-600 mt-[2px] pl-3 pr-3" style={{ fontSize: 14 }}>
                 Date : {new Date(order.timestamp).toLocaleString()}
             </StyledText>
             <TouchableOpacity style={{ padding: 3, marginTop: 4, marginHorizontal: 4 }} onPress={handlePress}>
                 <StyledView className='flex-row bg-blue-500 py-[3px] items-center justify-center rounded-md'>
-                    <StyledText className='text-white font-bold text-base' style={{ fontSize: 13 }}>Show Details</StyledText>
+                    <StyledText className='text-white font-bold text-base' style={{ fontSize: 13 }}>{pathname === '/order/rating' ? 'Give Rating' : 'Show Details'}</StyledText>
                 </StyledView>
             </TouchableOpacity>
         </StyledView>

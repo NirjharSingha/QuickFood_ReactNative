@@ -63,3 +63,13 @@ export type OrderTableType = {
     image: string
     quantity: number
 }
+
+export type RatingPageType = {
+    restaurantName: string;
+    restaurantPic: string;
+    menuItems: {
+        id: number;
+        name: string;
+        image: string;
+    }[];
+} | null;
