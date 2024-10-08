@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { RestaurantCardType } from '@/scripts/type'
 import unauthorized from '@/scripts/unauthorized'
 import Toast from 'react-native-toast-message'
+import { useGlobal } from '@/contexts/Globals'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -23,6 +24,7 @@ const index = () => {
     const [sendRequest, setSendRequest] = useState(true);
     const [showLoading, setShowLoading] = useState(true);
     const scrollViewRef = useRef<ScrollView>(null);
+    const { setCartCount } = useGlobal();
     const pageSize = 3;
 
     useEffect(() => {
@@ -48,7 +50,7 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
             }
         };
         if (sendRequest) {
