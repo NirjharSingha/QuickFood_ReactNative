@@ -73,3 +73,21 @@ export type RatingPageType = {
         image: string;
     }[];
 } | null;
+
+export type ChatCardType = {
+    id: number;
+    roomId: number;
+    message: string;
+    senderId: string;
+    receiverId: string;
+    timestamp: any;
+    isEdited: boolean;
+    isSeen: boolean;
+    reaction: string;
+    files: {
+        id: number;
+        data: string;
+        fileType: string;
+    }[];
+    prevFiles: number[];
+}

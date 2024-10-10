@@ -208,51 +208,63 @@ const analytics = () => {
                         </StyledText>
                     </StyledView>
                     <LineChart data={monthlySales} areaChart noOfSections={6} height={240} />
-                    <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mt-5 mb-5'>
-                        <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
-                            <MaterialCommunityIcons name='brightness-percent' size={18} color={Colors.light.primaryGray} />
-                        </StyledView>
-                        <StyledText className='text-gray-700 font-bold ml-2' style={{ fontSize: 16 }}>
-                            Top Sold Items
-                        </StyledText>
-                    </StyledView>
-                    <StyledView className='flex-1 justify-center items-center mb-5'>
-                        <PieChart data={topSoldItems} showText={true} donut radius={135} innerRadius={50} fontWeight='bold' textSize={12} />
-                        <StyledView className="flex-row justify-center items-center mt-2 w-full flex-wrap">
-                            {topSoldItems.map((item, index) => (
-                                <StyledText key={index} className="text-gray-700 font-bold mx-2" style={{ fontSize: 12 }}>
-                                    {topSoldLabels[index] + '-' + item.value.toFixed(1) + '%'}
+                    {topSoldItems.length > 0 &&
+                        <View>
+                            <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mt-5 mb-5'>
+                                <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
+                                    <MaterialCommunityIcons name='brightness-percent' size={18} color={Colors.light.primaryGray} />
+                                </StyledView>
+                                <StyledText className='text-gray-700 font-bold ml-2' style={{ fontSize: 16 }}>
+                                    Top Sold Items
                                 </StyledText>
-                            ))}
-                        </StyledView>
-                    </StyledView>
-                    <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mb-5'>
-                        <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
-                            <AntDesign name="star" size={18} color={Colors.light.primaryGray} />
-                        </StyledView>
-                        <StyledText className='text-gray-700 font-bold ml-2' style={{ fontSize: 16 }}>
-                            Top Rated Items
-                        </StyledText>
-                        <StyledView className='ml-auto flex-row justify-center items-center'>
-                            <StyledText className={`${!isSwitchOn ? "text-gray-700" : "text-gray-400"}`} style={{ fontSize: 11 }}>
-                                Worst
-                            </StyledText>
-                            <SwitchInput isSwitchOn={isSwitchOn} setIsSwitchOn={setIsSwitchOn} />
-                            <StyledText className={`${isSwitchOn ? "text-gray-700" : "text-gray-400"}`} style={{ fontSize: 11 }}>
-                                Best
-                            </StyledText>
-                        </StyledView>
-                    </StyledView>
-                    <BarChart noOfSections={6} data={topReviewedItems} height={240} maxValue={5} spacing={40} />
-                    <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mt-5 mb-5'>
-                        <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
-                            <MaterialIcons name='pending' size={18} color={Colors.light.primaryGray} />
-                        </StyledView>
-                        <StyledText className='text-gray-700 font-bold ml-2' style={{ fontSize: 16 }}>
-                            Pending Order Status
-                        </StyledText>
-                    </StyledView>
-                    <BarChart noOfSections={6} data={pendingOrders} height={240} spacing={100} />
+                            </StyledView>
+                            <StyledView className='flex-1 justify-center items-center mb-5'>
+                                <PieChart data={topSoldItems} showText={true} donut radius={135} innerRadius={50} fontWeight='bold' textSize={12} />
+                                <StyledView className="flex-row justify-center items-center mt-2 w-full flex-wrap">
+                                    {topSoldItems.map((item, index) => (
+                                        <StyledText key={index} className="text-gray-700 font-bold mx-2" style={{ fontSize: 12 }}>
+                                            {topSoldLabels[index] + '-' + item.value.toFixed(1) + '%'}
+                                        </StyledText>
+                                    ))}
+                                </StyledView>
+                            </StyledView>
+                        </View>
+                    }
+                    {topReviewedItems.length > 0 &&
+                        <View>
+                            <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mb-5'>
+                                <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
+                                    <AntDesign name="star" size={18} color={Colors.light.primaryGray} />
+                                </StyledView>
+                                <StyledText className='text-gray-700 font-bold ml-2' style={{ fontSize: 16 }}>
+                                    Top Rated Items
+                                </StyledText>
+                                <StyledView className='ml-auto flex-row justify-center items-center'>
+                                    <StyledText className={`${!isSwitchOn ? "text-gray-700" : "text-gray-400"}`} style={{ fontSize: 11 }}>
+                                        Worst
+                                    </StyledText>
+                                    <SwitchInput isSwitchOn={isSwitchOn} setIsSwitchOn={setIsSwitchOn} />
+                                    <StyledText className={`${isSwitchOn ? "text-gray-700" : "text-gray-400"}`} style={{ fontSize: 11 }}>
+                                        Best
+                                    </StyledText>
+                                </StyledView>
+                            </StyledView>
+                            <BarChart noOfSections={6} data={topReviewedItems} height={240} maxValue={5} spacing={40} />
+                        </View>
+                    }
+                    {pendingOrders.length > 0 &&
+                        <View>
+                            <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mt-5 mb-5'>
+                                <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
+                                    <MaterialIcons name='pending' size={18} color={Colors.light.primaryGray} />
+                                </StyledView>
+                                <StyledText className='text-gray-700 font-bold ml-2' style={{ fontSize: 16 }}>
+                                    Pending Order Status
+                                </StyledText>
+                            </StyledView>
+                            <BarChart noOfSections={6} data={pendingOrders} height={240} spacing={100} />
+                        </View>
+                    }
                     <StyledView className='mb-6' />
                 </StyledScrollView>
             }
