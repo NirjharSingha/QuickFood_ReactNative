@@ -83,7 +83,7 @@ export type ChatCardType = {
     timestamp: any;
     isEdited: boolean;
     isSeen: boolean;
-    reaction: string;
+    reaction: string | null;
     files: {
         id: number;
         data: string;
