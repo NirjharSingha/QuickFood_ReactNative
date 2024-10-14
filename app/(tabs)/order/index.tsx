@@ -23,7 +23,6 @@ const index = () => {
     const [prevScrollTop, setPrevScrollTop] = useState(0);
     const [sendRequest, setSendRequest] = useState(true);
     const [showLoading, setShowLoading] = useState(true);
-    const scrollViewRef = useRef<ScrollView>(null);
     const { setCartCount } = useGlobal();
     const pageSize = 3;
 
@@ -77,7 +76,7 @@ const index = () => {
 
     return (
         <View>
-            <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false} ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={5}>
+            <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false} onScroll={handleScroll} scrollEventThrottle={5}>
                 <SearchBar />
                 {restaurants.length !== 0 && restaurants.map((item, index) => (
                     <View key={index} style={{ paddingHorizontal: 12 }}>

@@ -24,7 +24,6 @@ const Menu = () => {
     const [page, setPage] = useState(0);
     const [prevScrollTop, setPrevScrollTop] = useState(0);
     const [sendRequest, setSendRequest] = useState(true);
-    const scrollViewRef = useRef<ScrollView>(null);
     const router = useRouter();
     const pageSize = 3;
     const { id } = useLocalSearchParams()
@@ -99,7 +98,7 @@ const Menu = () => {
                 </StyledView>
             )}
             <MenuDialog visible={showMenuDialog} setVisible={setShowMenuDialog} menu={menuToEdit} />
-            <ScrollView style={{ width: '100%', padding: 12 }} showsVerticalScrollIndicator={false} ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={5}>
+            <ScrollView style={{ width: '100%', padding: 12 }} showsVerticalScrollIndicator={false} onScroll={handleScroll} scrollEventThrottle={5}>
                 {menu.length !== 0 && menu.map((item, index) => (
                     <View key={index}>
                         <MenuCard menu={item} setShowMenuDialog={setShowMenuDialog} setMenuToEdit={setMenuToEdit} />

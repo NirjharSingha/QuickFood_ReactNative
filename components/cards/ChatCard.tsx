@@ -109,12 +109,12 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
                         }
                     </View>
                     {isReceived &&
-                        <TouchableOpacity onPress={() => setChatToReact(chat.id)}>
+                        <TouchableOpacity onPress={() => setChatToReact(chat.id)} style={{ marginBottom: !chat.isEdited ? 12 : 0 }}>
                             <Entypo name="emoji-happy" size={22} color={Colors.light.primaryGray} />
                         </TouchableOpacity>
                     }
                     {!isReceived &&
-                        <TouchableOpacity onPress={() => setSelectedChat(chat.id)}>
+                        <TouchableOpacity onPress={() => setSelectedChat(chat.id)} style={{ marginBottom: !chat.isEdited ? 12 : 0 }}>
                             <Entypo name="dots-three-horizontal" size={22} color={Colors.light.primaryGray} />
                         </TouchableOpacity>
                     }
