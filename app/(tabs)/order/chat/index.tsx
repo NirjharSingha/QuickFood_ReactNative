@@ -52,6 +52,7 @@ const index = () => {
     const [prevScrollHeight, setPrevScrollHeight] = useState(0);
     const roomId = 6
     const size = 7;
+    const inputRef = useRef(null);
     const [isMounted, setIsMounted] = useState(false);
 
     const handleError = async (error: any) => {
@@ -264,7 +265,7 @@ const index = () => {
                 ))}
                 {showLoading && <Loading2 />}
             </ScrollView>
-            <ChatInput />
+            <ChatInput inputValue={inputValue} setInputValue={setInputValue} inputRef={inputRef} />
             <Likes visible={chatToReact !== 0} setChatToReact={setChatToReact} prevReaction={prevReaction} handleReaction={handleReaction} />
             <ChatOptions visible={selectedChat !== 0} setSelectedChat={setSelectedChat} handleDelete={handleDelete} handleEdit={handleEdit} />
         </KeyboardAvoidingView>

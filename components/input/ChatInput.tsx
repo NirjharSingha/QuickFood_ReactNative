@@ -1,30 +1,46 @@
-import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native'
-import React from 'react'
+import { View, TextInput, Pressable, TextInputSelectionChangeEventData, NativeSyntheticEvent } from 'react-native'
+import React, { useState } from 'react'
 import { styled } from 'nativewind';
-import { Entypo } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Emoji from '../Emoji';
 
 const StyledView = styled(View);
-const StyledTouchableOpacity = styled(TouchableOpacity)
 const StyledInput = styled(TextInput)
+const StyledPressable = styled(Pressable)
 
-const ChatInput = () => {
+interface ChatInputProps {
+    inputValue: string;
+    setInputValue: (text: string) => void;
+    inputRef: any;
+}
+
+const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, inputRef }) => {
+    const [cursorPosition, setCursorPosition] = useState(0);
+    const handleSelectionChange = (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+        const { selection } = event.nativeEvent;
+        setCursorPosition(selection.start);
+    };
+
     return (
         <View>
-            <StyledView className="flex-row w-full px-2">
-                <StyledTouchableOpacity className="h-[33px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-l-full border-r-0 pl-2 pr-[6px]">
-                    <Entypo name="emoji-happy" size={20} color={Colors.light.primaryGray} />
-                </StyledTouchableOpacity>
+            <StyledView className="flex-row w-full px-2 items-center">
+                <Emoji inputValue={inputValue} setInputValue={setInputValue} cursorPosition={cursorPosition} setCursorPosition={setCursorPosition} />
                 <StyledInput
-                    className={`flex-1 bg-white h-[33px] border-[1px] border-solid border-gray-500 border-r-0 border-l-0 focus:border-gray-500 focus:outline-none`}
+                    className={`flex-1 bg-white h-[31px] border-[1px] border-solid border-gray-500 border-r-0 border-l-0 focus:border-gray-500 focus:outline-none`}
                     placeholder="Type a message"
-                // value={inputValue}
-                // onChangeText={(text) => handleInputChange(text)}
+                    value={inputValue}
+                    ref={inputRef}
+                    onChangeText={(text) => {
+                        setInputValue(text)
+                        setCursorPosition((prev: number) => prev + 1);
+                    }}
+                    onSelectionChange={handleSelectionChange}
                 />
-                <StyledTouchableOpacity className="h-[33px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-r-full border-l-0 pr-[4] pl-[1px]">
+                <StyledPressable className="h-[31px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-r-full border-l-0 pr-[4] pl-[1px] mr-2">
                     <Ionicons name="attach-sharp" size={22} color={Colors.light.primaryGray} />
-                </StyledTouchableOpacity>
+                </StyledPressable>
+                <Ionicons name="send-sharp" size={24} color={'blue'} />
             </StyledView>
         </View>
     )
