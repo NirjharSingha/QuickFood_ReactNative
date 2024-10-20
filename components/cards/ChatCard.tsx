@@ -5,7 +5,7 @@ import { moderateScale } from 'react-native-size-matters';
 import { styled } from 'nativewind';
 import ImageView from 'react-native-image-viewing';
 import { ChatCardType } from '@/scripts/type';
-import { Video } from 'expo-av';
+import { ResizeMode, Video } from 'expo-av';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Colors } from '@/constants/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,16 +28,30 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
     const [isReceived, setIsReceived] = useState<boolean | undefined>(undefined);
     const [imageIndex, setImageIndex] = useState(-1);
     const [isVisible, setIsVisible] = useState(false);
+    const [shouldPlay, setShouldPlay] = useState<boolean[]>([]);
+    const [isMuted, setIsMuted] = useState<boolean[]>([])
 
     useEffect(() => {
         const setFlag = async () => {
             const token = await AsyncStorage.getItem("token");
             if (token === null || token === undefined) return;
             const userId = jwtDecode(token).sub;
-            setIsReceived(chat.senderId !== userId);
+            setIsReceived(chat.senderId === userId);
         }
         setFlag();
     }, []);
+
+    useEffect(() => {
+        const temp = new Array<boolean>(chat.files.length).fill(true)
+        setShouldPlay(temp)
+        setIsMuted(temp)
+
+        setTimeout(() => {
+            const temp2 = new Array<boolean>(chat.files.length).fill(false)
+            setShouldPlay(temp2)
+            setIsMuted(temp2)
+        }, 1000)
+    }, [chat.files])
 
     return (
         <View>
@@ -63,6 +77,10 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
                                                 style={{ marginVertical: 8, width: 200, height: 150, borderRadius: 6 }}
                                                 source={{ uri: `data:video/mp4;base64,${file.data}` }}
                                                 useNativeControls
+                                                resizeMode={ResizeMode.COVER}
+                                                isLooping
+                                                shouldPlay={shouldPlay[index]}
+                                                isMuted={isMuted[index]}
                                             />
                                         )}
                                     </View>
@@ -114,7 +132,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
                         </TouchableOpacity>
                     }
                     {!isReceived &&
-                        <TouchableOpacity onPress={() => setSelectedChat(chat.id)} style={{ marginBottom: !chat.isEdited ? 12 : 0 }}>
+                        <TouchableOpacity onPress={() => setSelectedChat(chat)} style={{ marginBottom: !chat.isEdited ? 12 : 0 }}>
                             <Entypo name="dots-three-horizontal" size={22} color={Colors.light.primaryGray} />
                         </TouchableOpacity>
                     }

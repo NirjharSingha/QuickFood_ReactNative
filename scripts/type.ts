@@ -74,6 +74,12 @@ export type RatingPageType = {
     }[];
 } | null;
 
+export type ChatFileType = {
+    id?: number;
+    data: string;
+    fileType: string;
+}
+
 export type ChatCardType = {
     id: number;
     roomId: number;

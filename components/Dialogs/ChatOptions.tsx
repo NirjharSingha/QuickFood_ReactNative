@@ -4,6 +4,7 @@ import { styled } from 'nativewind'
 import { Dialog, Portal } from 'react-native-paper'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { ChatCardType } from '@/scripts/type';
 
 const StyledView = styled(View)
 const StyledTouchableOpacity = styled(TouchableOpacity)
@@ -11,12 +12,13 @@ const StyledText = styled(Text)
 
 interface EditOrDeleteProps {
     visible: boolean;
-    setSelectedChat: (value: number) => void;
+    selectedChat: ChatCardType | null;
+    setSelectedChat: any;
     handleEdit: any;
     handleDelete: any;
 }
 
-export const ChatOptions: React.FC<EditOrDeleteProps> = ({ visible, setSelectedChat, handleEdit, handleDelete }) => {
+export const ChatOptions: React.FC<EditOrDeleteProps> = ({ visible, selectedChat, setSelectedChat, handleEdit, handleDelete }) => {
     const hideDialog = () => {
         setSelectedChat(0)
     }
@@ -25,7 +27,7 @@ export const ChatOptions: React.FC<EditOrDeleteProps> = ({ visible, setSelectedC
         <Portal>
             <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white', borderRadius: 12, minWidth: 200, marginHorizontal: 'auto' }}>
                 <Dialog.Content>
-                    <StyledTouchableOpacity className='flex-row items-center bg-slate-200 px-3 py-[6px] mb-3 rounded-md' onPress={handleEdit}>
+                    <StyledTouchableOpacity className='flex-row items-center bg-slate-200 px-3 py-[6px] mb-3 rounded-md' onPress={() => handleEdit(selectedChat)}>
                         <StyledView className='mr-[10px]'>
                             <FontAwesome name="pencil" size={24} color="black" />
                         </StyledView>

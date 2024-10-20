@@ -1,10 +1,10 @@
-import { View, Text, ScrollView, Dimensions, Button, Image, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native'
+import { View, Text, ScrollView, Dimensions, Button, Image, KeyboardAvoidingView, Platform, SafeAreaView, LogBox } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { jwtDecode } from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError } from 'axios';
-import { ChatCardType } from '@/scripts/type';
+import { ChatCardType, ChatFileType } from '@/scripts/type';
 import ChatCard from '@/components/cards/ChatCard';
 import { Likes } from '@/components/Dialogs/LikesDialog';
 import unauthorized from '@/scripts/unauthorized';
@@ -14,6 +14,8 @@ import { ChatOptions } from '@/components/Dialogs/ChatOptions';
 import { styled } from 'nativewind';
 import { Loading2 } from '@/components/Loading';
 import ChatInput from '@/components/input/ChatInput';
+import ChatFiles from '@/components/ChatFiles';
+import * as ImagePicker from 'expo-image-picker';
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -25,11 +27,7 @@ const index = () => {
     const [showLoading, setShowLoading] = useState(true);
     const [sendRequest, setSendRequest] = useState(true);
     const [inputValue, setInputValue] = useState("");
-    const [childInput, setChildInput] = useState("");
-    const [chatAttachments, setChatAttachments] = useState([]);
-    const [previewFiles, setPreviewFiles] = useState([]);
-    const [iAmTyping, setIAmTyping] = useState(false);
-    const [showEmojis, setShowEmojis] = useState(false);
+    const [chatAttachments, setChatAttachments] = useState<ChatFileType[]>([]);
     const [destination, setDestination] = useState("");
     const [myTarget, setMyTarget] = useState<{ id: number, name: string, image: string } | null>(null);
     const [unseenChatCount, setUnseenChatCount] = useState(-1);
@@ -44,15 +42,13 @@ const index = () => {
     const [page, setPage] = useState(0);
     const [chats, setChats] = useState<ChatCardType[]>([]);
     const [chatToReact, setChatToReact] = useState(0);
-    const [chatToEdit, setChatToEdit] = useState(0);
-    const [selectedChat, setSelectedChat] = useState(0);
+    const [chatToEdit, setChatToEdit] = useState<ChatCardType | null>(null);
+    const [selectedChat, setSelectedChat] = useState<ChatCardType | null>(null);
     const { setCartCount } = useGlobal();
     const scrollViewRef = useRef<ScrollView>(null);
     // const { roomId } = useLocalSearchParams() as { roomId?: number };
-    const [prevScrollHeight, setPrevScrollHeight] = useState(0);
     const roomId = 6
     const size = 7;
-    const inputRef = useRef(null);
     const [isMounted, setIsMounted] = useState(false);
 
     const handleError = async (error: any) => {
@@ -195,19 +191,17 @@ const index = () => {
                 }
             );
             if (response.status === 200) {
-                setChats((prevChats) => prevChats.filter((chat) => chat.id !== selectedChat));
-                setSelectedChat(0);
+                setChats((prevChats) => prevChats.filter((chat) => chat.id !== selectedChat?.id));
+                setSelectedChat(null);
             }
         } catch (error) {
             handleError(error)
         }
     };
 
-    const handleEdit = () => {
-        setSelectedChat((chatId) => {
-            setChatToEdit(chatId);
-            return 0
-        })
+    const handleEdit = (chat: ChatCardType) => {
+        setChatToEdit(chat);
+        setSelectedChat(null);
     }
 
     useEffect(() => {
@@ -246,8 +240,26 @@ const index = () => {
         }
     }, [showLoading]);
 
+    const uploadFiles = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            quality: 1,
+            allowsMultipleSelection: true
+        });
+
+        if (!result.canceled) {
+            const selectedFiles = result.assets.map(asset => ({
+                id: -1,
+                data: asset.uri,
+                fileType: asset.type ? asset.type : '',
+            }));
+
+            setChatAttachments((prev) => [...prev, ...selectedFiles]);
+        }
+    };
+
     return (
-        <KeyboardAvoidingView style={{}} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 190 : 130}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 190 : 130}>
             <StyledView className="h-[47px] bg-gray-700 py-[6px] px-3 flex-row items-center w-full">
                 <StyledImage source={myTarget?.image === null ? require('@/assets/images/user.png') : { uri: `data:image/jpeg;base64,${myTarget?.image}` }}
                     alt="logo"
@@ -265,9 +277,10 @@ const index = () => {
                 ))}
                 {showLoading && <Loading2 />}
             </ScrollView>
-            <ChatInput inputValue={inputValue} setInputValue={setInputValue} inputRef={inputRef} />
+            <ChatInput inputValue={inputValue} setInputValue={setInputValue} uploadFiles={uploadFiles} />
             <Likes visible={chatToReact !== 0} setChatToReact={setChatToReact} prevReaction={prevReaction} handleReaction={handleReaction} />
-            <ChatOptions visible={selectedChat !== 0} setSelectedChat={setSelectedChat} handleDelete={handleDelete} handleEdit={handleEdit} />
+            <ChatOptions visible={selectedChat !== null} selectedChat={selectedChat} setSelectedChat={setSelectedChat} handleDelete={handleDelete} handleEdit={handleEdit} />
+            {(chatAttachments.length > 0 || chatToEdit !== null) && <ChatFiles chatAttachments={chatAttachments} setChatAttachments={setChatAttachments} chatToEdit={chatToEdit} setChatToEdit={setChatToEdit} inputValue={inputValue} setInputValue={setInputValue} uploadFiles={uploadFiles} />}
         </KeyboardAvoidingView>
     )
 }

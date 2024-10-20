@@ -69,9 +69,9 @@ const emojis = [
         "\u{1F637}",] // Face with Medical Mask
 ];
 
-const EmojiPicker: React.FC<{ handleEmojiClick: any }> = ({ handleEmojiClick }) => {
+const EmojiPicker: React.FC<{ handleEmojiClick: any, flag: boolean }> = ({ handleEmojiClick, flag }) => {
     return (
-        <StyledScrollView className="absolute bottom-[105%] left-[11px] w-48 h-44 bg-white rounded-md z-10 p-2" showsVerticalScrollIndicator={false}>
+        <StyledScrollView className={`absolute bottom-[105%] ${flag ? 'left-[11px]' : 'right-[-8px]'} w-48 h-44 bg-white rounded-md z-10 p-2`} showsVerticalScrollIndicator={false}>
             {emojis.map((emojiRow, index) => (
                 <View key={index}>
                     <StyledView className="flex-row justify-between">
@@ -93,9 +93,10 @@ interface EmojiProps {
     setInputValue: any;
     cursorPosition: number;
     setCursorPosition: any;
+    flag: boolean;
 }
 
-const Emoji: React.FC<EmojiProps> = ({ inputValue, setInputValue, cursorPosition, setCursorPosition }) => {
+const Emoji: React.FC<EmojiProps> = ({ inputValue, setInputValue, cursorPosition, setCursorPosition, flag }) => {
     const [showEmoji, setShowEmoji] = useState(false);
 
     const handleEmojiClick = (emoji: any) => {
@@ -106,8 +107,8 @@ const Emoji: React.FC<EmojiProps> = ({ inputValue, setInputValue, cursorPosition
 
     return (
         <View style={{ position: 'relative' }}>
-            {showEmoji && <EmojiPicker handleEmojiClick={handleEmojiClick} />}
-            <StyledPressable className="h-[31px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-l-full border-r-0 pl-2 pr-[6px]" onPress={() => {
+            {showEmoji && <EmojiPicker handleEmojiClick={handleEmojiClick} flag={flag} />}
+            <StyledPressable className={`h-[31px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center ${flag ? 'rounded-l-full' : 'border-l-0 border-t-0'} border-r-0 pl-2 pr-[6px]`} onPress={() => {
                 setShowEmoji((prev: boolean) => !prev);
             }}>
                 <Entypo name="emoji-happy" size={20} color={Colors.light.primaryGray} />

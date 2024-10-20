@@ -12,10 +12,10 @@ const StyledPressable = styled(Pressable)
 interface ChatInputProps {
     inputValue: string;
     setInputValue: (text: string) => void;
-    inputRef: any;
+    uploadFiles: any;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, inputRef }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, uploadFiles }) => {
     const [cursorPosition, setCursorPosition] = useState(0);
     const handleSelectionChange = (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
         const { selection } = event.nativeEvent;
@@ -25,19 +25,18 @@ const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, inputR
     return (
         <View>
             <StyledView className="flex-row w-full px-2 items-center">
-                <Emoji inputValue={inputValue} setInputValue={setInputValue} cursorPosition={cursorPosition} setCursorPosition={setCursorPosition} />
+                <Emoji inputValue={inputValue} setInputValue={setInputValue} cursorPosition={cursorPosition} setCursorPosition={setCursorPosition} flag={true} />
                 <StyledInput
                     className={`flex-1 bg-white h-[31px] border-[1px] border-solid border-gray-500 border-r-0 border-l-0 focus:border-gray-500 focus:outline-none`}
                     placeholder="Type a message"
                     value={inputValue}
-                    ref={inputRef}
                     onChangeText={(text) => {
                         setInputValue(text)
                         setCursorPosition((prev: number) => prev + 1);
                     }}
                     onSelectionChange={handleSelectionChange}
                 />
-                <StyledPressable className="h-[31px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-r-full border-l-0 pr-[4] pl-[1px] mr-2">
+                <StyledPressable className="h-[31px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-r-full border-l-0 pr-[4] pl-[1px] mr-2" onPress={uploadFiles}>
                     <Ionicons name="attach-sharp" size={22} color={Colors.light.primaryGray} />
                 </StyledPressable>
                 <Ionicons name="send-sharp" size={24} color={'blue'} />
