@@ -1,6 +1,6 @@
 import { ChatCardType, ChatFileType } from '@/scripts/type';
 import React, { useEffect, useState } from 'react';
-import { View, Modal, StyleSheet, ScrollView, Text, TouchableOpacity, NativeSyntheticEvent, TextInputSelectionChangeEventData, TextInput, Image, Pressable } from 'react-native';
+import { View, Modal, StyleSheet, ScrollView, Text, TouchableOpacity, NativeSyntheticEvent, TextInputSelectionChangeEventData, TextInput, Image } from 'react-native';
 import { styled } from 'nativewind';
 import { Button } from 'react-native-paper';
 import Emoji from './Emoji';
@@ -14,6 +14,7 @@ interface ChatFilesProps {
     inputValue: string;
     setInputValue: any;
     uploadFiles: any
+    handleSubmit: any
 }
 
 const StyledView = styled(View)
@@ -21,14 +22,10 @@ const StyledText = styled(Text)
 const StyledInput = styled(TextInput)
 const StyledTouchableOpacity = styled(TouchableOpacity)
 const StyledImage = styled(Image)
-const StyledPressable = styled(Pressable)
 
-const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachments, chatToEdit, setChatToEdit, inputValue, setInputValue, uploadFiles }) => {
+const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachments, chatToEdit, setChatToEdit, inputValue, setInputValue, uploadFiles, handleSubmit }) => {
     const [cursorPosition, setCursorPosition] = useState(0);
     const [message, setMessage] = useState('');
-    const [files, setFiles] = useState<ChatFileType[]>([]);
-    const [shouldPlay, setShouldPlay] = useState<boolean[]>([]);
-    const [isMuted, setIsMuted] = useState<boolean[]>([])
     const [flag, setFlag] = useState(false)
 
     const handleSelectionChange = (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
@@ -37,37 +34,38 @@ const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachmen
     };
 
     useEffect(() => {
-        let temp: boolean[], temp2: boolean[];
-        if (chatToEdit !== null && !flag) {
+        if (chatToEdit !== null) {
             setInputValue('')
             setMessage(chatToEdit.message)
             setCursorPosition(chatToEdit.message.length)
-            setFiles(chatToEdit.files)
             setChatAttachments(chatToEdit.files)
-            setFlag(true)
-
-            temp = new Array<boolean>(chatToEdit.files.length).fill(true)
-            temp2 = new Array<boolean>(chatToEdit.files.length).fill(false)
         } else {
-            if (!flag) {
-                setMessage(inputValue)
-                setTimeout(() => {
-                    setInputValue('')
-                }, 1000);
-                setFlag(true)
-            }
-            setFiles(chatAttachments)
-            temp = new Array<boolean>(chatAttachments.length).fill(true)
-            temp2 = new Array<boolean>(chatAttachments.length).fill(false)
+            setMessage(inputValue)
+            setTimeout(() => {
+                setInputValue('')
+            }, 1000);
         }
+    }, [])
 
-        setShouldPlay(temp)
-        setIsMuted(temp)
-        setTimeout(() => {
-            setShouldPlay(temp2)
-            setIsMuted(temp2)
-        }, 1000)
-    }, [chatToEdit, chatAttachments])
+    // useEffect(() => {
+    //     if (chatToEdit !== null && !flag) {
+    //         setInputValue('')
+    //         setMessage(chatToEdit.message)
+    //         setCursorPosition(chatToEdit.message.length)
+    //         setFiles(chatToEdit.files)
+    //         setChatAttachments(chatToEdit.files)
+    //         setFlag(true)
+    //     } else {
+    //         if (!flag) {
+    //             setMessage(inputValue)
+    //             setTimeout(() => {
+    //                 setInputValue('')
+    //             }, 1000);
+    //             setFlag(true)
+    //         }
+    //         setFiles(chatAttachments)
+    //     }
+    // }, [chatAttachments])
 
     return (
         <View style={styles.container}>
@@ -79,12 +77,13 @@ const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachmen
                 <View style={styles.modalContainer}>
                     <View style={styles.innerContainer}>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 4 }}>
-                            {files.map((attachment, index) => (
-                                <StyledPressable key={index} className={`overflow-hidden relative w-32 h-24 flex-row justify-center items-center rounded-md bg-gray-100 ${index !== chatAttachments.length - 1 ? 'mr-3' : ''}`} onPress={() => {
-                                    setShouldPlay((prev: boolean[]) => prev.map((_, i) => i === index ? true : false))
-                                }}>
+                            {chatAttachments.map((attachment, index) => (
+                                <StyledView key={index} className={`overflow-hidden relative w-32 h-24 flex-row justify-center items-center rounded-md bg-gray-100 ${index !== chatAttachments.length - 1 ? 'mr-3' : ''}`}>
                                     <StyledTouchableOpacity className='w-6 h-6 rounded-full bg-red-500 absolute top-0 right-0 flex-row justify-center items-center z-10' onPress={() => {
-                                        setFiles((prev: ChatFileType[]) => prev.filter((_, i) => i !== index))
+                                        if (chatAttachments.length === 1 && chatToEdit === null) {
+                                            setInputValue(message)
+                                        }
+                                        setChatAttachments((prev: ChatFileType[]) => prev.filter((_, i) => i !== index))
                                     }}>
                                         <StyledText className='text-white font-bold mb-[2px]' style={{ fontSize: 13 }} >x</StyledText>
                                     </StyledTouchableOpacity>
@@ -96,12 +95,9 @@ const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachmen
                                             source={{ uri: attachment.id !== -1 ? `data:video/mp4;base64,${attachment.data}` : attachment.data }}
                                             useNativeControls
                                             resizeMode={ResizeMode.COVER}
-                                            isLooping
-                                            shouldPlay={shouldPlay[index]}
-                                            isMuted={isMuted[index]}
                                         />
                                     }
-                                </StyledPressable>
+                                </StyledView>
                             ))}
                         </ScrollView>
                         <TouchableOpacity className='mt-2 ml-auto mr-1' onPress={uploadFiles}>
@@ -118,7 +114,7 @@ const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachmen
                                 }}
                                 onSelectionChange={handleSelectionChange}
                             />
-                            <Emoji inputValue={inputValue} setInputValue={setInputValue} cursorPosition={cursorPosition} setCursorPosition={setCursorPosition} flag={false} />
+                            <Emoji inputValue={message} setInputValue={setMessage} cursorPosition={cursorPosition} setCursorPosition={setCursorPosition} flag={false} />
                         </StyledView>
                         <StyledView className='flex-row justify-around items-center w-full'>
                             <Button labelStyle={{ fontWeight: 'bold' }} mode="contained" onPress={() => {
@@ -130,7 +126,7 @@ const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachmen
                             }} style={{ marginTop: 20 }}>
                                 Cancel
                             </Button>
-                            <Button labelStyle={{ fontWeight: 'bold' }} mode="contained" onPress={() => { }} style={{ marginTop: 20 }}>
+                            <Button labelStyle={{ fontWeight: 'bold' }} mode="contained" onPress={() => handleSubmit(message)} style={{ marginTop: 20 }}>
                                 Send
                             </Button>
                         </StyledView>

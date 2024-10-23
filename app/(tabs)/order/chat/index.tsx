@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, Dimensions, Button, Image, KeyboardAvoidingView, Platform, SafeAreaView, LogBox } from 'react-native'
+import { View, Text, ScrollView, Dimensions, Image, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { jwtDecode } from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError } from 'axios';
@@ -28,7 +28,7 @@ const index = () => {
     const [sendRequest, setSendRequest] = useState(true);
     const [inputValue, setInputValue] = useState("");
     const [chatAttachments, setChatAttachments] = useState<ChatFileType[]>([]);
-    const [destination, setDestination] = useState("");
+    const [destination, setDestination] = useState("emp_1");
     const [myTarget, setMyTarget] = useState<{ id: number, name: string, image: string } | null>(null);
     const [unseenChatCount, setUnseenChatCount] = useState(-1);
 
@@ -47,8 +47,9 @@ const index = () => {
     const { setCartCount } = useGlobal();
     const scrollViewRef = useRef<ScrollView>(null);
     // const { roomId } = useLocalSearchParams() as { roomId?: number };
-    const roomId = 6
-    const size = 7;
+    // const roomId = 6
+    const roomId = 36
+    const size = 15;
     const [isMounted, setIsMounted] = useState(false);
 
     const handleError = async (error: any) => {
@@ -150,6 +151,8 @@ const index = () => {
                 }
             }
         } catch (error) {
+            console.log('error', error);
+
             handleError(error)
         }
     };
@@ -258,6 +261,105 @@ const index = () => {
         }
     };
 
+    const handleSubmit = async (messageToSend: string) => {
+        const formData = new FormData();
+
+        formData.append("message", messageToSend);
+        chatAttachments.forEach((chatAttachment) => {
+            if (chatAttachment.id === -1) {
+                formData.append("chatAttachments", {
+                    uri: chatAttachment.data,
+                    name: chatAttachment.fileType.includes('image') ? `image.jpeg` : 'video.mp4',
+                    type: chatAttachment.fileType.includes('image') ? 'image/jpeg' : 'video/mp4'
+                } as any);
+            }
+        })
+        formData.append("roomId", roomId.toString());
+
+        const token = await AsyncStorage.getItem("token");
+        if (token === null || token === undefined) {
+            router.push("/auth/login");
+            return;
+        }
+
+        if (chatToEdit === null) {
+            const senderId = jwtDecode(token).sub;
+            if (senderId === undefined) {
+                return;
+            }
+            formData.append("senderId", senderId.toString());
+            formData.append("receiverId", destination);
+        } else {
+            formData.append("id", chatToEdit.id.toString());
+            chatAttachments.forEach((file: any) => {
+                if (file.id !== -1) {
+                    formData.append("prevFiles", file.id);
+                }
+            });
+        }
+
+        try {
+            let response: any;
+            if (chatToEdit === null) {
+                response = await axios.post(
+                    `${process.env.EXPO_PUBLIC_SERVER_URL}/chat/addChat`,
+                    formData,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "multipart/form-data",
+                            Accept: 'application/json',
+                        },
+                    }
+                );
+            } else {
+                response = await axios.put(
+                    `${process.env.EXPO_PUBLIC_SERVER_URL}/chat/updateChat`,
+                    formData,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "multipart/form-data",
+                            Accept: 'application/json',
+                        },
+                    }
+                );
+            }
+            if (response.status === 200) {
+                setChatAttachments([]);
+                setInputValue("");
+
+                if (chatToEdit === null) {
+                    setChats((prev) => {
+                        const newChat = response.data;
+                        return [newChat, ...prev];
+                    });
+                    if (scrollViewRef.current) {
+                        scrollViewRef.current.scrollToEnd({
+                            animated: true,
+                        });
+                    }
+                } else {
+                    setChats((prev) => {
+                        const updatedChat = response.data;
+                        return prev.map((chat) =>
+                            chat.id === updatedChat.id ? updatedChat : chat
+                        );
+                    });
+                    setChatToEdit(null);
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Chat Edited',
+                        text2: 'The chat has been successfully edited',
+                        visibilityTime: 4000
+                    })
+                }
+            }
+        } catch (error) {
+            handleError(error)
+        }
+    };
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 190 : 130}>
             <StyledView className="h-[47px] bg-gray-700 py-[6px] px-3 flex-row items-center w-full">
@@ -277,10 +379,10 @@ const index = () => {
                 ))}
                 {showLoading && <Loading2 />}
             </ScrollView>
-            <ChatInput inputValue={inputValue} setInputValue={setInputValue} uploadFiles={uploadFiles} />
+            <ChatInput inputValue={inputValue} setInputValue={setInputValue} uploadFiles={uploadFiles} handleSubmit={handleSubmit} />
             <Likes visible={chatToReact !== 0} setChatToReact={setChatToReact} prevReaction={prevReaction} handleReaction={handleReaction} />
             <ChatOptions visible={selectedChat !== null} selectedChat={selectedChat} setSelectedChat={setSelectedChat} handleDelete={handleDelete} handleEdit={handleEdit} />
-            {(chatAttachments.length > 0 || chatToEdit !== null) && <ChatFiles chatAttachments={chatAttachments} setChatAttachments={setChatAttachments} chatToEdit={chatToEdit} setChatToEdit={setChatToEdit} inputValue={inputValue} setInputValue={setInputValue} uploadFiles={uploadFiles} />}
+            {(chatAttachments.length > 0 || chatToEdit !== null) && <ChatFiles chatAttachments={chatAttachments} setChatAttachments={setChatAttachments} chatToEdit={chatToEdit} setChatToEdit={setChatToEdit} inputValue={inputValue} setInputValue={setInputValue} uploadFiles={uploadFiles} handleSubmit={handleSubmit} />}
         </KeyboardAvoidingView>
     )
 }

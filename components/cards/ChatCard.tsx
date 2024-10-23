@@ -28,30 +28,16 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
     const [isReceived, setIsReceived] = useState<boolean | undefined>(undefined);
     const [imageIndex, setImageIndex] = useState(-1);
     const [isVisible, setIsVisible] = useState(false);
-    const [shouldPlay, setShouldPlay] = useState<boolean[]>([]);
-    const [isMuted, setIsMuted] = useState<boolean[]>([])
 
     useEffect(() => {
         const setFlag = async () => {
             const token = await AsyncStorage.getItem("token");
             if (token === null || token === undefined) return;
             const userId = jwtDecode(token).sub;
-            setIsReceived(chat.senderId === userId);
+            setIsReceived(chat.senderId !== userId);
         }
         setFlag();
     }, []);
-
-    useEffect(() => {
-        const temp = new Array<boolean>(chat.files.length).fill(true)
-        setShouldPlay(temp)
-        setIsMuted(temp)
-
-        setTimeout(() => {
-            const temp2 = new Array<boolean>(chat.files.length).fill(false)
-            setShouldPlay(temp2)
-            setIsMuted(temp2)
-        }, 1000)
-    }, [chat.files])
 
     return (
         <View>
@@ -78,9 +64,6 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
                                                 source={{ uri: `data:video/mp4;base64,${file.data}` }}
                                                 useNativeControls
                                                 resizeMode={ResizeMode.COVER}
-                                                isLooping
-                                                shouldPlay={shouldPlay[index]}
-                                                isMuted={isMuted[index]}
                                             />
                                         )}
                                     </View>

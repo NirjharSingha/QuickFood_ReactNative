@@ -13,9 +13,10 @@ interface ChatInputProps {
     inputValue: string;
     setInputValue: (text: string) => void;
     uploadFiles: any;
+    handleSubmit: any;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, uploadFiles }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, uploadFiles, handleSubmit }) => {
     const [cursorPosition, setCursorPosition] = useState(0);
     const handleSelectionChange = (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
         const { selection } = event.nativeEvent;
@@ -39,7 +40,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, upload
                 <StyledPressable className="h-[31px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-r-full border-l-0 pr-[4] pl-[1px] mr-2" onPress={uploadFiles}>
                     <Ionicons name="attach-sharp" size={22} color={Colors.light.primaryGray} />
                 </StyledPressable>
-                <Ionicons name="send-sharp" size={24} color={'blue'} />
+                <Ionicons name="send-sharp" size={24} color={'blue'} onPress={() => handleSubmit(inputValue)} />
             </StyledView>
         </View>
     )
