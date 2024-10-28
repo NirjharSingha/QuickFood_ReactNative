@@ -13,6 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
@@ -68,7 +69,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
                                         )}
                                     </View>
                                 ))}
-                                <StyledText className={`${isReceived ? 'text-gray-700' : 'text-white'} mt-[1px]`} style={{ fontSize: 16 }}>{chat.message}</StyledText>
+                                {chat.message.length > 0 && <StyledText className={`${isReceived ? 'text-gray-700' : 'text-white'} mt-[1px]`} style={{ fontSize: 16 }}>{chat.message}</StyledText>}
                                 <View style={[styles.arraoContainer, isReceived ? styles.arrow_left_container : styles.arrow_right_container]}>
                                     <Svg
                                         style={isReceived ? styles.arrowLeft : styles.arrowRight}
@@ -87,6 +88,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
                                         />
                                     </Svg>
                                 </View>
+                                {chat.isSeen && <Ionicons name="checkmark-done-outline" size={18} style={{ marginLeft: 'auto' }} color={!isReceived ? "white" : Colors.light.primaryBlue} />}
                                 {chat.reaction !== null &&
                                     <StyledView className={`absolute bottom-[-8px] p-[2px] bg-white rounded-full ${isReceived ? 'right-[-8px]' : 'left-[-8px]'}`}>
                                         {chat.reaction === 'LIKE' && <AntDesign name="like1" size={18} color='#007bff' />}

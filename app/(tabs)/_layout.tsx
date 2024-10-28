@@ -6,11 +6,21 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { usePathname } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useGlobal } from '@/contexts/Globals';
+import { jwtDecode } from 'jwt-decode';
+import { useSocket } from '@/contexts/Socket';
+import axios, { AxiosError } from 'axios';
+import unauthorized from '@/scripts/unauthorized';
+import Toast from 'react-native-toast-message';
+import { useRouter } from 'expo-router';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
 export default function TabLayout() {
     const [role, setRole] = useState('user');
     const pathname = usePathname();
     const { setCartCount } = useGlobal();
+    const { setIsTyping, setStompClient, setChats } = useSocket();
+    const router = useRouter();
 
     useEffect(() => {
         const handleCartCount = async () => {
@@ -26,6 +36,117 @@ export default function TabLayout() {
             }
         }
         handleCartCount();
+    }, []);
+
+    const fetchChatById = async (chatId: number, roomId: number, stompClient: any, dataChat: any) => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            const response = await axios.get(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/chat/getChatById?chatId=${chatId}&roomId=${roomId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (response.status == 200) {
+                const fetchedChat = response.data;
+                setChats((prevChats) => {
+                    const chatIndex = prevChats.findIndex(
+                        (chat) => chat.id === fetchedChat.id
+                    );
+
+                    if (chatIndex !== -1) {
+                        // If chat is found, replace it at the same index
+                        return [
+                            ...prevChats.slice(0, chatIndex),
+                            fetchedChat,
+                            ...prevChats.slice(chatIndex + 1),
+                        ];
+                    } else {
+                        // If chat is not found, add it at index 0
+                        return [fetchedChat, ...prevChats];
+                    }
+                });
+
+                const destination = "/user/" + fetchedChat.senderId + "/queue";
+                let redirectUrl;
+                const role = localStorage.getItem("role");
+                if (role === "RIDER") {
+                    redirectUrl = `/orderFood/chat/${dataChat.roomId}`;
+                } else {
+                    redirectUrl = "/delivery/chat";
+                }
+                let dataToSend = {
+                    title: "Chat",
+                    topic: "seen",
+                    chat: dataChat,
+                    redirectUrl: redirectUrl,
+                };
+                stompClient.send(destination, {}, JSON.stringify(dataToSend));
+            }
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response) {
+                const { status } = axiosError.response;
+                if (status === 401) {
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                }
+                if (status === 404) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Dissolved Chat Room',
+                        text2: 'The chat room is dissolved as the order is delivered.',
+                        visibilityTime: 4000
+                    })
+                    const role = await AsyncStorage.getItem('role')
+                    if (role) {
+                        if (role === "USER") {
+                            router.push("/order/chat");
+                        } else {
+                            router.push("/delivery");
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        const socket = new SockJS(`${process.env.EXPO_PUBLIC_SERVER_URL}/ws`);
+        const stompClient = new Client({
+            webSocketFactory: () => socket,
+        });
+
+        stompClient.onConnect = () => {
+            (async () => {
+                setStompClient(stompClient);
+                const token = await AsyncStorage.getItem("token");
+                if (!token) return;
+                const userId = jwtDecode(token).sub;
+
+                stompClient.subscribe(
+                    "/user/" + userId + "/queue",
+                    function (response) {
+                        const data = JSON.parse(response.body);
+                        console.log("Received message:", data);
+                    }
+                );
+            })();
+
+        }
+
+        stompClient.onStompError = function (error) {
+            console.log("STOMP error:", error);
+        };
+
+        // Activate the client
+        stompClient.activate();
+
+        // Cleanup on component unmount
+        return () => {
+            stompClient.deactivate();
+        };
     }, []);
 
     return (

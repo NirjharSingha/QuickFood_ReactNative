@@ -88,7 +88,7 @@ const Signup = () => {
                 <Password password={password} setPassword={setPassword} showPass={showPass} setShowPass={setShowPass} placeholder="Enter password" setWarning={setWarning} />
                 <Password password={confirmPassword} setPassword={setConfirmPassword} showPass={showConfirmPassword} setShowPass={setShowConfirmPassword} placeholder="Confirm password" setWarning={setWarning} />
                 <StyledTouchableOpacity
-                    className="bg-blue-500 w-full py-[6px] rounded-md mt-2 mb-1"
+                    className="bg-blue-500 w-full py-1 rounded-md mt-2 mb-1"
                     onPress={handleSignUp}
                 >
                     <StyledText className="text-white text-lg w-full text-center font-bold">Sign up</StyledText>

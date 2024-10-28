@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchBar from '@/components/SearchBar'
 import { Loading2 } from '@/components/Loading'
 import { ScrollView } from 'react-native-gesture-handler'

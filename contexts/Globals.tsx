@@ -26,7 +26,7 @@ export function useGlobal() {
     return context;
 }
 
-export default function MenuContextProvider({
+export default function GlobalContextProvider({
     children,
 }: GlobalContextProviderProps) {
     const [menu, setMenu] = useState<MenuType[]>([]);

@@ -86,7 +86,7 @@ const Login = () => {
                 <Input text={id} setText={setId} placeholder={checked === 'first' ? "Enter email" : "Enter Id"} setWarning={setWarning} keyboardType={!pathname.includes("/admin/riders") ? "email-address" : "default"} />
                 <Password password={password} setPassword={setPassword} showPass={showPass} setShowPass={setShowPass} placeholder="Enter password" setWarning={setWarning} />
                 <StyledTouchableOpacity
-                    className="bg-blue-500 w-full py-[6px] rounded-md mt-3 mb-2"
+                    className="bg-blue-500 w-full py-1 rounded-md mt-3 mb-2"
                     onPress={handleLogin}
                 >
                     <StyledText className="text-white text-lg w-full text-center font-bold">Log in</StyledText>

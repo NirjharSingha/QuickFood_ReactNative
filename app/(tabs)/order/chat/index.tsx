@@ -16,6 +16,7 @@ import { Loading2 } from '@/components/Loading';
 import ChatInput from '@/components/input/ChatInput';
 import ChatFiles from '@/components/ChatFiles';
 import * as ImagePicker from 'expo-image-picker';
+import { useSocket } from '@/contexts/Socket';
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -24,6 +25,8 @@ const StyledImage = styled(Image)
 const index = () => {
     const router = useRouter();
     const height = Dimensions.get('window').height;
+    const { chats, setChats } = useSocket();
+
     const [showLoading, setShowLoading] = useState(true);
     const [sendRequest, setSendRequest] = useState(true);
     const [inputValue, setInputValue] = useState("");
@@ -40,7 +43,6 @@ const index = () => {
 
 
     const [page, setPage] = useState(0);
-    const [chats, setChats] = useState<ChatCardType[]>([]);
     const [chatToReact, setChatToReact] = useState(0);
     const [chatToEdit, setChatToEdit] = useState<ChatCardType | null>(null);
     const [selectedChat, setSelectedChat] = useState<ChatCardType | null>(null);
@@ -48,7 +50,7 @@ const index = () => {
     const scrollViewRef = useRef<ScrollView>(null);
     // const { roomId } = useLocalSearchParams() as { roomId?: number };
     // const roomId = 6
-    const roomId = 36
+    const roomId = 5
     const size = 15;
     const [isMounted, setIsMounted] = useState(false);
 
