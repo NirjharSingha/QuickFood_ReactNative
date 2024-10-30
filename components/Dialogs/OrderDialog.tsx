@@ -15,7 +15,7 @@ import { useGlobal } from '@/contexts/Globals';
 import { AlertDialog } from '@/components/Dialogs/AlertDialog';
 import Complaint from './Complaint';
 import { OrderTable as Table } from '../Table';
-import { OrderTableType } from '@/scripts/type';
+import { OrderTableType, MenuItemType } from '@/scripts/type';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -26,14 +26,6 @@ interface OrderDialogProps {
     visible: boolean;
     setVisible: (visible: boolean) => void;
     setOrders?: any;
-}
-
-type MenuItemType = {
-    menuId: number
-    menuName: string,
-    price: number,
-    image: string,
-    quantity: number
 }
 
 const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrders }) => {

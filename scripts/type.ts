@@ -97,3 +97,11 @@ export type ChatCardType = {
     }[];
     prevFiles: number[];
 }
+
+export type MenuItemType = {
+    menuId: number
+    menuName: string,
+    price: number,
+    image: string,
+    quantity: number
+}

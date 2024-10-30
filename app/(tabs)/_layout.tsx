@@ -15,27 +15,41 @@ import { useRouter } from 'expo-router';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
+const validRoles = ['USER', 'RIDER', 'ADMIN', ''] as const;
+type Role = typeof validRoles[number];
+
 export default function TabLayout() {
-    const [role, setRole] = useState('user');
+    const [role, setRole] = useState<Role>('');
     const pathname = usePathname();
     const { setCartCount } = useGlobal();
     const { setIsTyping, setStompClient, setChats } = useSocket();
     const router = useRouter();
 
     useEffect(() => {
-        const handleCartCount = async () => {
-            let temp = await AsyncStorage.getItem('cart');
-            if (!temp) return
+        const handleInit = async () => {
+            let tempRole = await AsyncStorage.getItem('role');
 
-            let cart = JSON.parse(temp);
+            if (!tempRole || !validRoles.includes(tempRole as Role)) {
+                router.push('/auth/login');
+                return;
+            }
 
-            if (cart) {
-                if (cart.selectedMenu) {
-                    setCartCount(cart.selectedMenu.length);
+            setRole(tempRole as Role);
+
+            if (tempRole === 'USER') {
+                let temp = await AsyncStorage.getItem('cart');
+                if (!temp) return
+
+                let cart = JSON.parse(temp);
+
+                if (cart) {
+                    if (cart.selectedMenu) {
+                        setCartCount(cart.selectedMenu.length);
+                    }
                 }
             }
         }
-        handleCartCount();
+        handleInit();
     }, []);
 
     const fetchChatById = async (chatId: number, roomId: number, stompClient: any, dataChat: any) => {
@@ -161,15 +175,15 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="delivery"
                 options={{
-                    href: role === 'rider' ? '/delivery' : null,
+                    href: role === 'RIDER' ? '/delivery' : null,
                     title: 'Delivery',
-                    tabBarIcon: () => <MaterialIcons name="delivery-dining" size={26} color={pathname.includes("/delivery") ? 'blue' : 'gray'} />
+                    tabBarIcon: () => <MaterialIcons name="delivery-dining" size={29} color={pathname.includes("/delivery") ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
                 name="dashboard"
                 options={{
-                    href: role === 'admin' ? '/dashboard' : null,
+                    href: role === 'ADMIN' ? '/dashboard' : null,
                     title: 'Dashboard',
                     tabBarIcon: () => <MaterialIcons name="dashboard" size={26} color={pathname.includes("/dashboard") ? 'blue' : 'gray'} />
                 }}
@@ -177,7 +191,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="order"
                 options={{
-                    href: role === 'user' ? '/order' : null,
+                    href: role === 'USER' ? '/order' : null,
                     title: 'Order',
                     tabBarIcon: () => <FontAwesome6 size={26} name="first-order-alt" color={pathname.includes("/order") ? 'blue' : 'gray'} />
                 }}
@@ -185,7 +199,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="restaurants"
                 options={{
-                    href: role === 'user' ? '/restaurants' : null,
+                    href: role === 'USER' ? '/restaurants' : null,
                     title: 'Restaurants',
                     tabBarIcon: () => <MaterialIcons name="local-restaurant" size={26} color={pathname.includes("/restaurants") ? 'blue' : 'gray'} />
                 }}
