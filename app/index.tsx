@@ -34,7 +34,7 @@ const index = () => {
             if (expiryTime === undefined || currentTimeSeconds >= expiryTime) {
                 router.push("/auth/login");
             } else {
-                router.push("/delivery");
+                router.push("/admin");
             }
         }
     }

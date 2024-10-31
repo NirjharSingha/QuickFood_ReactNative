@@ -14,54 +14,12 @@ import Toast from 'react-native-toast-message';
 import { useGlobal } from '@/contexts/Globals';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { jwtDecode } from 'jwt-decode';
+import { deliverData, stackData } from '@/scripts/type';
+import { StackData } from '@/components/StackData';
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledScrollView = styled(ScrollView)
-
-type stackData = {
-    stacks: { value: number, color: string }[],
-    label: string
-}
-
-type deliverData = {
-    name: string;
-    successDeliveries: number;
-    lateDeliveries: number;
-    complaintDeliveries: number;
-    bothIssues: number;
-}
-
-const StackData = () => {
-    return (
-        <StyledView className="flex-row justify-center items-center mt-2 w-full flex-wrap">
-            <StyledView className='flex-row items-center'>
-                <StyledView className='w-3 h-3 rounded-full' style={{ backgroundColor: 'green' }} />
-                <StyledText className="text-gray-700 font-bold mx-2" style={{ fontSize: 12 }}>
-                    No issues
-                </StyledText>
-            </StyledView>
-            <StyledView className='flex-row items-center'>
-                <StyledView className='w-3 h-3 rounded-full' style={{ backgroundColor: 'blue' }} />
-                <StyledText className="text-gray-700 font-bold mx-2" style={{ fontSize: 12 }}>
-                    Late Delivery
-                </StyledText>
-            </StyledView>
-            <StyledView className='flex-row items-center'>
-                <StyledView className='w-3 h-3 rounded-full' style={{ backgroundColor: 'purple' }} />
-                <StyledText className="text-gray-700 font-bold mx-2" style={{ fontSize: 12 }}>
-                    Complaint
-                </StyledText>
-            </StyledView>
-            <StyledView className='flex-row items-center'>
-                <StyledView className='w-3 h-3 rounded-full' style={{ backgroundColor: 'red' }} />
-                <StyledText className="text-gray-700 font-bold mx-2" style={{ fontSize: 12 }}>
-                    Late & Complaint
-                </StyledText>
-            </StyledView>
-        </StyledView>
-    )
-}
 
 export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) => {
     const [weeklyDeliveries, setWeeklyDeliveries] = useState<stackData[]>([])

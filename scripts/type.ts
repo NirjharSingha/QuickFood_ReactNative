@@ -105,3 +105,16 @@ export type MenuItemType = {
     image: string,
     quantity: number
 }
+
+export type stackData = {
+    stacks: { value: number, color: string }[],
+    label: string
+}
+
+export type deliverData = {
+    name: string;
+    successDeliveries: number;
+    lateDeliveries: number;
+    complaintDeliveries: number;
+    bothIssues: number;
+}

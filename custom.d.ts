@@ -16,9 +16,6 @@ declare module "*.jpeg" {
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            EXPO_PUBLIC_EMAILJS_SERVICE_ID: string;
-            EXPO_PUBLIC_EMAILJS_TEMPLATE_ID: string;
-            EXPO_PUBLIC_EMAILJS_PUBLIC_KEY: string;
         }
     }
 }

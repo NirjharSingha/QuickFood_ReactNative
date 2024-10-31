@@ -181,11 +181,11 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="dashboard"
+                name="admin"
                 options={{
-                    href: role === 'ADMIN' ? '/dashboard' : null,
+                    href: role === 'ADMIN' ? '/admin' : null,
                     title: 'Dashboard',
-                    tabBarIcon: () => <MaterialIcons name="dashboard" size={26} color={pathname.includes("/dashboard") ? 'blue' : 'gray'} />
+                    tabBarIcon: () => <MaterialIcons name="dashboard" size={26} color={pathname.includes("/admin") ? 'blue' : 'gray'} />
                 }}
             />
             <Tabs.Screen
