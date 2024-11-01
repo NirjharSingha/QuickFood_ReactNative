@@ -19,9 +19,10 @@ interface ComplaintProps {
     setVisible: (visible: boolean) => void;
     orderId: number;
     setOrders: any;
+    setShowOrderDialog: (visible: boolean) => void;
 }
 
-const Complaint: React.FC<ComplaintProps> = ({ visible, setVisible, orderId, setOrders }) => {
+const Complaint: React.FC<ComplaintProps> = ({ visible, setVisible, orderId, setOrders, setShowOrderDialog }) => {
     const router = useRouter()
     const [warning, setWarning] = useState("");
     const [input, setInput] = useState("");
@@ -60,6 +61,7 @@ const Complaint: React.FC<ComplaintProps> = ({ visible, setVisible, orderId, set
                     return filteredOrderCards;
                 });
                 setVisible(false);
+                setShowOrderDialog(false)
             }
         } catch (error) {
             const axiosError = error as AxiosError;

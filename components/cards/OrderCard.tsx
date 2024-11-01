@@ -3,7 +3,7 @@ import React from 'react'
 import { styled } from 'nativewind'
 import { OrderCardType } from '@/scripts/type'
 import { useGlobal } from '@/contexts/Globals'
-import { router, usePathname } from 'expo-router'
+import { useRouter, usePathname } from 'expo-router'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -16,6 +16,7 @@ interface OrderCardProps {
 export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
     const { setSelectedOrder, setShowOrderDialog } = useGlobal()
     const pathname = usePathname()
+    const router = useRouter()
 
     const handlePress = () => {
         if (pathname === "/order/rating") {

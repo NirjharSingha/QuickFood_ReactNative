@@ -2,7 +2,7 @@ import { styled } from 'nativewind';
 import * as React from 'react';
 import { ScrollView, Image, View, TouchableOpacity } from 'react-native';
 import { Dialog, Portal, Text } from 'react-native-paper';
-import { router, usePathname } from 'expo-router';
+import { useRouter, usePathname } from 'expo-router';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError } from 'axios';
@@ -38,6 +38,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
     const [showAlert, setShowAlert] = useState(false);
     const [cancelMessage, setCancelMessage] = useState("");
     const [showComplaint, setShowComplaint] = useState(false);
+    const router = useRouter()
 
     const hideDialog = () => {
         setSelectedOrder(0)
@@ -168,6 +169,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
                     );
                     return filteredOrderCards;
                 });
+                setVisible(false)
             }
         } catch (error) {
             const axiosError = error as AxiosError;
@@ -225,7 +227,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
         <Portal>
             <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: 'white', borderRadius: 8, marginHorizontal: 4, marginVertical: 80, paddingLeft: 6, paddingBottom: 8 }}>
                 <AlertDialog visible={showAlert} setVisible={setShowAlert} title='Cancel Order' message={cancelMessage} cancelHandler={() => setShowAlert(false)} continueHandler={continueHandler} flag={!cancelMessage.includes("cannot cancel")} />
-                <Complaint visible={showComplaint} setVisible={setShowComplaint} orderId={selectedOrder} setOrders={setOrders} />
+                <Complaint visible={showComplaint} setVisible={setShowComplaint} orderId={selectedOrder} setOrders={setOrders} setShowOrderDialog={setVisible} />
                 {loading && <Loading />}
                 {!loading &&
                     <View style={{ paddingTop: 8 }}>

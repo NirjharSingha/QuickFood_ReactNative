@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { RestaurantAnalytics } from "@/app/(tabs)/restaurants/[id]/analytics"
+import { useLocalSearchParams } from "expo-router"
 
 const index = () => {
+    const { id } = useLocalSearchParams() as { id?: string }
+
     return (
-        <View>
-            <Text>index</Text>
-        </View>
+        <RestaurantAnalytics id={id as string} />
     )
 }
 

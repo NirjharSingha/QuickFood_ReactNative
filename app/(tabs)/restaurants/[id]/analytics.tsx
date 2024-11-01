@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { BarChart, LineChart, PieChart } from "react-native-gifted-charts";
 import axios, { AxiosError } from 'axios';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, usePathname } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '@/constants/Colors';
 import Loading from '@/components/Loading';
@@ -20,8 +20,7 @@ const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledScrollView = styled(ScrollView)
 
-const analytics = () => {
-    const { id } = useLocalSearchParams() as { id?: string };
+export const RestaurantAnalytics: React.FC<{ id: string }> = ({ id }) => {
     const [topSoldItems, setTopSoldItems] = useState<{ value: number, text: string }[]>([]);
     const [topSoldLabels, setTopSoldLabels] = useState<string[]>([]);
     const [weeklySales, setWeeklySales] = useState<{ value: number, label: string }[]>([]);
@@ -33,6 +32,8 @@ const analytics = () => {
     const { setCartCount } = useGlobal();
     const [isSwitchOn, setIsSwitchOn] = useState(false);
     const [flags, setFlags] = useState<boolean[]>([false, false, false, false, false]);
+    const router = useRouter();
+    const pathname = usePathname()
 
     const weeklySale = async () => {
         try {
@@ -61,6 +62,11 @@ const analytics = () => {
     };
 
     const getTopSoldItems = async () => {
+        if (pathname.includes('/admin')) {
+            setFlags((prev) => prev.map((flag, index) => index === 1 ? true : flag));
+            return;
+        }
+
         try {
             const token = await AsyncStorage.getItem("token");
             const response = await axios.get(
@@ -116,6 +122,11 @@ const analytics = () => {
     };
 
     const getTopReviewedItems = async () => {
+        if (pathname.includes('/admin')) {
+            setFlags((prev) => prev.map((flag, index) => index === 3 ? true : flag));
+            return;
+        }
+
         try {
             const token = await AsyncStorage.getItem("token");
             const response = await axios.get(
@@ -142,6 +153,11 @@ const analytics = () => {
     };
 
     const pendingOrderFetch = async () => {
+        if (pathname.includes('/admin')) {
+            setFlags((prev) => prev.map((flag, index) => index === 4 ? true : flag));
+            return;
+        }
+
         try {
             const token = await AsyncStorage.getItem("token");
             const response = await axios.get(
@@ -168,18 +184,24 @@ const analytics = () => {
     };
 
     useEffect(() => {
-        getTopSoldItems();
-        monthlySale();
-        pendingOrderFetch();
-    }, [])
+        if (id !== '') {
+            getTopSoldItems();
+            monthlySale();
+            pendingOrderFetch();
+        }
+    }, [id])
 
     useEffect(() => {
-        weeklySale();
-    }, [selectedDate])
+        if (id !== '') {
+            weeklySale();
+        }
+    }, [selectedDate, id])
 
     useEffect(() => {
-        getTopReviewedItems();
-    }, [isSwitchOn])
+        if (id !== '') {
+            getTopReviewedItems();
+        }
+    }, [isSwitchOn, id])
 
     return (
         <View>
@@ -208,7 +230,7 @@ const analytics = () => {
                         </StyledText>
                     </StyledView>
                     <LineChart data={monthlySales} areaChart noOfSections={6} height={240} />
-                    {topSoldItems.length > 0 &&
+                    {topSoldItems.length > 0 && !pathname.includes('/admin') &&
                         <View>
                             <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mt-5 mb-5'>
                                 <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
@@ -230,7 +252,7 @@ const analytics = () => {
                             </StyledView>
                         </View>
                     }
-                    {topReviewedItems.length > 0 &&
+                    {topReviewedItems.length > 0 && !pathname.includes('/admin') &&
                         <View>
                             <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mb-5'>
                                 <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
@@ -252,7 +274,7 @@ const analytics = () => {
                             <BarChart noOfSections={6} data={topReviewedItems} height={240} maxValue={5} spacing={40} />
                         </View>
                     }
-                    {pendingOrders.length > 0 &&
+                    {pendingOrders.length > 0 && !pathname.includes('/admin') &&
                         <View>
                             <StyledView className='w-full flex-row items-center py-[6px] px-[10px] shadow-sm shadow-gray-400 rounded-md bg-slate-200 mt-5 mb-5'>
                                 <StyledView className='w-7 h-7 flex-row justify-center items-center rounded-full bg-slate-400'>
@@ -270,6 +292,11 @@ const analytics = () => {
             }
         </View>
     )
+}
+
+const analytics = () => {
+    const { id } = useLocalSearchParams() as { id?: string };
+    return <RestaurantAnalytics id={id as string} />
 }
 
 export default analytics

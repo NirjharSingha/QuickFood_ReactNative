@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { router } from 'expo-router'
+import { useRouter } from 'expo-router'
 import axios, { AxiosError } from 'axios'
 import unauthorized from '@/scripts/unauthorized'
 import Toast from 'react-native-toast-message'
@@ -22,6 +22,7 @@ const pendingOrders = () => {
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
     const { showOrderDialog, setShowOrderDialog, selectedOrder, setCartCount } = useGlobal()
+    const router = useRouter();
 
     useEffect(() => {
         const getPendingOrders = async () => {

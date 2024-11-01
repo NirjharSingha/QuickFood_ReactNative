@@ -1,4 +1,4 @@
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { styled } from 'nativewind';
 import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -30,14 +30,14 @@ export default function Layout() {
 
                     <TouchableOpacity onPress={() => router.push("/admin/restaurants")}>
                         <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/admin/restaurants" ? 'bg-blue-100' : ''} rounded-full m-0 mt-2`} style={{ gap: 10 }}>
-                            <MaterialIcons name="analytics" size={26} color={pathname === "/admin/restaurants" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
+                            <FontAwesome name="home" size={26} color={pathname === "/admin/restaurants" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
                             <StyledText className='font-bold text-base' style={{ color: pathname === "/admin/restaurants" ? primaryBlue : 'gray', margin: 0 }}>Restaurants</StyledText>
                         </StyledView>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => router.push("/admin/riders")}>
                         <StyledView className={`flex-row items-center px-4 py-2 ${pathname === '/admin/riders' ? 'bg-blue-100' : ''} rounded-full m-0 mt-3`} style={{ gap: 10 }}>
-                            <MaterialIcons name="delivery-dining" size={26} color={pathname === "/admin/riders" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
+                            <MaterialIcons name="delivery-dining" size={27} color={pathname === "/admin/riders" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
                             <StyledText className='font-bold text-base' style={{ color: pathname === "/admin/riders" ? primaryBlue : 'gray', margin: 0 }}>Riders</StyledText>
                         </StyledView>
                     </TouchableOpacity>

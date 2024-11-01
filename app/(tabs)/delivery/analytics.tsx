@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { BarChart, PieChart } from "react-native-gifted-charts";
 import axios, { AxiosError } from 'axios';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '@/constants/Colors';
 import Loading from '@/components/Loading';
@@ -30,6 +30,7 @@ export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) =>
     const [selectedDate, setSelectedDate] = useState(new Date(Date.now()).toISOString())
     const { setCartCount } = useGlobal();
     const [flags, setFlags] = useState<boolean[]>([false, false, false]);
+    const router = useRouter();
 
     const weeklyDelivery = async () => {
         try {
@@ -185,7 +186,7 @@ export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) =>
                                 <StyledView className="flex-row justify-center items-center mt-2 w-full flex-wrap">
                                     {allDeliveries.map((item, index) => (
                                         <StyledText key={index} className="text-gray-700 font-bold mx-2" style={{ fontSize: 12 }}>
-                                            {allDeliveryLabels[index] + '-' + item.value.toFixed(1)}
+                                            {allDeliveryLabels[index] + '-' + item.value.toFixed(0)}
                                         </StyledText>
                                     ))}
                                 </StyledView>
@@ -201,6 +202,7 @@ export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) =>
 
 const analytics = () => {
     const [riderId, setRiderId] = useState<string>('')
+    const router = useRouter()
 
     useEffect(() => {
         const init = async () => {

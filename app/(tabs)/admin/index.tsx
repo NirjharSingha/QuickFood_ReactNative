@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { BarChart, LineChart, PieChart } from "react-native-gifted-charts";
 import axios, { AxiosError } from 'axios';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '@/constants/Colors';
 import Loading from '@/components/Loading';
@@ -40,6 +40,7 @@ const dashboard = () => {
     const [selectedDate2, setSelectedDate2] = useState(new Date(Date.now()).toISOString())
     const { setCartCount } = useGlobal();
     const [flags, setFlags] = useState<boolean[]>([false, false, false, false, false, false]);
+    const router = useRouter();
 
 
     const weeklySale = async () => {
