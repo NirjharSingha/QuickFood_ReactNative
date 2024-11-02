@@ -27,6 +27,7 @@ const Menu = () => {
     const router = useRouter();
     const pageSize = 3;
     const { id } = useLocalSearchParams()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const handleScroll = (event: any) => {
         const currentScrollTop = event.nativeEvent.contentOffset.y; // Current scroll position
@@ -78,7 +79,7 @@ const Menu = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 

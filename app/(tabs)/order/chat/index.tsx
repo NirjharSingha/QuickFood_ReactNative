@@ -47,6 +47,7 @@ const index = () => {
     const [chatToEdit, setChatToEdit] = useState<ChatCardType | null>(null);
     const [selectedChat, setSelectedChat] = useState<ChatCardType | null>(null);
     const { setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
     const scrollViewRef = useRef<ScrollView>(null);
     // const { roomId } = useLocalSearchParams() as { roomId?: number };
     // const roomId = 6
@@ -59,7 +60,7 @@ const index = () => {
         if (axiosError.response) {
             const { status } = axiosError.response;
             if (status === 401) {
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
             if (status === 404) {
                 Toast.show({

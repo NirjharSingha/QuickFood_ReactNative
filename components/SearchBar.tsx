@@ -69,6 +69,7 @@ const SearchBar = () => {
     const [showResult, setShowResult] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
     const containerRef = useClickOutside<View>(() => {
         setShowResult(false)
         setShowMessage(false)
@@ -106,7 +107,7 @@ const SearchBar = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         } else if (value.length === 0) {
             setFilteredData([]);

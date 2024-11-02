@@ -33,6 +33,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
     const [quantity, setQuantity] = useState(0);
     const pathname = usePathname();
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
     const [showCartAlert, setShowCartAlert] = useState(false)
 
     useEffect(() => {
@@ -54,7 +55,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, setShowMenuDialog, set
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
         getRating();

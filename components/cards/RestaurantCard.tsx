@@ -26,6 +26,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
     const [rating, setRating] = useState('');
     const [flag, setFlag] = useState(false);
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const handleNavigate = () => {
         if (pathname.includes("/restaurants")) {
@@ -54,7 +55,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
         getRating();

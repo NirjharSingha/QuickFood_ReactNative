@@ -27,6 +27,7 @@ const Complaint: React.FC<ComplaintProps> = ({ visible, setVisible, orderId, set
     const [warning, setWarning] = useState("");
     const [input, setInput] = useState("");
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const handler = async (complaint: string) => {
         try {
@@ -65,7 +66,7 @@ const Complaint: React.FC<ComplaintProps> = ({ visible, setVisible, orderId, set
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 

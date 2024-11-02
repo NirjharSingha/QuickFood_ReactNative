@@ -24,6 +24,7 @@ const status = () => {
     const [orders, setOrders] = useState<OrderCardType[]>([]);
     const { showOrderDialog, selectedOrder, setShowOrderDialog, setCartCount } = useGlobal()
     const router = useRouter();
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const getOrderCards = async () => {
@@ -51,7 +52,7 @@ const status = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
         getOrderCards();

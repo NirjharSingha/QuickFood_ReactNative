@@ -24,6 +24,7 @@ const index = () => {
     const [sendRequest, setSendRequest] = useState(true);
     const [showLoading, setShowLoading] = useState(true);
     const { setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
     const pageSize = 3;
 
     useEffect(() => {
@@ -49,7 +50,7 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
         if (sendRequest) {

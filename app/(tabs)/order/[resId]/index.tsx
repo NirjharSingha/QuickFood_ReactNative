@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import SearchBar from '@/components/SearchBar'
 import { Loading2 } from '@/components/Loading'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -37,6 +36,7 @@ const index = () => {
     const { resId } = useLocalSearchParams() as { resId?: string };
     const pageSize = 3;
     const { setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const getMenu = async () => {
@@ -74,7 +74,7 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
 

@@ -23,6 +23,7 @@ const pendingOrders = () => {
     const [showLoading, setShowLoading] = useState(true);
     const { showOrderDialog, setShowOrderDialog, selectedOrder, setCartCount } = useGlobal()
     const router = useRouter();
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const getPendingOrders = async () => {
@@ -49,7 +50,7 @@ const pendingOrders = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
         getPendingOrders();

@@ -34,6 +34,7 @@ export const RestaurantAnalytics: React.FC<{ id: string }> = ({ id }) => {
     const [flags, setFlags] = useState<boolean[]>([false, false, false, false, false]);
     const router = useRouter();
     const pathname = usePathname()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const weeklySale = async () => {
         try {
@@ -57,7 +58,7 @@ export const RestaurantAnalytics: React.FC<{ id: string }> = ({ id }) => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -91,7 +92,7 @@ export const RestaurantAnalytics: React.FC<{ id: string }> = ({ id }) => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -117,7 +118,7 @@ export const RestaurantAnalytics: React.FC<{ id: string }> = ({ id }) => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -148,7 +149,7 @@ export const RestaurantAnalytics: React.FC<{ id: string }> = ({ id }) => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -179,7 +180,7 @@ export const RestaurantAnalytics: React.FC<{ id: string }> = ({ id }) => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 

@@ -39,6 +39,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
     const [cancelMessage, setCancelMessage] = useState("");
     const [showComplaint, setShowComplaint] = useState(false);
     const router = useRouter()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const hideDialog = () => {
         setSelectedOrder(0)
@@ -90,7 +91,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
         } catch (error) {
             setVisible(false)
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -133,7 +134,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -173,7 +174,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     }
 
@@ -210,7 +211,7 @@ const OrderDialog: React.FC<OrderDialogProps> = ({ visible, setVisible, setOrder
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 

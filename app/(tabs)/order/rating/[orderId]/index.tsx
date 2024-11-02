@@ -30,6 +30,7 @@ const index = () => {
     const [rating, setRating] = useState<{ menuId: number, rating: number }[]>([]);
     const [visible, setVisible] = useState(false);
     const [selectedMenuId, setSelectedMenuId] = useState(0);
+    const { setUnseenNotificationCount } = useGlobal();
 
     const getPage = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -48,7 +49,7 @@ const index = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -88,7 +89,7 @@ const index = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 

@@ -24,6 +24,7 @@ const index = () => {
     const [showLoading, setShowLoading] = useState(true);
     const router = useRouter();
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const getOrderCards = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -50,7 +51,7 @@ const index = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 

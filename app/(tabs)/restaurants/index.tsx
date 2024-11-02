@@ -24,6 +24,7 @@ const restaurants = () => {
     const [showLoading, setShowLoading] = useState(true);
     const router = useRouter();
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const getRestaurants = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -51,7 +52,7 @@ const restaurants = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 

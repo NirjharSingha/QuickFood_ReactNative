@@ -30,6 +30,7 @@ const cart = () => {
     const [restaurantName, setRestaurantName] = useState("");
     const [showMessage, setShowMessage] = useState(false);
     const { setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
 
     const getCart = async () => {
         let temp = await AsyncStorage.getItem("cart");
@@ -88,7 +89,7 @@ const cart = () => {
                     }
                 } catch (error) {
                     const axiosError = error as AxiosError;
-                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
                 }
 
                 const selectedRes = cart.restaurantId;
@@ -107,7 +108,7 @@ const cart = () => {
                     }
                 } catch (error) {
                     const axiosError = error as AxiosError;
-                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
                 }
             } else {
                 setShowMessage(true);

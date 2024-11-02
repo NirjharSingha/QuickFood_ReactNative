@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import Password from '@/components/Dialogs/Password';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CustomDrawer, DrawerHeader } from '@/components/Drawer';
+import { useGlobal } from '@/contexts/Globals';
 
 export default function Layout() {
     const StyledView = styled(View);
@@ -16,6 +17,7 @@ export default function Layout() {
     const router = useRouter();
     const { primaryBlue } = Colors.light;
     const [visible, setVisible] = useState(false);
+    const { setCartCount, setUnseenNotificationCount, unseenNotificationCount } = useGlobal();
 
     // Custom drawer content component
     const CustomDrawerContent = ({ }: { navigation: any }) => {
@@ -47,7 +49,7 @@ export default function Layout() {
                         <TouchableOpacity onPress={() => router.push("/account/notifications")}>
                             <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/account/notifications" ? 'bg-blue-100' : ''} rounded-full m-0 mt-2`} style={{ gap: 10 }}>
                                 <Ionicons name="notifications-circle" size={26} color={pathname === "/account/notifications" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
-                                <StyledText className='font-bold text-base' style={{ color: pathname === "/account/notifications" ? primaryBlue : 'gray', margin: 0 }}>Notifications</StyledText>
+                                <StyledText className='font-bold text-base' style={{ color: pathname === "/account/notifications" ? primaryBlue : 'gray', margin: 0 }}>Notifications {`${unseenNotificationCount > 0 ? `(${unseenNotificationCount})` : ''}`}</StyledText>
                             </StyledView>
                         </TouchableOpacity>
                     </StyledView>
@@ -55,9 +57,13 @@ export default function Layout() {
 
                 {/* Second Row: Logout Button */}
                 <TouchableOpacity style={{ padding: 6 }} onPress={async () => {
+                    setCartCount(0);
+                    setUnseenNotificationCount(0);
                     await AsyncStorage.removeItem("token");
                     await AsyncStorage.removeItem("role");
-                    router.replace("/auth/login");
+                    await AsyncStorage.removeItem("cart");
+                    await AsyncStorage.removeItem("YourRestaurant");
+                    router.push("/auth/login");
                 }}>
                     <StyledView className='flex-row bg-blue-500 py-[6px] items-center justify-center rounded-md mb-1'>
                         <StyledText className='text-white font-bold mr-3 text-base'>Logout</StyledText>

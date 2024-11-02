@@ -20,6 +20,7 @@ const index = () => {
     const { setCartCount } = useGlobal();
     const [showLoading, setShowLoading] = useState(true);
     const router = useRouter();
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const getAllRiders = async () => {
@@ -39,7 +40,7 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
 
@@ -62,11 +63,11 @@ const index = () => {
                         </StyledView>
                         <StyledView className='flex-row'>
                             <StyledView className='w-[8px] h-[8px] rounded-full bg-white mr-1 mt-[5.5px]' />
-                            <StyledText className='text-white' style={{ fontSize: 13 }}>All the riders registered on the app are listed below.</StyledText>
+                            <StyledText className='text-white' style={{ fontSize: 13 }}>All the restaurants registered on the app are listed below.</StyledText>
                         </StyledView>
                         <StyledView className='flex-row'>
                             <StyledView className='w-[8px] h-[8px] rounded-full bg-white mr-1 mt-[5.5px]' />
-                            <StyledText className='text-white' style={{ fontSize: 13 }}>Click on the row of the rider to see the performance analytics of the rider.</StyledText>
+                            <StyledText className='text-white' style={{ fontSize: 13 }}>Click on the analytics button of the restaurant to see the sale analytics of the restaurant.</StyledText>
                         </StyledView>
                     </StyledView>
                     <StyledScrollView horizontal showsHorizontalScrollIndicator={false} className='p-[6px] pr-0'>

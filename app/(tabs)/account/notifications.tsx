@@ -27,6 +27,7 @@ interface NotificationCardProps {
 const NotificationCard: React.FC<NotificationCardProps> = ({ notification, setNotifications, setUnreadCount }) => {
     const router = useRouter();
     const { setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
 
     const deleteOne = async () => {
         try {
@@ -52,7 +53,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, setNo
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     }
 
@@ -84,7 +85,7 @@ const notifications = () => {
     const router = useRouter();
     const [unreadCount, setUnreadCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
-    const { setCartCount } = useGlobal();
+    const { setCartCount, setUnseenNotificationCount } = useGlobal();
 
     const deleteAll = async () => {
         try {
@@ -108,7 +109,7 @@ const notifications = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     }
 
@@ -139,10 +140,11 @@ const notifications = () => {
                     });
                     setUnreadCount(count);
                     setShowLoading(false);
+                    setUnseenNotificationCount(0);
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
         getNotifications();

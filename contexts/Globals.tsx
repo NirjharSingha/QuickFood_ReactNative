@@ -10,6 +10,8 @@ type GlobalContextType = {
     setSelectedOrder: React.Dispatch<React.SetStateAction<number>>;
     showOrderDialog: boolean;
     setShowOrderDialog: React.Dispatch<React.SetStateAction<boolean>>;
+    unseenNotificationCount: number;
+    setUnseenNotificationCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type GlobalContextProviderProps = {
@@ -33,9 +35,10 @@ export default function GlobalContextProvider({
     const [cartCount, setCartCount] = useState(0);
     const [selectedOrder, setSelectedOrder] = useState(0);
     const [showOrderDialog, setShowOrderDialog] = useState(false);
+    const [unseenNotificationCount, setUnseenNotificationCount] = useState(0);
 
     return (
-        <GlobalContext.Provider value={{ menu, setMenu, cartCount, setCartCount, selectedOrder, setSelectedOrder, showOrderDialog, setShowOrderDialog }}>
+        <GlobalContext.Provider value={{ menu, setMenu, cartCount, setCartCount, selectedOrder, setSelectedOrder, showOrderDialog, setShowOrderDialog, unseenNotificationCount, setUnseenNotificationCount }}>
             {children}
         </GlobalContext.Provider>
     );

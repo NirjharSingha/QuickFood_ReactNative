@@ -32,6 +32,7 @@ const Password: React.FC<PasswordProps> = ({ visible, setVisible }) => {
     const { light } = Colors;
     const router = useRouter();
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
 
     const updatePassword = async () => {
         if (password === "" || confirmPassword === "") {
@@ -72,7 +73,7 @@ const Password: React.FC<PasswordProps> = ({ visible, setVisible }) => {
             } catch (error) {
                 hideDialog();
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         }
     }

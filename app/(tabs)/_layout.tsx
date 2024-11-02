@@ -21,35 +21,60 @@ type Role = typeof validRoles[number];
 export default function TabLayout() {
     const [role, setRole] = useState<Role>('');
     const pathname = usePathname();
-    const { setCartCount } = useGlobal();
+    const { setCartCount, setUnseenNotificationCount } = useGlobal();
     const { setIsTyping, setStompClient, setChats } = useSocket();
     const router = useRouter();
 
-    useEffect(() => {
-        const handleInit = async () => {
-            let tempRole = await AsyncStorage.getItem('role');
+    const handleInit = async () => {
+        let tempRole = await AsyncStorage.getItem('role');
 
-            if (!tempRole || !validRoles.includes(tempRole as Role)) {
-                router.push('/auth/login');
-                return;
-            }
+        if (!tempRole || !validRoles.includes(tempRole as Role)) {
+            router.push('/auth/login');
+            return;
+        }
 
-            setRole(tempRole as Role);
+        setRole(tempRole as Role);
 
-            if (tempRole === 'USER') {
-                let temp = await AsyncStorage.getItem('cart');
-                if (!temp) return
+        if (tempRole === 'USER') {
+            let temp = await AsyncStorage.getItem('cart');
+            if (!temp) return
 
-                let cart = JSON.parse(temp);
+            let cart = JSON.parse(temp);
 
-                if (cart) {
-                    if (cart.selectedMenu) {
-                        setCartCount(cart.selectedMenu.length);
-                    }
+            if (cart) {
+                if (cart.selectedMenu) {
+                    setCartCount(cart.selectedMenu.length);
                 }
             }
         }
+    }
+
+    const getUnseenNotifications = async () => {
+        const token = await AsyncStorage.getItem("token");
+        if (token) {
+            const userId = jwtDecode(token).sub;
+            try {
+                const response = await axios.get(
+                    `${process.env.EXPO_PUBLIC_SERVER_URL}/notification/getUnseenNotificationCount?userId=${userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                if (response.status === 200) {
+                    setUnseenNotificationCount(response.data);
+                }
+            } catch (error) {
+                const axiosError = error as AxiosError;
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+            }
+        }
+    };
+
+    useEffect(() => {
         handleInit();
+        getUnseenNotifications();
     }, []);
 
     const fetchChatById = async (chatId: number, roomId: number, stompClient: any, dataChat: any) => {
@@ -104,7 +129,7 @@ export default function TabLayout() {
             if (axiosError.response) {
                 const { status } = axiosError.response;
                 if (status === 401) {
-                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
                 }
                 if (status === 404) {
                     Toast.show({
@@ -143,7 +168,16 @@ export default function TabLayout() {
                     "/user/" + userId + "/queue",
                     function (response) {
                         const data = JSON.parse(response.body);
-                        console.log("Received message:", data);
+
+                        if (data.title === "Notification") {
+                            Toast.show({
+                                type: 'info',
+                                text1: 'New Notification',
+                                text2: data.notification,
+                                visibilityTime: 4000
+                            });
+                        }
+                        setUnseenNotificationCount((prev) => prev + 1)
                     }
                 );
             })();

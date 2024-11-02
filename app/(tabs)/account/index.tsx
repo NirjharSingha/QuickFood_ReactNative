@@ -39,6 +39,7 @@ const index = () => {
     const [flag, setFlag] = useState(false);
     const [prevdata, setPrevdata] = useState<ProfileDataType>({ name: '', address: '', phoneNum: '', image: '' });
     const { setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const getProfile = async () => {
@@ -69,7 +70,7 @@ const index = () => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
 
@@ -112,7 +113,7 @@ const index = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         };
     }
 

@@ -47,6 +47,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
     const [prevdata, setPrevdata] = useState<ProfileDataType>({ name: '', address: '', phoneNum: '', image: '' });
     const pathname = usePathname()
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const getResInfo = async () => {
@@ -76,7 +77,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
                 }
             } catch (error) {
                 const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
             }
         };
 
@@ -159,15 +160,7 @@ export const ResComponent: React.FC<ResComponentProps> = ({ id }) => {
             if (axiosError.response) {
                 const { status, data } = axiosError.response;
                 if (status === 401) {
-                    await AsyncStorage.removeItem("token");
-                    await AsyncStorage.removeItem("role");
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Session Expired',
-                        text2: 'Your current session has expired. Please login again.',
-                        visibilityTime: 4000,
-                    });
-                    router.push("/auth/login");
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
                 } else if (status === 409) {
                     setWarning('ID already exists')
                 } else {

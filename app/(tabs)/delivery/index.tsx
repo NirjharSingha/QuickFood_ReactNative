@@ -46,6 +46,7 @@ const delivery = () => {
     const [showAnimation, setShowAnimation] = useState(false);
     const router = useRouter()
     const { setCartCount } = useGlobal()
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const getDeliveryData = async () => {
@@ -119,7 +120,7 @@ const delivery = () => {
                 if (axiosError.response) {
                     const { status } = axiosError.response;
                     if (status === 401) {
-                        unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                        unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
                     }
                     if (status === 404) {
                         setShowMessage(true);
@@ -185,7 +186,7 @@ const delivery = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     }
 

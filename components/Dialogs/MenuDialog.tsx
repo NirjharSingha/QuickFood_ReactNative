@@ -14,6 +14,7 @@ import Toast from 'react-native-toast-message';
 import { InputGroup_2 as InputGroup } from '../input/TextInput';
 import { ImageInput } from '../input/ImagePicker';
 import { SelectInput } from '../input/SelectInput';
+import unauthorized from '@/scripts/unauthorized';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -35,7 +36,8 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ visible, setVisible, menu }) =>
     const [flag, setFlag] = useState(false);
     const { light } = Colors;
     const router = useRouter();
-    const { setMenu } = useGlobal();
+    const { setMenu, setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         const isAdd = menu?.id === 0;
@@ -158,15 +160,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ visible, setVisible, menu }) =>
             if (axiosError.response) {
                 const { status, data } = axiosError.response;
                 if (status === 401) {
-                    await AsyncStorage.removeItem("token");
-                    await AsyncStorage.removeItem("role");
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Session Expired',
-                        text2: 'Your current session has expired. Please login again.',
-                        visibilityTime: 4000,
-                    });
-                    router.push("/auth/login");
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
                 } else if (status === 400) {
                     setWarning('Duplicate Menu name');
                 } else {

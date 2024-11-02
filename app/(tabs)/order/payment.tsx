@@ -63,6 +63,7 @@ const Payment = () => {
     const [showAnimation, setShowAnimation] = useState(false);
     const router = useRouter();
     const { setCartCount } = useGlobal();
+    const { setUnseenNotificationCount } = useGlobal();
 
     useEffect(() => {
         if (paymentMethod === 'second') {
@@ -177,7 +178,7 @@ const Payment = () => {
             if (axiosError.response) {
                 const { status, data } = axiosError.response;
                 if (status === 401) {
-                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
                 }
                 if (status === 400) {
                     Toast.show({

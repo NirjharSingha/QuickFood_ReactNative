@@ -31,6 +31,7 @@ export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) =>
     const { setCartCount } = useGlobal();
     const [flags, setFlags] = useState<boolean[]>([false, false, false]);
     const router = useRouter();
+    const { setUnseenNotificationCount } = useGlobal();
 
     const weeklyDelivery = async () => {
         try {
@@ -62,7 +63,7 @@ export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) =>
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -96,7 +97,7 @@ export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) =>
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
@@ -125,7 +126,7 @@ export const DeliveryAnalytics: React.FC<{ riderId: string }> = ({ riderId }) =>
             }
         } catch (error) {
             const axiosError = error as AxiosError;
-            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount);
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
         }
     };
 
