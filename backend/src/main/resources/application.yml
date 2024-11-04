@@ -1,0 +1,26 @@
+server:
+    port: 8080
+    error:
+        include-message: always
+    tomcat:
+        max-swallow-size: 100MB
+
+spring:
+    datasource:
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME}
+        password: ${SPRING_DATASOURCE_PASSWORD}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        open-in-view: true
+    servlet:
+        multipart:
+            max-file-size: 100MB
+            max-request-size: 100MB
+
+jwt:
+    secret: ${JWT_SECRET}
+    expiration: 604800000

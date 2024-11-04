@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from 'nativewind'
 import Delivery from '@/assets/images/deliveryHeader.jpg'
 import axios, { AxiosError } from 'axios'
@@ -18,6 +18,7 @@ import { OrderTable } from '@/components/Table'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { AlertDialog } from '@/components/Dialogs/AlertDialog'
 import LottieView from 'lottie-react-native'
+import { useFocusEffect } from '@react-navigation/native'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -48,90 +49,93 @@ const delivery = () => {
     const { setCartCount } = useGlobal()
     const { setUnseenNotificationCount } = useGlobal();
 
-    useEffect(() => {
-        const getDeliveryData = async () => {
-            const token = await AsyncStorage.getItem("token");
-            if (token === null || token === undefined) {
-                router.push("/auth/login");
-                return;
-            }
-            const riderId = jwtDecode(token).sub;
+    const getDeliveryData = async () => {
+        const token = await AsyncStorage.getItem("token");
+        if (token === null || token === undefined) {
+            router.push("/auth/login");
+            return;
+        }
+        const riderId = jwtDecode(token).sub;
 
-            try {
-                const response = await axios.get(
-                    `${process.env.EXPO_PUBLIC_SERVER_URL}/order/deliveryOfRider?riderId=${riderId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (response.status == 200) {
-                    if (response.data.orderId === null) {
-                        setShowMessage(true);
-                        setShowLoading(false);
-                    } else {
-                        const { orderId } = response.data;
-                        setOrderId(orderId);
+        try {
+            const response = await axios.get(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/order/deliveryOfRider?riderId=${riderId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (response.status == 200) {
+                if (response.data.orderId === null) {
+                    setShowMessage(true);
+                    setShowLoading(false);
+                } else {
+                    const { orderId } = response.data;
+                    setOrderId(orderId);
 
-                        const res = await axios.get(
-                            `${process.env.EXPO_PUBLIC_SERVER_URL}/order/getOrderDataPage?orderId=${orderId}`,
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${token}`,
-                                },
-                            }
-                        );
-                        if (res.status === 200) {
-                            setOrderDetails(res.data);
-                            let data: OrderTableType[] = [];
-                            res.data.menuItems.forEach((item: MenuItemType) => {
-                                data.push({
-                                    id: item.menuId,
-                                    name: item.menuName,
-                                    price: item.price,
-                                    image: item.image,
-                                    quantity: item.quantity
-                                });
-                            });
-
-                            setTableData(data);
-                            let timeStamps = [
-                                res.data.orderPlaced,
-                                res.data.deliveryTaken,
-                                res.data.userNotified,
-                                res.data.deliveryCompleted,
-                            ];
-
-                            let step = 0;
-                            for (let i = 1; i < timeStamps.length; i++) {
-                                if (timeStamps[i] !== null) {
-                                    step++;
-                                }
-                            }
-
-                            setStepper(step);
-                            setShowLoading(false);
+                    const res = await axios.get(
+                        `${process.env.EXPO_PUBLIC_SERVER_URL}/order/getOrderDataPage?orderId=${orderId}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
                         }
-                    }
-                }
-            } catch (error) {
-                const axiosError = error as AxiosError;
-                if (axiosError.response) {
-                    const { status } = axiosError.response;
-                    if (status === 401) {
-                        unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
-                    }
-                    if (status === 404) {
-                        setShowMessage(true);
+                    );
+                    if (res.status === 200) {
+                        setOrderDetails(res.data);
+                        let data: OrderTableType[] = [];
+                        res.data.menuItems.forEach((item: MenuItemType) => {
+                            data.push({
+                                id: item.menuId,
+                                name: item.menuName,
+                                price: item.price,
+                                image: item.image,
+                                quantity: item.quantity
+                            });
+                        });
+
+                        setTableData(data);
+                        let timeStamps = [
+                            res.data.orderPlaced,
+                            res.data.deliveryTaken,
+                            res.data.userNotified,
+                            res.data.deliveryCompleted,
+                        ];
+
+                        let step = 0;
+                        for (let i = 1; i < timeStamps.length; i++) {
+                            if (timeStamps[i] !== null) {
+                                step++;
+                            }
+                        }
+
+                        setStepper(step);
                         setShowLoading(false);
+                        setShowMessage(false);
                     }
                 }
             }
-        };
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response) {
+                const { status } = axiosError.response;
+                if (status === 401) {
+                    unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+                }
+                if (status === 404) {
+                    setShowMessage(true);
+                    setShowLoading(false);
+                }
+            }
+        }
+    };
 
-        getDeliveryData();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getDeliveryData();
+        }, [])
+    );
 
     const cancelHandler = () => {
         setShowAlert(false);

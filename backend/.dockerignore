@@ -1,0 +1,12 @@
+target/
+.git
+.gitignore
+.DS_Store
+*.iml
+*.log
+*.swp
+.idea/
+.vscode/
+.env
+src/main/resources/META-INF/spring.factories
+src/main/java/com/example/quickFood/configs/DotenvPostProcessor.java

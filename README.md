@@ -8,12 +8,9 @@ The download link for the android apk of the app is given below. The backend is 
 
 <b> Download Android APK: </b>
 
-<p align="center">
-  <a href="https://quick-food-delta.vercel.app/">
-    <img src="./README/quickfood.png" alt="QuickFood" width="300" height="200">
-  </a>
-</p>
-
+```
+https://expo.dev/accounts/user_ns/projects/QuickFood/builds/5e366fed-1013-40db-8fb5-f96512a2ee2b
+```
 
 <br/>
 
@@ -137,7 +134,7 @@ efficiently manage their restaurant's presence on the QuickFood platform.
 First clone the git repository using the following command.
 
 ```bash
-git clone https://github.com/NirjharSingha/Quick_Food.git
+git clone https://github.com/NirjharSingha/QuickFood_ReactNative.git
 ```
 
 <h3>Build Frontend:</h3> <br />
