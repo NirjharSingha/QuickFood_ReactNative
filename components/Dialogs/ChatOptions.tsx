@@ -20,7 +20,7 @@ interface EditOrDeleteProps {
 
 export const ChatOptions: React.FC<EditOrDeleteProps> = ({ visible, selectedChat, setSelectedChat, handleEdit, handleDelete }) => {
     const hideDialog = () => {
-        setSelectedChat(0)
+        setSelectedChat(null)
     }
 
     return (

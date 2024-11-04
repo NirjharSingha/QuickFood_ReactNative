@@ -1,4 +1,4 @@
-import { ChatCardType } from "@/scripts/type";
+import { ChatCardType, ChatUserType } from "@/scripts/type";
 import React, { useState, createContext, useContext } from "react";
 
 type SocketContextType = {
@@ -6,6 +6,8 @@ type SocketContextType = {
     setStompClient: React.Dispatch<React.SetStateAction<any>>;
     isTyping: boolean;
     setIsTyping: React.Dispatch<React.SetStateAction<boolean>>;
+    chatUsers: ChatUserType[];
+    setChatUsers: React.Dispatch<React.SetStateAction<ChatUserType[]>>;
     chats: ChatCardType[];
     setChats: React.Dispatch<React.SetStateAction<ChatCardType[]>>;
 };
@@ -29,10 +31,11 @@ export default function SocketContextProvider({
 }: SocketContextProviderProps) {
     const [stompClient, setStompClient] = useState<any>(null);
     const [isTyping, setIsTyping] = useState(false);
+    const [chatUsers, setChatUsers] = useState<ChatUserType[]>([])
     const [chats, setChats] = useState<ChatCardType[]>([]);
 
     return (
-        <SocketContext.Provider value={{ stompClient, setStompClient, isTyping, setIsTyping, chats, setChats }}>
+        <SocketContext.Provider value={{ stompClient, setStompClient, isTyping, setIsTyping, chatUsers, setChatUsers, chats, setChats }}>
             {children}
         </SocketContext.Provider>
     );

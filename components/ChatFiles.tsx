@@ -26,7 +26,6 @@ const StyledImage = styled(Image)
 const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachments, chatToEdit, setChatToEdit, inputValue, setInputValue, uploadFiles, handleSubmit }) => {
     const [cursorPosition, setCursorPosition] = useState(0);
     const [message, setMessage] = useState('');
-    const [flag, setFlag] = useState(false)
 
     const handleSelectionChange = (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
         const { selection } = event.nativeEvent;
@@ -46,26 +45,6 @@ const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachmen
             }, 1000);
         }
     }, [])
-
-    // useEffect(() => {
-    //     if (chatToEdit !== null && !flag) {
-    //         setInputValue('')
-    //         setMessage(chatToEdit.message)
-    //         setCursorPosition(chatToEdit.message.length)
-    //         setFiles(chatToEdit.files)
-    //         setChatAttachments(chatToEdit.files)
-    //         setFlag(true)
-    //     } else {
-    //         if (!flag) {
-    //             setMessage(inputValue)
-    //             setTimeout(() => {
-    //                 setInputValue('')
-    //             }, 1000);
-    //             setFlag(true)
-    //         }
-    //         setFiles(chatAttachments)
-    //     }
-    // }, [chatAttachments])
 
     return (
         <View style={styles.container}>

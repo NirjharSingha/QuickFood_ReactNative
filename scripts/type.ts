@@ -118,3 +118,11 @@ export type deliverData = {
     complaintDeliveries: number;
     bothIssues: number;
 }
+
+export type ChatUserType = {
+    roomId: number;
+    userId: string;
+    name: string;
+    image: string;
+    unseenCount: number;
+}

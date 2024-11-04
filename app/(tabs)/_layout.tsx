@@ -14,6 +14,7 @@ import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import { useFocusEffect } from '@react-navigation/native';
 
 const validRoles = ['USER', 'RIDER', 'ADMIN', ''] as const;
 type Role = typeof validRoles[number];
@@ -22,7 +23,7 @@ export default function TabLayout() {
     const [role, setRole] = useState<Role>('');
     const pathname = usePathname();
     const { setCartCount, setUnseenNotificationCount } = useGlobal();
-    const { setIsTyping, setStompClient, setChats } = useSocket();
+    const { setStompClient, setChats } = useSocket();
     const router = useRouter();
 
     const handleInit = async () => {
@@ -151,51 +152,52 @@ export default function TabLayout() {
         }
     };
 
-    useEffect(() => {
-        const socket = new SockJS(`${process.env.EXPO_PUBLIC_SERVER_URL}/ws`);
-        const stompClient = new Client({
-            webSocketFactory: () => socket,
-        });
+    useFocusEffect(
+        React.useCallback(() => {
+            const socket = new SockJS(`${process.env.EXPO_PUBLIC_SERVER_URL}/ws`);
+            const stompClient = new Client({
+                webSocketFactory: () => socket,
+            });
 
-        stompClient.onConnect = () => {
-            (async () => {
-                setStompClient(stompClient);
-                const token = await AsyncStorage.getItem("token");
-                if (!token) return;
-                const userId = jwtDecode(token).sub;
+            stompClient.onConnect = () => {
+                (async () => {
+                    setStompClient(stompClient);
+                    const token = await AsyncStorage.getItem("token");
+                    if (!token) return;
+                    const userId = jwtDecode(token).sub;
 
-                stompClient.subscribe(
-                    "/user/" + userId + "/queue",
-                    function (response) {
-                        const data = JSON.parse(response.body);
+                    stompClient.subscribe(
+                        `/user/${userId}/queue`,
+                        (response) => {
+                            const data = JSON.parse(response.body);
 
-                        if (data.title === "Notification") {
-                            Toast.show({
-                                type: 'info',
-                                text1: 'New Notification',
-                                text2: data.notification,
-                                visibilityTime: 4000
-                            });
+                            if (data.title === "Notification") {
+                                Toast.show({
+                                    type: 'info',
+                                    text1: 'New Notification',
+                                    text2: data.notification,
+                                    visibilityTime: 6000,
+                                });
+                            }
+                            setUnseenNotificationCount((prev) => prev + 1);
                         }
-                        setUnseenNotificationCount((prev) => prev + 1)
-                    }
-                );
-            })();
+                    );
+                })();
+            };
 
-        }
+            stompClient.onStompError = (error) => {
+                console.log("STOMP error:", error);
+            };
 
-        stompClient.onStompError = function (error) {
-            console.log("STOMP error:", error);
-        };
+            // Activate the client when the screen is focused
+            stompClient.activate();
 
-        // Activate the client
-        stompClient.activate();
-
-        // Cleanup on component unmount
-        return () => {
-            stompClient.deactivate();
-        };
-    }, []);
+            // Cleanup function to deactivate stompClient on screen blur
+            return () => {
+                stompClient.deactivate();
+            };
+        }, [])
+    );
 
     return (
         <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: 'blue', tabBarLabelStyle: { fontWeight: 'bold' } }}>

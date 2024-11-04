@@ -167,6 +167,7 @@ const delivery = () => {
                         setShowAnimation(true);
                         setTimeout(() => {
                             setShowAnimation(false);
+                            setShowMessage(true);
                             Toast.show({
                                 type: 'success',
                                 text1: 'Delivery',
@@ -182,6 +183,7 @@ const delivery = () => {
                         text2: 'The order has already been cancelled',
                         visibilityTime: 4000,
                     })
+                    setShowMessage(true)
                 }
             }
         } catch (error) {
