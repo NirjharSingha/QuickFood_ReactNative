@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from 'nativewind'
 import Chat from '@/assets/images/chat.jpg'
 import axios, { AxiosError } from 'axios'

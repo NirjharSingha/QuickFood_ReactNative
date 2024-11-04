@@ -182,16 +182,18 @@ This will build the android apk file for the app.
 | Variable Name                   | Value                                                                      |
 |---------------------------------|----------------------------------------------------------------------------|
 | MYSQL_DATABASE                  | Your Database Name (eg "Quick_Food_Database")                              |
-| MYSQL_USER                      | Your database username (You can use "root" user)                           |
-| MYSQL_ROOT_PASSWORD             | Set the required password here                                              |
-| MYSQL_PASSWORD                  | Set the required password here                                              |
+| MYSQL_USER(not for docker)      | Your database username (You can use "root" user)                           |
+| MYSQL_ROOT_PASSWORD             | Set the required password here                                             |
+| MYSQL_PASSWORD(not for docker)  | Set the required password here                                             |
+
+<b>MYSQL_USER and MYSQL_PASSWORD are needed only for local connection without docker. If you use docker build then ignore these two variable and update the rest of the two in compose.yml</b>
 
 <br />
 
 You have the flexibility to build the backend either locally or with Docker. Building locally involves installing necessary tools and executing build commands, while Docker provides a consistent environment with its Dockerfile and image creation process. 
 <br /> <br />
 <b>Using Docker:</b><br />
-At first come to the base directory of the project. Then go to backend folder and set the value of the environment variables listed above in the compose.yml (from base directory the path of the file is "./backend/compose.yml") file. Then run the following command in terminal.
+At first come to the base directory of the project. Then go to backend folder and set the value of the environment variables listed above in the compose.yml (from base directory the path of the file is "./backend/compose.yml") file. Then run the following command in terminal staying in the directory '/backend'.
 
 ```bash
 docker compose up -d --build
@@ -202,7 +204,7 @@ This will build your spring boot server in docker container along with local MyS
 <br /><br />
 
 ```bash
-docker exec -it $(docker ps -qf "name=quick_food-db-1") mysql -u root -p<Your Password> -e "CREATE DATABASE IF NOT EXISTS Quick_Food_Database;"
+docker exec -it $(docker ps -qf "name=backend-db-1") mysql -u root -p<Your Password> -e "CREATE DATABASE IF NOT EXISTS Quick_Food_Database;"
 ```
 
 Make sure to place your database password in the place of 'Your Password'. This will create a database named 'Quick_Food_Database' in the docker container. Now your server can connect to the database.
