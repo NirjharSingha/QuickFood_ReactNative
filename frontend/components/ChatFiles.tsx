@@ -15,6 +15,7 @@ interface ChatFilesProps {
     setInputValue: any;
     uploadFiles: any
     handleSubmit: any
+    handleInputChange: any
 }
 
 const StyledView = styled(View)
@@ -23,7 +24,7 @@ const StyledInput = styled(TextInput)
 const StyledTouchableOpacity = styled(TouchableOpacity)
 const StyledImage = styled(Image)
 
-const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachments, chatToEdit, setChatToEdit, inputValue, setInputValue, uploadFiles, handleSubmit }) => {
+const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachments, chatToEdit, setChatToEdit, inputValue, setInputValue, uploadFiles, handleSubmit, handleInputChange }) => {
     const [cursorPosition, setCursorPosition] = useState(0);
     const [message, setMessage] = useState('');
 
@@ -90,6 +91,7 @@ const ChatFiles: React.FC<ChatFilesProps> = ({ chatAttachments, setChatAttachmen
                                 onChangeText={(text: any) => {
                                     setMessage(text)
                                     setCursorPosition((prev: number) => prev + 1);
+                                    handleInputChange()
                                 }}
                                 onSelectionChange={handleSelectionChange}
                             />

@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useFocusEffect } from '@react-navigation/native';
+import { SocketDataType } from '@/scripts/type';
 
 const validRoles = ['USER', 'RIDER', 'ADMIN', ''] as const;
 type Role = typeof validRoles[number];
@@ -23,7 +24,7 @@ export default function TabLayout() {
     const [role, setRole] = useState<Role>('');
     const pathname = usePathname();
     const { setCartCount, setUnseenNotificationCount } = useGlobal();
-    const { setStompClient, setChats } = useSocket();
+    const { setChats, setIsTyping } = useSocket();
     const router = useRouter();
 
     const handleInit = async () => {
@@ -78,11 +79,11 @@ export default function TabLayout() {
         getUnseenNotifications();
     }, []);
 
-    const fetchChatById = async (chatId: number, roomId: number, stompClient: any, dataChat: any) => {
+    const fetchChatById = async (socketData: SocketDataType) => {
         try {
             const token = await AsyncStorage.getItem("token");
             const response = await axios.get(
-                `${process.env.EXPO_PUBLIC_SERVER_URL}/chat/getChatById?chatId=${chatId}&roomId=${roomId}`,
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/chat/getChatById?chatId=${socketData.chat ? socketData.chat.id : 0}&roomId=${socketData.chat && socketData.chat.roomId ? socketData.chat.roomId : 0}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -111,19 +112,28 @@ export default function TabLayout() {
 
                 const destination = "/user/" + fetchedChat.senderId + "/queue";
                 let redirectUrl;
-                const role = localStorage.getItem("role");
+                const role = await AsyncStorage.getItem("role");
                 if (role === "RIDER") {
-                    redirectUrl = `/orderFood/chat/${dataChat.roomId}`;
+                    redirectUrl = `/order/chat/${socketData.chat && socketData.chat.roomId ? socketData.chat.roomId : 0}`;
                 } else {
                     redirectUrl = "/delivery/chat";
                 }
-                let dataToSend = {
-                    title: "Chat",
-                    topic: "seen",
-                    chat: dataChat,
-                    redirectUrl: redirectUrl,
+                let dataToSend: SocketDataType = {
+                    ...socketData,
+                    destination: destination,
+                    topic: 'seen',
+                    redirectUrl: redirectUrl
                 };
-                stompClient.send(destination, {}, JSON.stringify(dataToSend));
+
+                await axios.post(
+                    `${process.env.EXPO_PUBLIC_SERVER_URL}/chat/socketChat_ReactNative`,
+                    dataToSend,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
             }
         } catch (error) {
             const axiosError = error as AxiosError;
@@ -161,7 +171,6 @@ export default function TabLayout() {
 
             stompClient.onConnect = () => {
                 (async () => {
-                    setStompClient(stompClient);
                     const token = await AsyncStorage.getItem("token");
                     if (!token) return;
                     const userId = jwtDecode(token).sub;
@@ -170,6 +179,7 @@ export default function TabLayout() {
                         `/user/${userId}/queue`,
                         (response) => {
                             const data = JSON.parse(response.body);
+                            console.log(data);
 
                             if (data.title === "Notification") {
                                 Toast.show({
@@ -178,8 +188,11 @@ export default function TabLayout() {
                                     text2: data.notification,
                                     visibilityTime: 6000,
                                 });
+                                setUnseenNotificationCount((prev) => prev + 1);
+                            } else if (data.title === "Typing") {
+                                setIsTyping(data.typing);
+                            } else if (data.title === "Chat") {
                             }
-                            setUnseenNotificationCount((prev) => prev + 1);
                         }
                     );
                 })();

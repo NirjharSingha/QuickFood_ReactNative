@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,8 @@ public class ChatServiceImpl implements ChatService {
     private final ChatFileRepository chatFileRepository;
     @Autowired
     private final OrderRepository orderRepository;
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public ResponseEntity<List<ChatDto>> getChats(int page, int size, int roomId) {
@@ -327,5 +330,12 @@ public class ChatServiceImpl implements ChatService {
                 .build();
 
         return ResponseEntity.ok(chatDto);
+    }
+
+    @Override
+    public ResponseEntity<String> socketChat_ReactNative(SocketData socketData) {
+        String destination = socketData.getDestination();
+        simpMessagingTemplate.convertAndSend(destination, socketData);
+        return ResponseEntity.ok("Message sent successfully");
     }
 }

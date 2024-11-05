@@ -14,9 +14,10 @@ interface ChatInputProps {
     setInputValue: (text: string) => void;
     uploadFiles: any;
     handleSubmit: any;
+    handleInputChange: any
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, uploadFiles, handleSubmit }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, uploadFiles, handleSubmit, handleInputChange }) => {
     const [cursorPosition, setCursorPosition] = useState(0);
     const handleSelectionChange = (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
         const { selection } = event.nativeEvent;
@@ -34,6 +35,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, upload
                     onChangeText={(text) => {
                         setInputValue(text)
                         setCursorPosition((prev: number) => prev + 1);
+                        handleInputChange()
                     }}
                     onSelectionChange={handleSelectionChange}
                 />

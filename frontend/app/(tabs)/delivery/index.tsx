@@ -73,6 +73,7 @@ const delivery = () => {
                 } else {
                     const { orderId } = response.data;
                     setOrderId(orderId);
+                    await AsyncStorage.setItem("orderToDeliver", orderId.toString());
 
                     const res = await axios.get(
                         `${process.env.EXPO_PUBLIC_SERVER_URL}/order/getOrderDataPage?orderId=${orderId}`,
@@ -168,6 +169,7 @@ const delivery = () => {
                             setShowAnimation(false);
                         }, 3000);
                     } else {
+                        await AsyncStorage.removeItem("orderToDeliver");
                         setShowAnimation(true);
                         setTimeout(() => {
                             setShowAnimation(false);
@@ -188,6 +190,7 @@ const delivery = () => {
                         visibilityTime: 4000,
                     })
                     setShowMessage(true)
+                    await AsyncStorage.removeItem("orderToDeliver");
                 }
             }
         } catch (error) {

@@ -10,6 +10,7 @@ const unauthorized = async (axiosError: AxiosError, Toast: any, AsyncStorage: an
             await AsyncStorage.removeItem("role");
             await AsyncStorage.removeItem("cart");
             await AsyncStorage.removeItem("YourRestaurant");
+            await AsyncStorage.removeItem("orderToDeliver");
             Toast.show({
                 type: 'error',
                 text1: 'Session Expired',

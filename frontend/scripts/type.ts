@@ -126,3 +126,13 @@ export type ChatUserType = {
     image: string;
     unseenCount: number;
 }
+
+export type SocketDataType = {
+    title: string,
+    topic: string,
+    destination: string,
+    notificationMessage: string,
+    redirectUrl: string,
+    chat: { id: number, roomId?: number, reaction?: string } | null
+    typing: boolean | null
+}

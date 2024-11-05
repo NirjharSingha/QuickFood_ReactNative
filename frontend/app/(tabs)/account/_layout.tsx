@@ -63,6 +63,7 @@ export default function Layout() {
                     await AsyncStorage.removeItem("role");
                     await AsyncStorage.removeItem("cart");
                     await AsyncStorage.removeItem("YourRestaurant");
+                    await AsyncStorage.removeItem("orderToDeliver");
                     router.push("/auth/login");
                 }}>
                     <StyledView className='flex-row bg-blue-500 py-[6px] items-center justify-center rounded-md mb-1'>
