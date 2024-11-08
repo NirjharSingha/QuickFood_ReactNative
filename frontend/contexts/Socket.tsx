@@ -1,13 +1,17 @@
 import { ChatCardType, ChatUserType } from "@/scripts/type";
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useRef } from "react";
+import { ScrollView } from "react-native";
 
 type SocketContextType = {
     isTyping: boolean;
     setIsTyping: React.Dispatch<React.SetStateAction<boolean>>;
     chatUsers: ChatUserType[];
-    setChatUsers: React.Dispatch<React.SetStateAction<ChatUserType[]>>;
+    setChatUsers: any;
     chats: ChatCardType[];
     setChats: React.Dispatch<React.SetStateAction<ChatCardType[]>>;
+    currentUrl: any;
+    setCurrentUrl: React.Dispatch<React.SetStateAction<any>>;
+    scrollViewRef: React.RefObject<ScrollView>;
 };
 
 type SocketContextProviderProps = {
@@ -30,9 +34,11 @@ export default function SocketContextProvider({
     const [isTyping, setIsTyping] = useState(false);
     const [chatUsers, setChatUsers] = useState<ChatUserType[]>([])
     const [chats, setChats] = useState<ChatCardType[]>([]);
+    const [currentUrl, setCurrentUrl] = useState('/');
+    const scrollViewRef = useRef<ScrollView>(null);
 
     return (
-        <SocketContext.Provider value={{ isTyping, setIsTyping, chatUsers, setChatUsers, chats, setChats }}>
+        <SocketContext.Provider value={{ currentUrl, setCurrentUrl, isTyping, setIsTyping, chatUsers, setChatUsers, chats, setChats, scrollViewRef }}>
             {children}
         </SocketContext.Provider>
     );

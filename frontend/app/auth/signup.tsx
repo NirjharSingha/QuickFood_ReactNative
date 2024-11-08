@@ -12,6 +12,7 @@ import { Password } from "@/components/input/PasswordInput";
 import axios from "axios";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const StyledView = styled(View)
 const StyledImage = styled(Image)
@@ -30,7 +31,24 @@ export const SignupScreen = () => {
     const pathname = usePathname();
     const router = useRouter();
 
+    useFocusEffect(
+        React.useCallback(() => {
+            setWarning('')
+            setId('')
+            setUsername('')
+            setConfirmPassword('')
+            setPassword('')
+            setShowConfirmPassword(false)
+            setShowPass(false)
+        }, [])
+    );
+
     const handleSignUp = async () => {
+        if (id === '' || username === '' || password === '' || confirmPassword === '') {
+            setWarning("Please fill all fields");
+            return;
+        }
+
         if (password !== confirmPassword) {
             setWarning("Passwords do not match");
             return;

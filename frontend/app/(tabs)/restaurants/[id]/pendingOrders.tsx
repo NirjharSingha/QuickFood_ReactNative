@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
 import axios, { AxiosError } from 'axios'
 import unauthorized from '@/scripts/unauthorized'
@@ -12,6 +12,7 @@ import { OrderCard } from '@/components/cards/OrderCard'
 import { OrderCardType } from '@/scripts/type'
 import { useGlobal } from '@/contexts/Globals'
 import OrderDialog from '@/components/Dialogs/OrderDialog'
+import { useFocusEffect } from '@react-navigation/native';
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -25,36 +26,39 @@ const pendingOrders = () => {
     const router = useRouter();
     const { setUnseenNotificationCount } = useGlobal();
 
-    useEffect(() => {
-        const getPendingOrders = async () => {
-            const resId = await AsyncStorage.getItem("YourRestaurant");
-            if (resId === null || resId === undefined) {
-                return;
-            }
-            const token = await AsyncStorage.getItem("token");
-            try {
-                const response = await axios.get(
-                    `${process.env.EXPO_PUBLIC_SERVER_URL}/order/getOrderCard?id=${resId}&flag=resPendingOrder`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (response.status == 200) {
-                    setShowLoading(false);
-                    setPendingOrders(response.data);
-                    if (response.data.length === 0) {
-                        setShowMessage(true);
-                    }
+    const getPendingOrders = async () => {
+        const resId = await AsyncStorage.getItem("YourRestaurant");
+        if (resId === null || resId === undefined) {
+            return;
+        }
+        const token = await AsyncStorage.getItem("token");
+        try {
+            const response = await axios.get(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/order/getOrderCard?id=${resId}&flag=resPendingOrder`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
-            } catch (error) {
-                const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+            );
+            if (response.status == 200) {
+                setShowLoading(false);
+                setPendingOrders(response.data);
+                if (response.data.length === 0) {
+                    setShowMessage(true);
+                }
             }
-        };
-        getPendingOrders();
-    }, []);
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getPendingOrders();
+        }, [])
+    );
 
     return (
         <View>

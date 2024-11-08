@@ -26,12 +26,10 @@ const StyledImage = styled(Image)
 export const ChatRoom: React.FC<{ roomId: number }> = ({ roomId }) => {
     const router = useRouter();
     const height = Dimensions.get('window').height;
-    const { chats, setChats, isTyping } = useSocket();
+    const { chats, setChats, isTyping, scrollViewRef } = useSocket();
     const { setCartCount } = useGlobal();
     const { setUnseenNotificationCount } = useGlobal();
-    const scrollViewRef = useRef<ScrollView>(null);
     const size = 15;
-
     const [myName, setMyName] = useState('');
     const [showLoading, setShowLoading] = useState(true);
     const [sendRequest, setSendRequest] = useState(true);
@@ -186,8 +184,7 @@ export const ChatRoom: React.FC<{ roomId: number }> = ({ roomId }) => {
             if (response.status == 200) {
                 const { firstUser, secondUser, unseenCount } = response.data;
                 setMyTarget(secondUser);
-                // setDestination(secondUser.id);
-                setDestination(firstUser.id);
+                setDestination(secondUser.id);
                 setUnseenChatCount(unseenCount);
                 setMyName(firstUser.name);
             }
@@ -418,11 +415,14 @@ export const ChatRoom: React.FC<{ roomId: number }> = ({ roomId }) => {
                     setChats((prev) => {
                         return [newChat, ...prev];
                     });
-                    if (scrollViewRef.current) {
-                        scrollViewRef.current.scrollToEnd({
-                            animated: true,
-                        });
-                    }
+
+                    setTimeout(() => {
+                        if (scrollViewRef.current) {
+                            scrollViewRef.current.scrollToEnd({
+                                animated: true,
+                            });
+                        }
+                    }, 300);
 
                     sendSocketMessage("add", { id: newChat.id, roomId: newChat.roomId }, null);
                 } else {
@@ -460,7 +460,7 @@ export const ChatRoom: React.FC<{ roomId: number }> = ({ roomId }) => {
             </StyledView>
             <ScrollView style={{ width: '100%', paddingVertical: 12, height: isTyping ? height - 213 : height - 187 }} ref={scrollViewRef} showsVerticalScrollIndicator={false} onScroll={handleScroll} scrollEventThrottle={5} contentContainerStyle={{ flexDirection: 'column-reverse' }}>
                 {chats.length > 0 && chats.map((chat, index) => (
-                    <View key={index} style={{ marginBottom: 10 }}>
+                    <View key={chat.id} style={{ marginBottom: 10 }}>
                         <ChatCard chat={chat} setChatToReact={setChatToReact} setSelectedChat={setSelectedChat} />
                         {index === 0 && <View style={{ marginBottom: 10 }} />}
                     </View>

@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Loading from '@/components/Loading'
 import { styled } from 'nativewind'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router'
 import { jwtDecode } from 'jwt-decode'
 import axios, { AxiosError } from 'axios'
 import Toast from 'react-native-toast-message'
+import { useFocusEffect } from '@react-navigation/native';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -26,37 +27,40 @@ const status = () => {
     const router = useRouter();
     const { setUnseenNotificationCount } = useGlobal();
 
-    useEffect(() => {
-        const getOrderCards = async () => {
-            const token = await AsyncStorage.getItem("token");
-            if (token === null || token === undefined) {
-                router.push("/auth/login");
-                return;
-            }
-            const userId = jwtDecode(token).sub;
-            try {
-                const response = await axios.get(
-                    `${process.env.EXPO_PUBLIC_SERVER_URL}/order/getOrderCard?id=${userId}&flag=userPendingOrder`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (response.status == 200) {
-                    setShowLoading(false);
-                    setOrders(response.data);
-                    if (response.data.length === 0) {
-                        setShowMessage(true);
-                    }
+    const getOrderCards = async () => {
+        const token = await AsyncStorage.getItem("token");
+        if (token === null || token === undefined) {
+            router.push("/auth/login");
+            return;
+        }
+        const userId = jwtDecode(token).sub;
+        try {
+            const response = await axios.get(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/order/getOrderCard?id=${userId}&flag=userPendingOrder`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
-            } catch (error) {
-                const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+            );
+            if (response.status == 200) {
+                setShowLoading(false);
+                setOrders(response.data);
+                if (response.data.length === 0) {
+                    setShowMessage(true);
+                }
             }
-        };
-        getOrderCards();
-    }, []);
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getOrderCards();
+        }, [])
+    );
 
     return (
         <View>

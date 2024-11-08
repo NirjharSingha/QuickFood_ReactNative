@@ -44,9 +44,9 @@ export default function Layout() {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => router.push("/order/rating")}>
-                        <StyledView className={`flex-row items-center px-4 py-2 ${pathname === "/order/rating" ? 'bg-blue-100' : ''} rounded-full m-0 mt-2`} style={{ gap: 10 }}>
-                            <AntDesign name="star" size={24} color={pathname === "/order/rating" ? primaryBlue : 'gray'} style={{ margin: 0 }} />
-                            <StyledText className='font-bold text-base' style={{ color: pathname === "/order/rating" ? primaryBlue : 'gray', margin: 0 }}>Give Rating</StyledText>
+                        <StyledView className={`flex-row items-center px-4 py-2 ${pathname.includes("/order/rating") ? 'bg-blue-100' : ''} rounded-full m-0 mt-2`} style={{ gap: 10 }}>
+                            <AntDesign name="star" size={24} color={pathname.includes("/order/rating") ? primaryBlue : 'gray'} style={{ margin: 0 }} />
+                            <StyledText className='font-bold text-base' style={{ color: pathname.includes("/order/rating") ? primaryBlue : 'gray', margin: 0 }}>Give Rating</StyledText>
                         </StyledView>
                     </TouchableOpacity>
 

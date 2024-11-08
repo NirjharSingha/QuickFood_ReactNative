@@ -51,7 +51,19 @@ const index = () => {
     const { setCartCount } = useGlobal()
     const { setUnseenNotificationCount } = useGlobal();
     const [showLoading, setShowLoading] = useState(true);
-    const { chatUsers, setChatUsers } = useSocket()
+    const { chatUsers, setChatUsers, setCurrentUrl } = useSocket()
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setTimeout(() => {
+                setCurrentUrl('/order/chat')
+            }, 1000);;
+
+            return () => {
+                setCurrentUrl('/')
+            };
+        }, [])
+    );
 
     const getChatUsers = async () => {
         try {

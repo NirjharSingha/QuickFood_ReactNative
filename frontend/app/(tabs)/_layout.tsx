@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Tabs } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { usePathname } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useFocusEffect } from '@react-navigation/native';
-import { SocketDataType } from '@/scripts/type';
+import { ChatUserType, SocketDataType } from '@/scripts/type';
 
 const validRoles = ['USER', 'RIDER', 'ADMIN', ''] as const;
 type Role = typeof validRoles[number];
@@ -24,8 +24,13 @@ export default function TabLayout() {
     const [role, setRole] = useState<Role>('');
     const pathname = usePathname();
     const { setCartCount, setUnseenNotificationCount } = useGlobal();
-    const { setChats, setIsTyping } = useSocket();
+    const { setChats, setIsTyping, currentUrl, setChatUsers, scrollViewRef } = useSocket();
     const router = useRouter();
+    const currentUrlRef = useRef(currentUrl); // create a ref for currentUrl
+
+    useEffect(() => {
+        currentUrlRef.current = currentUrl; // update ref whenever currentUrl changes
+    }, [currentUrl]);
 
     const handleInit = async () => {
         let tempRole = await AsyncStorage.getItem('role');
@@ -106,6 +111,14 @@ export default function TabLayout() {
                         ];
                     } else {
                         // If chat is not found, add it at index 0
+
+                        setTimeout(() => {
+                            if (scrollViewRef.current) {
+                                scrollViewRef.current.scrollToEnd({
+                                    animated: true,
+                                });
+                            }
+                        }, 400);
                         return [fetchedChat, ...prevChats];
                     }
                 });
@@ -179,7 +192,6 @@ export default function TabLayout() {
                         `/user/${userId}/queue`,
                         (response) => {
                             const data = JSON.parse(response.body);
-                            console.log(data);
 
                             if (data.title === "Notification") {
                                 Toast.show({
@@ -191,7 +203,94 @@ export default function TabLayout() {
                                 setUnseenNotificationCount((prev) => prev + 1);
                             } else if (data.title === "Typing") {
                                 setIsTyping(data.typing);
+
                             } else if (data.title === "Chat") {
+                                if (data.redirectUrl !== currentUrlRef.current) {
+                                    if (data.topic === "add" || data.topic === "reaction") {
+                                        Toast.show({
+                                            type: 'info',
+                                            text1: 'Chat Update!',
+                                            text2: data.notificationMessage,
+                                            visibilityTime: 4000,
+                                        })
+                                    }
+                                    if (currentUrlRef.current === "/order/chat" && data.topic === "add") {
+                                        setChatUsers((prevChatUsers: ChatUserType[]) => {
+                                            const newChat = data.chat;
+                                            const existingUserIndex = prevChatUsers.findIndex(
+                                                (chatUser) => chatUser.roomId === newChat.roomId
+                                            );
+
+                                            if (existingUserIndex !== -1) {
+                                                // Room already exists
+                                                const updatedChatUser = {
+                                                    ...prevChatUsers[existingUserIndex],
+                                                    unseenCount:
+                                                        prevChatUsers[existingUserIndex].unseenCount + 1,
+                                                };
+                                                const updatedChatUsers = [
+                                                    updatedChatUser,
+                                                    ...prevChatUsers.filter(
+                                                        (_, index) => index !== existingUserIndex
+                                                    ),
+                                                ];
+                                                return updatedChatUsers;
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    const topic = data.topic;
+                                    if (topic === "add" || topic === "update") {
+                                        fetchChatById(data);
+
+                                    } else if (topic === "delete") {
+                                        setChats((prevChats) => {
+                                            return prevChats.filter(
+                                                (chat) => chat.id !== data.chat.id
+                                            );
+                                        });
+                                    } else if (topic === "reaction") {
+                                        setChats((prevChats) => {
+                                            const chatIndex = prevChats.findIndex(
+                                                (chat) => chat.id === data.chat.id
+                                            );
+
+                                            if (chatIndex === -1) {
+                                                // If chat not found, return the previous state
+                                                return prevChats;
+                                            }
+
+                                            // Create a new chat object with the updated reaction
+                                            const updatedChat = {
+                                                ...prevChats[chatIndex],
+                                                reaction: data.chat.reaction,
+                                            };
+
+                                            // Return the new state with the updated chat
+                                            return [
+                                                ...prevChats.slice(0, chatIndex),
+                                                updatedChat,
+                                                ...prevChats.slice(chatIndex + 1),
+                                            ];
+                                        });
+                                    } else if (topic === "seenAll") {
+                                        setChats((prevChats) =>
+                                            prevChats.map((chat) =>
+                                                chat.senderId === userId
+                                                    ? { ...chat, isSeen: true }
+                                                    : chat
+                                            )
+                                        );
+                                    } else if (topic === "seen") {
+                                        setChats((prevChats) => {
+                                            return prevChats.map((chat) => {
+                                                return chat.id === data.chat.id
+                                                    ? { ...chat, isSeen: true }
+                                                    : chat;
+                                            });
+                                        });
+                                    }
+                                }
                             }
                         }
                     );

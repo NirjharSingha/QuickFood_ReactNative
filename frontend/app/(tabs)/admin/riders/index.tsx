@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from 'nativewind'
 import Delivery from '@/assets/images/deliveryHeader.jpg'
 import axios, { AxiosError } from 'axios'
@@ -10,6 +10,7 @@ import unauthorized from '@/scripts/unauthorized'
 import Toast from 'react-native-toast-message'
 import { useGlobal } from '@/contexts/Globals'
 import { AdminTable } from '@/components/Table'
+import { useFocusEffect } from '@react-navigation/native'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -22,30 +23,32 @@ const index = () => {
     const router = useRouter();
     const { setUnseenNotificationCount } = useGlobal();
 
-    useEffect(() => {
-        const getAllRiders = async () => {
-            try {
-                const token = await AsyncStorage.getItem("token");
-                const response = await axios.get(
-                    `${process.env.EXPO_PUBLIC_SERVER_URL}/user/getAllRiders`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (response.status == 200) {
-                    setRiders(response.data);
-                    setShowLoading(false);
+    const getAllRiders = async () => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            const response = await axios.get(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/user/getAllRiders`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
-            } catch (error) {
-                const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+            );
+            if (response.status == 200) {
+                setRiders(response.data);
+                setShowLoading(false);
             }
-        };
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+        }
+    };
 
-        getAllRiders();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getAllRiders();
+        }, [])
+    );
 
     return (
         <View>

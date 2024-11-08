@@ -36,6 +36,9 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
             if (token === null || token === undefined) return;
             const userId = jwtDecode(token).sub;
             setIsReceived(chat.senderId !== userId);
+
+            console.log('senderId', chat.senderId);
+            console.log('userId', userId);
         }
         setFlag();
     }, []);
@@ -88,7 +91,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
                                         />
                                     </Svg>
                                 </View>
-                                {chat.isSeen && <Ionicons name="checkmark-done-outline" size={18} style={{ marginLeft: 'auto' }} color={!isReceived ? "white" : Colors.light.primaryBlue} />}
+                                {chat.isSeen && !isReceived && <Ionicons name="checkmark-done-outline" size={18} style={{ marginLeft: 'auto' }} color={"white"} />}
                                 {chat.reaction !== null &&
                                     <StyledView className={`absolute bottom-[-8px] p-[2px] bg-white rounded-full ${isReceived ? 'right-[-8px]' : 'left-[-8px]'}`}>
                                         {chat.reaction === 'LIKE' && <AntDesign name="like1" size={18} color='#007bff' />}

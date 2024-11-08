@@ -16,6 +16,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useGlobal } from '@/contexts/Globals';
 import { RatingPageType } from '@/scripts/type';
 import RatingDialog from '@/components/Dialogs/RatingDialog';
+import { useFocusEffect } from '@react-navigation/native';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -53,9 +54,11 @@ const index = () => {
         }
     };
 
-    useEffect(() => {
-        getPage()
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getPage();
+        }, [])
+    );
 
     const handleSubmitRating = async () => {
         if (rating.length === 0) {

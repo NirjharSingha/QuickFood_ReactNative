@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { styled } from 'nativewind'
 import Loading from '@/components/Loading'
 import Feather from '@expo/vector-icons/Feather';
@@ -12,6 +12,7 @@ import axios, { AxiosError } from 'axios';
 import unauthorized from '@/scripts/unauthorized';
 import Toast from 'react-native-toast-message';
 import { useGlobal } from "@/contexts/Globals";
+import { useFocusEffect } from '@react-navigation/native';
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -113,42 +114,45 @@ const notifications = () => {
         }
     }
 
-    useEffect(() => {
-        const getNotifications = async () => {
-            try {
-                const token = await AsyncStorage.getItem("token");
-                if (token === null || token === undefined) {
-                    router.push("/auth/login");
-                    return;
-                }
-                const userId = jwtDecode(token).sub;
-                const response = await axios.get(
-                    `${process.env.EXPO_PUBLIC_SERVER_URL}/notification/getNotifications?userId=${userId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (response.status === 200) {
-                    setNotifications(response.data.reverse());
-                    let count = 0;
-                    response.data.map((data: any) => {
-                        if (!data.isSeen) {
-                            count++;
-                        }
-                    });
-                    setUnreadCount(count);
-                    setShowLoading(false);
-                    setUnseenNotificationCount(0);
-                }
-            } catch (error) {
-                const axiosError = error as AxiosError;
-                unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+    const getNotifications = async () => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            if (token === null || token === undefined) {
+                router.push("/auth/login");
+                return;
             }
-        };
-        getNotifications();
-    }, []);
+            const userId = jwtDecode(token).sub;
+            const response = await axios.get(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/notification/getNotifications?userId=${userId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (response.status === 200) {
+                setNotifications(response.data.reverse());
+                let count = 0;
+                response.data.map((data: any) => {
+                    if (!data.isSeen) {
+                        count++;
+                    }
+                });
+                setUnreadCount(count);
+                setShowLoading(false);
+                setUnseenNotificationCount(0);
+            }
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            unauthorized(axiosError, Toast, AsyncStorage, router, setCartCount, setUnseenNotificationCount);
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getNotifications();
+        }, [])
+    );
 
     return (
         <View>
