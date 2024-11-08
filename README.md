@@ -9,7 +9,7 @@ The download link for the android apk of the app is given below. The backend is 
 <b> Download Android APK: </b>
 
 ```
-https://expo.dev/accounts/user_ns/projects/QuickFood/builds/5e366fed-1013-40db-8fb5-f96512a2ee2b
+https://expo.dev/accounts/user_ns/projects/QuickFood/builds/9d951010-3646-4ba8-88bf-11f260dd4074
 ```
 
 <br/>

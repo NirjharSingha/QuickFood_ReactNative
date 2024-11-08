@@ -13,13 +13,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { RestaurantCard } from '@/components/cards/RestaurantCard'
 import { useGlobal } from '@/contexts/Globals'
+import { RestaurantCardType } from '@/scripts/type'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledScrollView = styled(ScrollView)
 
 const restaurants = () => {
-    const [restaurants, setRestaurants] = useState([]);
+    const [restaurants, setRestaurants] = useState<RestaurantCardType[]>([]);
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
     const router = useRouter();
@@ -75,7 +76,7 @@ const restaurants = () => {
             {!showLoading && !showMessage &&
                 <StyledScrollView className="w-screen p-3" showsVerticalScrollIndicator={false}>
                     {restaurants.length !== 0 && restaurants.map((restaurant, index) => (
-                        <View key={index}>
+                        <View key={restaurant.id}>
                             <RestaurantCard restaurant={restaurant} />
                             {index === restaurants.length - 1 && <View className="mb-3" />}
                         </View>

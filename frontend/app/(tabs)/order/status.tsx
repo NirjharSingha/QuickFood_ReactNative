@@ -76,7 +76,7 @@ const status = () => {
             {!showLoading && !showMessage &&
                 <StyledScrollView className="w-screen p-3" showsVerticalScrollIndicator={false}>
                     {orders.length !== 0 && orders.map((order, index) => (
-                        <View key={index}>
+                        <View key={order.id}>
                             <OrderCard order={order} />
                             {index === orders.length - 1 && <View className="mb-3" />}
                         </View>

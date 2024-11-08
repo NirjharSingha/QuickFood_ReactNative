@@ -80,7 +80,7 @@ const index = () => {
             <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false} onScroll={handleScroll} scrollEventThrottle={5}>
                 <SearchBar />
                 {restaurants.length !== 0 && restaurants.map((item, index) => (
-                    <View key={index} style={{ paddingHorizontal: 12 }}>
+                    <View key={item.id} style={{ paddingHorizontal: 12 }}>
                         {index === 0 && <View className="mt-3" />}
                         <RestaurantCard restaurant={item} />
                     </View>

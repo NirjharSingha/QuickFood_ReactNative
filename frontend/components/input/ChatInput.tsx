@@ -1,4 +1,4 @@
-import { View, TextInput, Pressable, TextInputSelectionChangeEventData, NativeSyntheticEvent } from 'react-native'
+import { View, TextInput, Pressable, TouchableOpacity, TextInputSelectionChangeEventData, NativeSyntheticEvent } from 'react-native'
 import React, { useState } from 'react'
 import { styled } from 'nativewind';
 import { Colors } from '@/constants/Colors';
@@ -42,7 +42,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ inputValue, setInputValue, upload
                 <StyledPressable className="h-[31px] bg-white border-[1px] border-solid border-gray-500 flex-row justify-center items-center rounded-r-full border-l-0 pr-[4] pl-[1px] mr-2" onPress={uploadFiles}>
                     <Ionicons name="attach-sharp" size={22} color={Colors.light.primaryGray} />
                 </StyledPressable>
-                <Ionicons name="send-sharp" size={24} color={'blue'} onPress={() => handleSubmit(inputValue)} />
+                <TouchableOpacity onPress={() => handleSubmit(inputValue)}>
+                    <Ionicons name="send-sharp" size={24} color={'blue'} />
+                </TouchableOpacity>
             </StyledView>
         </View>
     )

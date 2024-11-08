@@ -13,13 +13,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useGlobal } from '@/contexts/Globals'
 import { OrderCard } from '@/components/cards/OrderCard'
+import { OrderCardType } from '@/scripts/type'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledScrollView = styled(ScrollView)
 
 const index = () => {
-    const [orderCards, setOrderCards] = useState([]);
+    const [orderCards, setOrderCards] = useState<OrderCardType[]>([]);
     const [showMessage, setShowMessage] = useState(false);
     const [showLoading, setShowLoading] = useState(true);
     const router = useRouter();
@@ -74,7 +75,7 @@ const index = () => {
             {!showLoading && !showMessage &&
                 <StyledScrollView className="w-screen p-3" showsVerticalScrollIndicator={false}>
                     {orderCards.length !== 0 && orderCards.map((orderCard, index) => (
-                        <View key={index}>
+                        <View key={orderCard.id}>
                             <OrderCard order={orderCard} />
                             {index === orderCards.length - 1 && <View className="mb-3" />}
                         </View>

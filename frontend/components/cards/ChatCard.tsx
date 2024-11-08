@@ -36,9 +36,6 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, setChatToReact, setSelectedCh
             if (token === null || token === undefined) return;
             const userId = jwtDecode(token).sub;
             setIsReceived(chat.senderId !== userId);
-
-            console.log('senderId', chat.senderId);
-            console.log('userId', userId);
         }
         setFlag();
     }, []);

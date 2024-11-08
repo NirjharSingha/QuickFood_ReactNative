@@ -74,7 +74,7 @@ const pendingOrders = () => {
             {!showLoading && !showMessage &&
                 <StyledScrollView className="w-screen p-3" showsVerticalScrollIndicator={false}>
                     {pendingOrders.length !== 0 && pendingOrders.map((order, index) => (
-                        <View key={index}>
+                        <View key={order.id}>
                             <OrderCard order={order} />
                             {index === pendingOrders.length - 1 && <View className="mb-3" />}
                         </View>

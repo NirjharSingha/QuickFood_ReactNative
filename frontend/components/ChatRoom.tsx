@@ -342,6 +342,16 @@ export const ChatRoom: React.FC<{ roomId: number }> = ({ roomId }) => {
     };
 
     const handleSubmit = async (messageToSend: string) => {
+        if (messageToSend === '' && chatAttachments.length === 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Empty Chat!',
+                text2: 'Type something or add an attachment',
+                visibilityTime: 4000
+            })
+            return;
+        }
+
         const formData = new FormData();
 
         formData.append("message", messageToSend);

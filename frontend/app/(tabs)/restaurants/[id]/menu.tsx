@@ -101,7 +101,7 @@ const Menu = () => {
             <MenuDialog visible={showMenuDialog} setVisible={setShowMenuDialog} menu={menuToEdit} />
             <ScrollView style={{ width: '100%', padding: 12 }} showsVerticalScrollIndicator={false} onScroll={handleScroll} scrollEventThrottle={5}>
                 {menu.length !== 0 && menu.map((item, index) => (
-                    <View key={index}>
+                    <View key={item.id}>
                         <MenuCard menu={item} setShowMenuDialog={setShowMenuDialog} setMenuToEdit={setMenuToEdit} />
                         {index === menu.length - 1 && <View className="mb-3" />}
                     </View>

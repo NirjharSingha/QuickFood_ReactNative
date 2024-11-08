@@ -111,7 +111,7 @@ const index = () => {
                     </StyledTouchableOpcity>
                 </StyledView>
                 {menu.length !== 0 && menu.map((item, index) => (
-                    <View key={index} style={{ paddingHorizontal: 12 }}>
+                    <View key={item.id} style={{ paddingHorizontal: 12 }}>
                         {index === 0 && <View className="mt-3" />}
                         <MenuCard menu={item} />
                     </View>
