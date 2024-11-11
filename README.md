@@ -34,7 +34,7 @@ These are some sample user accounts using which you can login to the app and see
 <br/>
 
 <p align="center">
-  <a href="https://youtu.be/CQKs_RtvfpY?si=Btow64LsTLCOsQmS">
+  <a href="https://youtu.be/AI2w0TfE-EE">
     <img src="./README/youtube_logo.png" alt="QuickFood" width="300" height="200">
   </a>
 </p>
